@@ -7,7 +7,7 @@ namespace dae
 	class Texture2D;
 
 	// todo: this should become final.
-	class GameObject 
+	class GameObject
 	{
 	public:
 		virtual void Update();
@@ -28,4 +28,4 @@ namespace dae
 		// todo: mmm, every gameobject has a texture? Is that correct?
 		std::shared_ptr<Texture2D> m_texture{};
 	};
-}
+};
