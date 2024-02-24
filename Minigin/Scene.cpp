@@ -14,6 +14,7 @@ Scene::~Scene() = default;
 void Scene::Add(std::shared_ptr<GameObject> object)
 {
 	m_objects.emplace_back(std::move(object));
+	
 }
 
 void Scene::Remove(std::shared_ptr<GameObject> object)
@@ -31,6 +32,14 @@ void Scene::Update()
 	for(auto& object : m_objects)
 	{
 		object->Update();
+	}
+}
+
+void dae::Scene::FixedUpdate()
+{
+	for (auto& object : m_objects)
+	{
+		object->FixedUpdate();
 	}
 }
 

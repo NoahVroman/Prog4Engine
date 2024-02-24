@@ -9,6 +9,10 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include <chrono>
+#include <thread>
+#include "GameTime.h"
+
 
 SDL_Window* g_window{};
 
@@ -84,11 +88,38 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& input = InputManager::GetInstance();
 
 	// todo: this update loop could use some work.
-	bool doContinue = true;
+	const float MsPerFrame = 16.f; //16 for 60 fps, 33 for 30 fps
+	//how do i get the fps
+
+
+
+
+ 	bool doContinue = true;
+	auto last_Time = std::chrono::high_resolution_clock::now();
+	float lag = 0.0f;
 	while (doContinue)
 	{
+		const auto currentTime = std::chrono::high_resolution_clock::now();
+		const float deltaTime = std::chrono::duration<float>(currentTime - last_Time).count();
+		last_Time = currentTime;
+
+		lag += deltaTime;
 		doContinue = input.ProcessInput();
+
+		while (lag >= MsPerFrame)
+		{
+			sceneManager.FixedUpdate();
+			lag -= MsPerFrame;
+		}
+		GameTime::Instance().SetDeltaTime(deltaTime);
+		
 		sceneManager.Update();
 		renderer.Render();
+		
+		const auto sleepTime = currentTime + std::chrono::milliseconds(int(MsPerFrame)) - std::chrono::high_resolution_clock::now();
+		if (sleepTime > std::chrono::milliseconds(0))
+			std::this_thread::sleep_for(sleepTime);
+
 	}
 }
+
