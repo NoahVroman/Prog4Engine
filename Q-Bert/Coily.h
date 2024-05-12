@@ -65,6 +65,7 @@ namespace dae
 		Subject m_Subject;
 		dae::TextureComponent::SpriteInfo spriteInfo;
 
+
 		std::unordered_map<CoilyState::CoilyStateEnum,std::unique_ptr<CoilyState>> m_pCoilyState;
 
 		CoilyState* m_CurrentState;
@@ -72,6 +73,8 @@ namespace dae
 		const float cubeSizeX = m_pPyramid->GetCubeSize().x;
 		const float cubeSizeY = m_pPyramid->GetCubeSize().y;
 		const float threeQuartersCubeSizeY = cubeSizeY * 0.75f;
+
+
 
 		void InitializeSpriteInfo();
 		void UpdateJumping();

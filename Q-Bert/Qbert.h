@@ -32,6 +32,7 @@ namespace dae
 
 		glm::vec2 GetCurrentPos() const { return m_CurrentPos; }
 		int GetCurrentIndex() const { return m_CurrentCubeIndex; }
+		int GetCurrentRow() const { return m_CurrentRow; }
 
 		void Reset();
 

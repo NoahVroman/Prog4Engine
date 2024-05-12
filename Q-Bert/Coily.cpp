@@ -5,6 +5,7 @@
 #include <iostream>
 #include "EggState.h"
 #include "SnakeState.h"
+#include "ServiceLocator.h"
 
 dae::Coily::Coily(GameObject* const pParent, Qbert* pQbert, LevelPyramid* pyramid, int StartingIndex, int StartRow, float jumpInterval)
 	:Component(pParent)
@@ -37,12 +38,12 @@ dae::Coily::Coily(GameObject* const pParent, Qbert* pQbert, LevelPyramid* pyrami
 	m_CurrentState = m_pCoilyState[CoilyState::CoilyStateEnum::Egg].get();
 
 
+
+
 }
 
 void dae::Coily::Update()
 {
-
-
 
 	if (m_IsJumping)
 	{
@@ -291,6 +292,7 @@ void dae::Coily::HandleJumpEnd()
 
 void dae::Coily::Jump(const glm::vec2& target, glm::vec2& controlPoint, float duration)
 {
+	
 	m_IsJumping = true;
 	m_TargetPos = target;
 	m_ControlPoint = controlPoint;
