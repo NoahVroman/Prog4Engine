@@ -31,9 +31,8 @@ void load()
 	auto mainTextFont = resourceManager.LoadFont("Minecraft.ttf", 36);
 
 
-	std::unique_ptr<dae::SoundService> soundSystem = std::make_unique<dae::LoggingSoundSystem>(std::make_unique<dae::SDLSoundSystem>());
-
-	dae::ServiceLocator::RegisterSoundSystem(std::move(soundSystem));
+	//std::unique_ptr<dae::SoundService> soundSystem = std::make_unique<dae::LoggingSoundSystem>(std::make_unique<dae::SDLSoundSystem>());
+	//dae::ServiceLocator::RegisterSoundSystem(std::move(soundSystem));
 
 	auto& sceneManager = dae::SceneManager::GetInstance();
 	auto& gameScene = sceneManager.CreateScene("GameScene");
@@ -45,7 +44,7 @@ void load()
 	settings.StartPos = glm::vec2{ 300,70 };
 	settings.Rows = 7;
 	settings.CubeSize = glm::vec2{ 62, 64 };
-	settings.Level = 1;
+	settings.Level = 2;
 	settings.ColorIndex = 0;
 	settings.SpriteSize = glm::vec2{ 32, 32 };
 

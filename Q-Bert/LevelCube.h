@@ -39,6 +39,7 @@ namespace dae
 		void SetColorIndex(int index) { m_ColorIndex = index; }
 
 		void SetTurned(bool turned) { m_Turned = turned; }
+		void SetHalfTurned(bool halfTurned) { m_HalfTurned = halfTurned; }
 
 	private:
 		int m_Level;  

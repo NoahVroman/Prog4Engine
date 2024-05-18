@@ -40,12 +40,15 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 		m_FlashingTimer = 0;
 		m_CurrentColor = 1;
 
+
+
 		m_Pyramid->NextRound();
 		m_pQbert->Reset();
 
-		for (auto& cube : m_Pyramid->GetCubes())
+		for (auto& cube : m_Pyramid->GetCubes()) 
 		{
-
+			cube->GetComponent<LevelCube>()->SetTurned(false);
+			cube->GetComponent<LevelCube>()->SetHalfTurned(false);
 			cube->GetComponent<LevelCube>()->ChangeToFirstColor();
 		}
 

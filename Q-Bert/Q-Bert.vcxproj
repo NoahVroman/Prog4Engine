@@ -158,6 +158,7 @@
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="LevelPyramid.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PyramidMovementComponent.cpp" />
     <ClCompile Include="Qbert.cpp" />
     <ClCompile Include="QbertCommands.cpp" />
     <ClCompile Include="SnakeState.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="LevelCube.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="LevelPyramid.h" />
+    <ClInclude Include="PyramidMovementComponent.h" />
     <ClInclude Include="Qbert.h" />
     <ClInclude Include="QbertCommands.h" />
     <ClInclude Include="SnakeState.h" />

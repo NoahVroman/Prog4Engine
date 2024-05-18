@@ -7,7 +7,9 @@ namespace dae
 	class SnakeState : public CoilyState
 	{
 	public:
-		SnakeState();
+
+
+		SnakeState(GameObject* const pParent);
 		virtual ~SnakeState();
 		SnakeState(const SnakeState& other) = delete;
 		SnakeState(SnakeState&& other) = delete;
@@ -16,8 +18,26 @@ namespace dae
 
 
 		virtual void Update(Coily* coily) override;
+		void HandleMovement(Coily* coily);
+
+		void UpdateTexture();
 
 		CoilyStateEnum GetNextState(Coily* coily) override;
+
+		private:
+			float m_JumpInterval;
+			float m_JumpTimer;
+
+			enum class Direction
+			{
+				UpRight,
+				UpLeft,
+				DownRight,
+				DownLeft
+			};
+
+
+			Direction m_Direction;
 	};
 
 

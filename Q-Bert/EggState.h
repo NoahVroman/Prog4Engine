@@ -7,7 +7,7 @@ namespace dae
 	{
 
 		public:
-		EggState();
+		EggState(GameObject* const pParent);
 		virtual ~EggState();
 		EggState(const EggState& other) = delete;
 		EggState(EggState&& other) = delete;
@@ -18,6 +18,11 @@ namespace dae
 		
 		void Update(Coily* coily) override;
 
+		private:
+			float m_JumpInterval;
+			float m_JumpTimer;
+			float m_StateChangeDelay;
+			float m_StateTimer;
 		
 	};
 

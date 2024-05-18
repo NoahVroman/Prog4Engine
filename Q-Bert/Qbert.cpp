@@ -9,7 +9,7 @@ dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid)
 	,m_IsMoving(false)
     ,Parent(pParent)
     ,m_CurrentRow(0)
-    ,m_MovingDuration(0.4f)
+    ,m_MovingDuration(0.3f)
     ,m_MoveTimer(0.0f)
     ,m_ControlPoint(0.0f, 0.0f)
 
