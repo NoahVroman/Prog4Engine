@@ -162,6 +162,7 @@
     <ClCompile Include="Qbert.cpp" />
     <ClCompile Include="QbertCommands.cpp" />
     <ClCompile Include="SnakeState.cpp" />
+    <ClCompile Include="UggWrongWay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coily.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Qbert.h" />
     <ClInclude Include="QbertCommands.h" />
     <ClInclude Include="SnakeState.h" />
+    <ClInclude Include="UggWrongWay.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

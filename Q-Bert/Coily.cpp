@@ -7,13 +7,12 @@
 #include "SnakeState.h"
 #include "ServiceLocator.h"
 
-dae::Coily::Coily(GameObject* const pParent, Qbert* pQbert, LevelPyramid* pyramid, int StartingIndex, int StartRow, float jumpInterval)
+dae::Coily::Coily(GameObject* const pParent, Qbert* pQbert, LevelPyramid* pyramid, int StartingIndex, int StartRow)
 	:Component(pParent)
 	, m_pQbert(pQbert)
 	, m_pPyramid(pyramid)
 	, m_StartingIndex(StartingIndex)
 	, m_StartRow(StartRow)
-	, m_JumpInterval(jumpInterval)
 	, m_pParent(pParent)
 	
 

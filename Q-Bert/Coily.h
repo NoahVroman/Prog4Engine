@@ -18,7 +18,7 @@ namespace dae
 
 
 
-		Coily(GameObject* const pParent,Qbert* pQbert , LevelPyramid* pyramid,int StartingIndex, int StartRow,float jumpInterval);
+		Coily(GameObject* const pParent,Qbert* pQbert , LevelPyramid* pyramid,int StartingIndex, int StartRow);
 		~Coily() = default; 
 		Coily(const Coily& other) = delete;
 		Coily(Coily&& other) = delete;
@@ -43,7 +43,6 @@ namespace dae
 
 		Qbert* m_pQbert;
 		LevelPyramid* m_pPyramid;
-		float m_JumpInterval;
 		GameObject* m_pParent;
 		glm::vec2 m_CurrentPos;
 		glm::vec2 m_TargetPos;

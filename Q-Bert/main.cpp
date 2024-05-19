@@ -21,6 +21,7 @@
 #include "SDLSoundSystem.h"
 #include "LevelManager.h"
 #include "Coily.h"
+#include "UggWrongWay.h"
 
 
 
@@ -70,9 +71,16 @@ void load()
 
 
 	auto Coily = std::make_shared<dae::GameObject>();
-	auto coilyComponent = Coily->AddComponent<dae::Coily>(qbertcomponent,pyramid,2,1,0.65f);
+	auto coilyComponent = Coily->AddComponent<dae::Coily>(qbertcomponent,pyramid,2,1);
 
 	gameScene.Add(Coily);
+
+
+	auto Ugg = std::make_shared<dae::GameObject>();
+	Ugg->AddComponent<dae::UggWrongWay>(pyramid, 6, true);
+
+	gameScene.Add(Ugg);
+
 
 
 	auto levelManager = std::make_shared<dae::GameObject>();

@@ -98,6 +98,46 @@ void dae::PyramidMovementComponent::MoveUpLeft()
 	}
 }
 
+void dae::PyramidMovementComponent::MoveUpRIghtUgg()
+{
+	if (not m_IsMoving)
+	{
+		++m_CurrentIndex;
+		--m_CurrentRow;
+
+		m_TargetPos.x = m_CurrentPos.x + cubeSizeX;
+		m_TargetPos.y = m_CurrentPos.y;
+
+		m_ControlPoint.x = m_CurrentPos.x + cubeSizeX;
+		m_ControlPoint.y = m_CurrentPos.y - cubeSizeY ;
+
+		Jump(m_TargetPos, m_ControlPoint, m_MovingDuration);
+
+	}
+
+
+}
+
+void dae::PyramidMovementComponent::MoveUpLeftUgg()
+{
+	if (not m_IsMoving)
+	{
+		--m_CurrentIndex;
+		--m_CurrentRow;
+
+		m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+		m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
+
+		m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.25f;
+		m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
+
+		Jump(m_TargetPos, m_ControlPoint, m_MovingDuration);
+
+	}
+
+
+}
+
 void dae::PyramidMovementComponent::Update()
 {
 

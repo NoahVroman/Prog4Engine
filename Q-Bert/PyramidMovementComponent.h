@@ -17,6 +17,9 @@ namespace dae
 		void MoveUpRight();
 		void MoveUpLeft();
 
+		void MoveUpRIghtUgg();
+		void MoveUpLeftUgg();
+
 		void Update() override;
 
 		int GetRows() const { return m_pPyramid->GetRows(); }
@@ -31,6 +34,10 @@ namespace dae
 		void SetCurrentPos(const glm::vec2& pos) { m_CurrentPos = pos; }
 		void SetCurrentRow(int row) { m_CurrentRow = row; }
 		void SetCurrentIndex(int index) { m_CurrentIndex = index; }
+
+		bool IsOnLastCubeInRow() { return m_CurrentIndex == GetLastCubeInRow(m_CurrentRow); }
+		bool IsOnFirstCubeInRow() { return m_CurrentIndex == GetFirstCubeInRow(m_CurrentRow); }
+
 
 
 
@@ -57,7 +64,18 @@ namespace dae
 
 			void Jump(const glm::vec2& targetPos, const glm::vec2& controlPoint, float duration);
 
-
+			unsigned int Factorial(unsigned int n)
+			{
+				return (n * (n + 1)) / 2;
+			}
+			int GetFirstCubeInRow(int row)
+			{
+				return Factorial(row);
+			}
+			int GetLastCubeInRow(int row)
+			{
+				return GetFirstCubeInRow(row) + row;
+			}
 
 			void HandleEndOfJump();
 
