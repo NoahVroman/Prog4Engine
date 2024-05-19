@@ -29,8 +29,9 @@ namespace dae
 		virtual void Update(Coily* coily) = 0;
 
 		protected:
-
 		CoilyStateEnum m_State;
+
+
 		PyramidMovementComponent* GetPyramidMovementComponent() const { return m_pPyramidMovementComponent; }
 		TextureComponent* GetTextureComponent() const { return m_pTextureComponent; }
 
@@ -38,9 +39,6 @@ namespace dae
 		bool IsOnLastCubeInRow(){return m_pPyramidMovementComponent->GetCurrentIndex() == GetLastCubeInRow(m_pPyramidMovementComponent->GetCurrentRow());}
 		bool IsOnFirstCubeInRow(){return m_pPyramidMovementComponent->GetCurrentIndex() == GetFirstCubeInRow(m_pPyramidMovementComponent->GetCurrentRow());}
 
-
-
-			
 		private:
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 		TextureComponent* m_pTextureComponent;

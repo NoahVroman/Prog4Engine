@@ -7,6 +7,7 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
 	:Component(pParent),
 	 m_Pyramid{pyramid}
 	, m_pQbert{pQbert}
+	, m_pCoily{pCoily}
 	, m_AnimationTimer{0}
 	, m_MaxAnimationTime{2.f}
 	, m_FlashingTimer{0}
@@ -19,7 +20,7 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
 {
 	m_Pyramid->GetSubject().AddObserver(this);
 	m_pQbert->GetSubject().AddObserver(this);
-	pCoily->GetSubject().AddObserver(this);
+	m_pCoily->GetSubject().AddObserver(this);
 }
 
 void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
@@ -32,6 +33,7 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 	else if (currentEvent == Event::QbertDied)
 	{
 		std::cout << "QBERT DIED" << "\n";
+
 	}
 	else if (currentEvent == Event::RoundWon)
 	{
@@ -44,6 +46,7 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 
 		m_Pyramid->NextRound();
 		m_pQbert->Reset();
+
 
 		for (auto& cube : m_Pyramid->GetCubes()) 
 		{

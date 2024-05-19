@@ -28,6 +28,8 @@ namespace dae
 
 		void Update() override;
 
+		void Reset();
+
 
 		Qbert* GetQbert() const { return m_pQbert; }
 		LevelPyramid* GetPyramid() const { return m_pPyramid; }
@@ -58,10 +60,6 @@ namespace dae
 
 		std::unordered_map<CoilyState::CoilyStateEnum,std::unique_ptr<CoilyState>> m_pCoilyState;
 		CoilyState* m_CurrentState;
-
-
-
-		void InitializeSpriteInfo();
 
 
 	};

@@ -28,6 +28,10 @@ namespace dae
 		int GetCurrentIndex() const { return m_CurrentIndex; }
 
 
+		void SetCurrentPos(const glm::vec2& pos) { m_CurrentPos = pos; }
+		void SetCurrentRow(int row) { m_CurrentRow = row; }
+		void SetCurrentIndex(int index) { m_CurrentIndex = index; }
+
 
 
 		private:

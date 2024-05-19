@@ -19,7 +19,13 @@ dae::Coily::Coily(GameObject* const pParent, Qbert* pQbert, LevelPyramid* pyrami
 
 {
 
-	InitializeSpriteInfo();
+	spriteInfo.width = 32;
+	spriteInfo.height = 64;
+	spriteInfo.SrcX = 0;
+	spriteInfo.SrcY = 0;
+	spriteInfo.SrcWidth = 16;
+	spriteInfo.SrcHeight = 32;
+
 
 	m_CurrentPos = glm::vec2(  m_pPyramid->GetStartPos(m_StartingIndex).x,m_pPyramid->GetStartPos(m_StartingIndex).y - spriteInfo.height/2.f);
 	m_TargetPos = m_CurrentPos;
@@ -51,16 +57,20 @@ void dae::Coily::Update()
 	
 }
 
-
-void dae::Coily::InitializeSpriteInfo()
+void dae::Coily::Reset()
 {
-	spriteInfo.width = 32;
-	spriteInfo.height = 64;
-	spriteInfo.SrcX = 0;
-	spriteInfo.SrcY = 0;
-	spriteInfo.SrcWidth = 16;
-	spriteInfo.SrcHeight = 32;
+	m_CurrentPos = glm::vec2(m_pPyramid->GetStartPos(m_StartingIndex).x, m_pPyramid->GetStartPos(m_StartingIndex).y - spriteInfo.height / 2.f);
+	m_TargetPos = m_CurrentPos;
+	m_pPyramidMovementComponent->SetCurrentIndex(m_StartingIndex);
+	m_pPyramidMovementComponent->SetCurrentRow(m_StartRow);
+	m_pPyramidMovementComponent->SetCurrentPos(m_CurrentPos);
+	m_pTextureComponent->SetSourceInfo(0,0,16,32);
+	m_CurrentState = m_pCoilyState[CoilyState::CoilyStateEnum::Egg].get();
+
+
 
 }
+
+
 
 

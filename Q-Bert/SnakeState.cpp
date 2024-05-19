@@ -15,15 +15,23 @@ dae::SnakeState::~SnakeState()
 
 void dae::SnakeState::Update(Coily* coily)
 {
-    m_JumpTimer += GameTime::GetInstance().GetDeltaTime(); // Update the timer
+    m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
 
     if (m_JumpTimer >= m_JumpInterval)
     {
         HandleMovement(coily);
+
+        if (GetPyramidMovementComponent()->GetCurrentIndex() == coily->GetQbert()->GetCurrentIndex())
+        {
+            coily->GetSubject().Notify(Event::QbertDied);
+        }
+
         m_JumpTimer = 0.0f;
     }
 
     UpdateTexture();
+
+
 
 }
 

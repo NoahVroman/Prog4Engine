@@ -36,6 +36,7 @@ namespace dae
 
 		LevelPyramid* m_Pyramid;
 		Qbert* m_pQbert;
+		Coily* m_pCoily;
 	};
 
 
