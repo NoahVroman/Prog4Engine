@@ -85,6 +85,7 @@ void dae::LevelCube::RevertColor()
 			m_HalfTurned = false;
 		}
 	}
+	m_Subject.Notify(Event::CubeChanged);
 
 }
 
