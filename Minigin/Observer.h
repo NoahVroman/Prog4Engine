@@ -9,6 +9,8 @@ namespace dae
 		RoundWon,
 		LevelCompleted,
 		QbertDied,
+		UggWrongWayDied,
+		CoilyDied,
 		ScoreUpdated,
 		LivesChanged
 	

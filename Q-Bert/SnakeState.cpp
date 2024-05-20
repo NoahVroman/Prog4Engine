@@ -2,7 +2,7 @@
 #include "GameTime.h"
 dae::SnakeState::SnakeState(GameObject* const pParent)
 	: CoilyState(CoilyStateEnum::Snake,pParent)
-    , m_JumpInterval{ 0.65f }
+    , m_JumpInterval{ 1.f }
     , m_JumpTimer{ 0.0f }
     , m_Direction{ dae::SnakeState::Direction::UpRight }
 {

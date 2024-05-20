@@ -5,7 +5,7 @@
 #include "GameTime.h"
 dae::EggState::EggState(GameObject* const pParent)
     : CoilyState(CoilyState::CoilyStateEnum::Egg,pParent)
-    , m_JumpInterval{ 0.3f }
+    , m_JumpInterval{ 1.f }
     , m_JumpTimer{ 0.0f }
     , m_StateChangeDelay{ 1.f }
     , m_StateTimer{ 0.0f }

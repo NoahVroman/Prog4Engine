@@ -49,6 +49,45 @@ void dae::LevelCube::ChangeColor()
 
 }
 
+void dae::LevelCube::RevertColor()
+{
+
+	if (m_Turned)
+	{
+		if (m_Level == 1)
+		{
+			ChangeToFirstColor();
+		}
+		else if (m_Level == 2)
+		{
+			if (m_HalfTurned)
+			{
+				ChangeToSecondColor();
+				m_HalfTurned = false ;
+			}
+			else
+			{
+				ChangeToFirstColor();
+			}
+		}
+		else
+		{
+			ChangeToFirstColor();
+		}
+
+		m_Turned = false;
+	}
+	else
+	{
+		if (m_Level == 2 && m_HalfTurned)
+		{
+			ChangeToFirstColor();
+			m_HalfTurned = false;
+		}
+	}
+
+}
+
 void dae::LevelCube::ChangeToFirstColor()
 {
 	GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(float(m_ColorIndex)* m_Size.x,0,m_Size.x,m_Size.y);

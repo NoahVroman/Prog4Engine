@@ -161,6 +161,7 @@
     <ClCompile Include="PyramidMovementComponent.cpp" />
     <ClCompile Include="Qbert.cpp" />
     <ClCompile Include="QbertCommands.cpp" />
+    <ClCompile Include="SlickSam.cpp" />
     <ClCompile Include="SnakeState.cpp" />
     <ClCompile Include="UggWrongWay.cpp" />
   </ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="PyramidMovementComponent.h" />
     <ClInclude Include="Qbert.h" />
     <ClInclude Include="QbertCommands.h" />
+    <ClInclude Include="SlickSam.h" />
     <ClInclude Include="SnakeState.h" />
     <ClInclude Include="UggWrongWay.h" />
   </ItemGroup>

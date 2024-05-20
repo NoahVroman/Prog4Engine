@@ -5,31 +5,28 @@
 #include "PyramidMovementComponent.h"
 #include "LevelPyramid.h"
 #include "Subject.h"
-namespace dae
+namespace dae 
 {
-	class UggWrongWay : public Component
+	class SlickSam : public Component
 	{
-	public:
-		UggWrongWay(GameObject* const pParent, LevelPyramid* pyramid, int StartRow, bool isStartingLeft);
-		~UggWrongWay() = default;
+		public:
+		SlickSam(GameObject* const pParent, LevelPyramid* pyramid, int StartRow, int StartingIndex);
+		~SlickSam() = default;
 
-		UggWrongWay(const UggWrongWay& other) = delete;
-		UggWrongWay(UggWrongWay&& other) = delete;
-		UggWrongWay& operator=(const UggWrongWay& other) = delete;
-		UggWrongWay& operator=(UggWrongWay&& other) = delete;
-
+		SlickSam(const SlickSam& other) = delete;
+		SlickSam(SlickSam&& other) = delete;
+		SlickSam& operator=(const SlickSam& other) = delete;
+		SlickSam& operator=(SlickSam&& other) = delete;
 
 		void Update() override;
 
 		Subject& GetSubject() { return m_Subject; }
 
-
-
 		private:
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 		TextureComponent* m_pTextureComponent;
 		LevelPyramid* m_pPyramid;
-		
+
 		glm::vec2 m_CurrentPos;
 
 		Subject m_Subject;
@@ -40,9 +37,11 @@ namespace dae
 		float m_Delay;
 
 		int m_StartRow;
-		bool m_IsStartingLeft;
+		int m_StartingIndex;
 		GameObject* m_pParent;
+
 
 	};
 
 }
+

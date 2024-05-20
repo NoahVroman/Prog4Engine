@@ -22,7 +22,7 @@
 #include "LevelManager.h"
 #include "Coily.h"
 #include "UggWrongWay.h"
-
+#include "SlickSam.h"
 
 
 
@@ -77,14 +77,17 @@ void load()
 
 
 	auto Ugg = std::make_shared<dae::GameObject>();
-	Ugg->AddComponent<dae::UggWrongWay>(pyramid, 6, true);
+	auto UggComponent = Ugg->AddComponent<dae::UggWrongWay>(pyramid, 6, true);
+
+	auto SlickSam = std::make_shared<dae::GameObject>();
+	SlickSam->AddComponent<dae::SlickSam>(pyramid, 1, 1);
 
 	gameScene.Add(Ugg);
-
+	gameScene.Add(SlickSam);
 
 
 	auto levelManager = std::make_shared<dae::GameObject>();
-	levelManager->AddComponent<dae::LevelManager>(pyramid, qbertcomponent, coilyComponent);
+	levelManager->AddComponent<dae::LevelManager>(pyramid, qbertcomponent, coilyComponent, UggComponent);
 
 	gameScene.Add(levelManager);
 

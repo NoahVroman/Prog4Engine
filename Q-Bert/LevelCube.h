@@ -30,6 +30,8 @@ namespace dae
 
 		void ChangeColor();
 
+		void RevertColor();
+
 		bool IsTurned() const { return m_Turned; }
 
 		void ChangeToFirstColor();
