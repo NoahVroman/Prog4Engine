@@ -44,7 +44,6 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 		m_CurrentColor = 1;
 
 
-
 		m_Pyramid->NextRound();
 		m_pQbert->Reset();
 
