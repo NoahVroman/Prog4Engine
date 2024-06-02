@@ -3,7 +3,7 @@
 #include "GameTime.h"
 #include "LevelCube.h"
 
-dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, Qbert* pQbert, Coily* pCoily, UggWrongWay* pUggWrongWay)
+dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, GameObject* pQbert, GameObject* pCoily, GameObject* pUggWrongWay)
 	:Component(pParent),
 	 m_Pyramid{pyramid}
 	, m_pQbert{pQbert}
@@ -20,9 +20,9 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
 
 {
 	m_Pyramid->GetSubject().AddObserver(this);
-	m_pQbert->GetSubject().AddObserver(this);
-	m_pCoily->GetSubject().AddObserver(this);
-	m_pUggWrongWay->GetSubject().AddObserver(this);
+	m_pQbert->GetComponent<Qbert>()->GetSubject().AddObserver(this);
+	m_pCoily->GetComponent<Coily>()->GetSubject().AddObserver(this);
+	m_pUggWrongWay->GetComponent<UggWrongWay>()->GetSubject().AddObserver(this);
 
 }
 
@@ -45,7 +45,7 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 
 
 		m_Pyramid->NextRound();
-		m_pQbert->Reset();
+		m_pQbert->GetComponent<Qbert>()->Reset();
 
 
 		for (auto& cube : m_Pyramid->GetCubes())
@@ -58,14 +58,13 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 	case dae::Event::LevelCompleted:
 		break;
 	case dae::Event::QbertDied:
-		std::cout << "QBERT DIED" << "\n";
+		m_pQbert->GetComponent<Qbert>()->Reset();
+		m_pCoily->Destroy();
+		m_pUggWrongWay->Destroy();
 
 		break;
 	case dae::Event::UggWrongWayDied:
-		std::cout << "UGG WRONG WAY DIED" << "\n";
-
-		
-
+		m_pUggWrongWay->Destroy();
 		break;
 	case dae::Event::CoilyDied:
 		break;

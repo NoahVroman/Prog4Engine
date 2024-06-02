@@ -27,9 +27,9 @@ namespace dae
 			m_GamePadControllers[controllerIndex]->BindGamePadAction(button, inputType, command);
 		}
 
-		void BindKeyboardAction(SDL_Scancode key, auto command) {
+		void BindKeyboardAction(SDL_Scancode key, InputType inputType ,auto command) {
 
-			m_KeyBoard->BindKeyboardAction(key, command);
+			m_KeyBoard->BindKeyboardAction(key,inputType ,command);
 		}
 
 		private:

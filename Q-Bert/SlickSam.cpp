@@ -38,9 +38,6 @@ void dae::SlickSam::Update()
 	if (m_ElapsedTime >= m_Delay)
 	{
 		m_ElapsedTime -= m_Delay;
-
-	
-
 		int random = rand() % 2;
 		if (random == 0)
 		{

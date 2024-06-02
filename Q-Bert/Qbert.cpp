@@ -48,21 +48,24 @@ void dae::Qbert::Update()
             m_TargetPos * t * t * t;
 
         Parent->GetTransform()->SetLocalPosition(newPos);
-
         m_MoveTimer += GameTime::GetInstance().GetDeltaTime();
-
         if (m_MoveTimer >= m_MovingDuration)
         {
 		    m_IsMoving = false;
 		    m_MoveTimer = 0.0f;
 		    m_CurrentPos = m_TargetPos;
             Parent->GetTransform()->SetLocalPosition(m_TargetPos);
-            m_pPyramid->GetCubes()[m_CurrentCubeIndex]->GetComponent<dae::LevelCube>()->ChangeColor();
+
+            if (m_JumpedOff == false)
+            {
+                m_pPyramid->GetCubes()[m_CurrentCubeIndex]->GetComponent<dae::LevelCube>()->ChangeColor();
+            }
+            else
+            {
+                m_Subject.Notify(Event::QbertDied);
+            }
 		}
-
-
     }
-
 }
 
 
@@ -72,6 +75,8 @@ void dae::Qbert::MoveUpRight()
     {
         if (not m_IsMoving)
         {
+            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
+
             m_CurrentCubeIndex -= m_CurrentRow;
             m_CurrentRow -= 1;
 
@@ -80,17 +85,25 @@ void dae::Qbert::MoveUpRight()
 
             m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
             m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
-
-
             Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
-
-
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
         }
     }
     else
     {
-        m_Subject.Notify(Event::QbertDied);
+        if (not m_IsMoving)
+        {
+            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
+
+            m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+            m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
+
+            m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
+
+            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+            m_JumpedOff = true;
+        }
+
     }
 
 }
@@ -101,6 +114,9 @@ void dae::Qbert::MoveUpLeft()
     {
         if (not m_IsMoving)
         {
+
+            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
+
             m_CurrentCubeIndex -= m_CurrentRow + 1;
             m_CurrentRow -= 1;
 
@@ -111,17 +127,27 @@ void dae::Qbert::MoveUpLeft()
             m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
 
             Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
-
-
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
-
         }
 
     }
 	else
 	{
-		m_Subject.Notify(Event::QbertDied);
-	}
+        if (not m_IsMoving)
+        {
+            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
+
+            m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+            m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
+
+            m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.25f;
+            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
+
+            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+            m_JumpedOff = true;
+
+        }
+
+    }
 }
 
 void dae::Qbert::MoveDownRight()
@@ -131,6 +157,9 @@ void dae::Qbert::MoveDownRight()
     {
         if (not m_IsMoving)
         {
+
+            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
+
             m_CurrentCubeIndex += m_CurrentRow + 2;
             m_CurrentRow += 1;
 
@@ -142,13 +171,25 @@ void dae::Qbert::MoveDownRight()
 
             Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
 
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
 
         }
     }
     else
     {
-        m_Subject.Notify(Event::QbertDied);
+        if (not m_IsMoving)
+        {
+            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
+
+            m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+            m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
+
+            m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
+
+            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+            m_JumpedOff = true;
+
+        }
     }
 
 }
@@ -159,6 +200,9 @@ void dae::Qbert::MoveDownLeft()
     {
         if (not m_IsMoving)
         {
+
+            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
+
             m_CurrentCubeIndex += m_CurrentRow + 1;
             m_CurrentRow += 1;
 
@@ -170,15 +214,28 @@ void dae::Qbert::MoveDownLeft()
 
             Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
 
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
 
         }
 
     }
     else
 	{
-		m_Subject.Notify(Event::QbertDied);
-	}
+        if (not m_IsMoving)
+        {
+            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
+
+            m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+            m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
+
+            m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
+
+            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+            m_JumpedOff = true;
+
+        }
+
+    }
 }
 
 void dae::Qbert::Reset()
@@ -190,6 +247,7 @@ void dae::Qbert::Reset()
 	m_TargetPos = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
 	m_ControlPoint = glm::vec2(0.0f, 0.0f);
 	m_IsMoving = false;
+    m_JumpedOff = false;
 	m_MoveTimer = 0.0f;
 	Parent->GetTransform()->SetLocalPosition(m_CurrentPos);
 	m_pTextureComponent->SetSourceInfo(0, 0, 16, 16);

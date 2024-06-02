@@ -62,22 +62,22 @@ void load()
 	auto Qbert = std::make_shared<dae::GameObject>();
 	auto qbertcomponent =  Qbert->AddComponent<dae::Qbert>(pyramid);
 	
-	dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_RIGHT,InputType::DownThisFrame ,MoveDownRightCommand(Qbert));
-	dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_DOWN, InputType::DownThisFrame, MoveDownLeftCommand(Qbert));
-	dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_LEFT, InputType::DownThisFrame, MoveUpLeftCommand(Qbert));
-	dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_UP, InputType::DownThisFrame, MoveUpRightCommand(Qbert));
+	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame ,MoveDownRightCommand(Qbert));
+	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(Qbert));
+	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(Qbert));
+	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(Qbert));
 
 	gameScene.Add(Qbert);
 
 
 	auto Coily = std::make_shared<dae::GameObject>();
-	auto coilyComponent = Coily->AddComponent<dae::Coily>(qbertcomponent,pyramid,2,1);
+	Coily->AddComponent<dae::Coily>(qbertcomponent,pyramid,2,1);
 
 	gameScene.Add(Coily);
 
 
 	auto Ugg = std::make_shared<dae::GameObject>();
-	auto UggComponent = Ugg->AddComponent<dae::UggWrongWay>(pyramid, 6, true);
+	Ugg->AddComponent<dae::UggWrongWay>(pyramid, 6, true);
 
 	auto SlickSam = std::make_shared<dae::GameObject>();
 	SlickSam->AddComponent<dae::SlickSam>(pyramid, 1, 1);
@@ -87,7 +87,7 @@ void load()
 
 
 	auto levelManager = std::make_shared<dae::GameObject>();
-	levelManager->AddComponent<dae::LevelManager>(pyramid, qbertcomponent, coilyComponent, UggComponent);
+	levelManager->AddComponent<dae::LevelManager>(pyramid, Qbert.get(), Coily.get(), Ugg.get());
 
 	gameScene.Add(levelManager);
 

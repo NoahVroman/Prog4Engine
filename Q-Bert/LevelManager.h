@@ -15,7 +15,7 @@ namespace dae
 	{
 
 		public:
-		LevelManager(GameObject* const pParent,LevelPyramid* pyramid,Qbert* pQbert,Coily* pCoily, UggWrongWay* pUggWrongWay);
+		LevelManager(GameObject* const pParent,LevelPyramid* pyramid, GameObject* pQbert, GameObject* pCoily, GameObject* pUggWrongWay);
 		virtual ~LevelManager() = default;
 		void NotifyObserver(Subject* const gameObject, Event currentEvent) override;
 
@@ -36,9 +36,9 @@ namespace dae
 
 
 		LevelPyramid* m_Pyramid;
-		Qbert* m_pQbert;
-		Coily* m_pCoily;
-		UggWrongWay* m_pUggWrongWay;
+		GameObject* m_pQbert;
+		GameObject* m_pCoily;
+		GameObject* m_pUggWrongWay;
 	};
 
 

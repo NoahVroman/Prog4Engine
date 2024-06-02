@@ -51,6 +51,11 @@ namespace dae
 		float m_MovingDuration;
 		float m_MoveTimer;
 
+		
+
+
+		bool m_PendingJumpedOff{false};
+		bool m_JumpedOff{false};
 
 		int m_CurrentRow;
 		int m_CurrentCubeIndex;
