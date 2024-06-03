@@ -60,6 +60,34 @@ glm::vec2 dae::LevelPyramid::GetStartPos(int index) const
     	return m_pCubes[index]->GetComponent<dae::LevelCube>()->GetCenter();
 }
 
+glm::vec2 dae::LevelPyramid::GetPosFirstCubeInRow(int row) const
+{
+    const float halfCubeSize = m_Settings.CubeSize.x * 0.5f;
+	const float threeQuartersCubeSize = m_Settings.CubeSize.y * 0.75f;
+	auto tempX = m_Settings.StartPos.x - halfCubeSize * row;
+	auto tempY = m_Settings.StartPos.y + threeQuartersCubeSize * row;
+	return glm::vec2{ tempX,tempY };
+}
+
+glm::vec2 dae::LevelPyramid::GetPosLastCubeInRow(int row) const
+{
+    const float halfCubeSize = m_Settings.CubeSize.x * 0.5f;
+	const float threeQuartersCubeSize = m_Settings.CubeSize.y * 0.75f;
+	auto tempX = m_Settings.StartPos.x + halfCubeSize * row;
+	auto tempY = m_Settings.StartPos.y + threeQuartersCubeSize * row;
+	return glm::vec2{ tempX,tempY };
+}
+
+int dae::LevelPyramid::GetFirstCubeInRow(int row) const
+{
+    return row * (row + 1) / 2;
+}
+
+int dae::LevelPyramid::GetLastCubeInRow(int row) const
+{
+	return (row + 1) * (row + 2) / 2 - 1;
+}
+
 void dae::LevelPyramid::NextRound()
 {
     m_Settings.ColorIndex = (m_Settings.ColorIndex + 1) % 6;

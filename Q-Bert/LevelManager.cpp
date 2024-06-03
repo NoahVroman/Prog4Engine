@@ -64,6 +64,7 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 
 		break;
 	case dae::Event::UggWrongWayDied:
+
 		m_pUggWrongWay->Destroy();
 		break;
 	case dae::Event::CoilyDied:

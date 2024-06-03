@@ -83,8 +83,8 @@ void dae::SnakeState::UpdateTexture()
         baseIndex = 1.0f;
     }
 
-    const float textureWidth = 16.0f; 
-    const float textureHeight = 32.0f;
+    constexpr float textureWidth = 16.0f; 
+    constexpr float textureHeight = 32.0f;
     const float textureOffsets[] = {
         2.0f * textureWidth,  // UpRight (stationary)
         3.0f * textureWidth,  // UpRight (moving)

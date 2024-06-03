@@ -37,7 +37,7 @@ dae::CoilyState::CoilyStateEnum dae::EggState::GetNextState(Coily*)
     return CoilyStateEnum::Egg;
 }
 
-void dae::EggState::Update(Coily* )
+void dae::EggState::Update(Coily*)
 {
     m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
     if (GetPyramidMovementComponent()->GetCurrentRow() < GetPyramidMovementComponent()->GetRows() - 1)
@@ -45,7 +45,6 @@ void dae::EggState::Update(Coily* )
         if (GetPyramidMovementComponent()->IsMoving())
         {
             GetTextureComponent()->SetSourceInfo(16, 0, 16, 32);
-
         }
         else
         {

@@ -8,6 +8,7 @@
 #include "Component.h"
 #include "LevelCube.h"
 #include "Subject.h"
+#include "ServiceLocator.h"
 
 namespace dae
 {
@@ -34,7 +35,20 @@ namespace dae
 		int GetCurrentIndex() const { return m_CurrentCubeIndex; }
 		int GetCurrentRow() const { return m_CurrentRow; }
 
+		bool IsJumpedOff() const { return m_JumpedOff; }
+
 		void Reset();
+
+
+		bool IsOnLastCubeInRow()
+		{
+			return m_CurrentCubeIndex == GetLastCubeInRow(m_CurrentRow);
+		}
+		bool IsOnFirstCubeInRow()
+		{
+			return m_CurrentCubeIndex == GetFirstCubeInRow(m_CurrentRow);
+		}
+
 
 		private:
      	LevelPyramid* m_pPyramid;
@@ -83,14 +97,6 @@ namespace dae
 		int GetLastCubeInRow(int row)
 		{
 			return GetFirstCubeInRow(row) + row;
-		}
-		bool IsOnLastCubeInRow()
-		{
-			return m_CurrentCubeIndex == GetLastCubeInRow(m_CurrentRow);
-		}
-		bool IsOnFirstCubeInRow()
-		{
-			return m_CurrentCubeIndex == GetFirstCubeInRow(m_CurrentRow);
 		}
 
 		void Move(const glm::vec2& target, glm::vec2& controlPoint, float duration);

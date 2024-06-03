@@ -234,9 +234,7 @@ private:
 					if (pSound)
 					{
 						Sound sound{ pSound, soundEvent.data.c_str() };
-						lock.lock();
 						m_LoadedSounds.emplace_back(sound);
-						lock.unlock();
 					}
 				}
 				break;

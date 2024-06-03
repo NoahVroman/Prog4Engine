@@ -48,12 +48,24 @@ namespace dae
 		void RemoveAllCubes();
 
 		glm::vec2 GetCubeSize() const { return m_Settings.CubeSize; }
-
 		glm::vec2 GetStartPos(int index) const;
-
 		int GetRows() const { return m_Settings.Rows; }
-
 		Subject& GetSubject() { return m_Subject; }
+
+		glm::vec2 GetPosFirstCubeInRow(int row) const;
+		glm::vec2 GetPosLastCubeInRow(int row) const;
+
+		float GetCubeHeight() const { return m_Settings.CubeSize.y; }
+		float GetCubeWidth() const { return m_Settings.CubeSize.x; }
+		float GetHalfCubeWidth() const { return m_Settings.CubeSize.x * 0.5f; }
+		float GetHalfCubeHeight() const { return m_Settings.CubeSize.y * 0.5f; }
+		float GetQuarterCubeHeight() const { return m_Settings.CubeSize.y * 0.25f; }
+		float GetQuarterCubeWidth() const { return m_Settings.CubeSize.x * 0.25f; }
+		float GetThreeQuartersCubeHeight() const { return m_Settings.CubeSize.y * 0.75f; }
+		float GetThreeQuartersCubeWidth() const { return m_Settings.CubeSize.x * 0.75f; }
+
+		int GetFirstCubeInRow(int row) const;
+		int GetLastCubeInRow(int row) const;
 
 		void NextRound();
 

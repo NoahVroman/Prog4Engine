@@ -23,6 +23,7 @@
 #include "Coily.h"
 #include "UggWrongWay.h"
 #include "SlickSam.h"
+#include "Disk.h"
 
 
 
@@ -32,8 +33,8 @@ void load()
 	auto mainTextFont = resourceManager.LoadFont("Minecraft.ttf", 36);
 
 
-	//std::unique_ptr<dae::SoundService> soundSystem = std::make_unique<dae::LoggingSoundSystem>(std::make_unique<dae::SDLSoundSystem>());
-	//dae::ServiceLocator::RegisterSoundSystem(std::move(soundSystem));
+	std::unique_ptr<dae::SoundService> soundSystem = std::make_unique<dae::LoggingSoundSystem>(std::make_unique<dae::SDLSoundSystem>());
+	dae::ServiceLocator::RegisterSoundSystem(std::move(soundSystem));
 
 	auto& sceneManager = dae::SceneManager::GetInstance();
 	auto& gameScene = sceneManager.CreateScene("GameScene");
@@ -78,13 +79,17 @@ void load()
 
 	auto Ugg = std::make_shared<dae::GameObject>();
 	Ugg->AddComponent<dae::UggWrongWay>(pyramid, 6, true);
+	gameScene.Add(Ugg);
 
 	auto SlickSam = std::make_shared<dae::GameObject>();
 	SlickSam->AddComponent<dae::SlickSam>(pyramid, 1, 1);
-
-	gameScene.Add(Ugg);
 	gameScene.Add(SlickSam);
 
+
+	auto Disk = std::make_shared<dae::GameObject>();
+	Disk->AddComponent<dae::Disk>(Qbert.get(), pyramid,4 , false, 0);
+
+	gameScene.Add(Disk);
 
 	auto levelManager = std::make_shared<dae::GameObject>();
 	levelManager->AddComponent<dae::LevelManager>(pyramid, Qbert.get(), Coily.get(), Ugg.get());

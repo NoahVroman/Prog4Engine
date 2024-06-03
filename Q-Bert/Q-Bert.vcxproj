@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="Coily.cpp" />
     <ClCompile Include="CoilyState.cpp" />
+    <ClCompile Include="Disk.cpp" />
     <ClCompile Include="EggState.cpp" />
     <ClCompile Include="LevelCube.cpp" />
     <ClCompile Include="LevelManager.cpp" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="Coily.h" />
     <ClInclude Include="CoilyState.h" />
+    <ClInclude Include="Disk.h" />
     <ClInclude Include="EggState.h" />
     <ClInclude Include="LevelCube.h" />
     <ClInclude Include="LevelManager.h" />

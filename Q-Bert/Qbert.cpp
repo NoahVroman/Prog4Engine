@@ -2,6 +2,7 @@
 #include <iostream>
 #include "GameTime.h"
 
+
 dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid)
 	: Component(pParent)
 	,m_pPyramid(pyramid)
@@ -16,7 +17,8 @@ dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid)
 {
     m_CurrentPos = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
     m_TargetPos  = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
-
+    
+   ServiceLocator::GetSoundSystem().AddSound("../Data/Sounds/QBertJump.wav");
     
 	spriteInfo.width = 32;
 	spriteInfo.height = 32;
@@ -37,7 +39,7 @@ dae::Qbert::~Qbert()
 
 void dae::Qbert::Update()
 {
-
+    std::cout << m_CurrentCubeIndex << std::endl;
     if (m_IsMoving)
     {
         float t = m_MoveTimer / m_MovingDuration;
@@ -71,6 +73,13 @@ void dae::Qbert::Update()
 
 void dae::Qbert::MoveUpRight()
 {
+    unsigned int JumpSoundIndex{};
+    if (JumpSoundIndex == UINT32_MAX)
+    {
+        JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
+    }
+    ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 100);
+
     if (not IsOnLastCubeInRow())
     {
         if (not m_IsMoving)
@@ -94,6 +103,9 @@ void dae::Qbert::MoveUpRight()
         {
             GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
 
+            m_CurrentCubeIndex = -1;
+
+
             m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
             m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
 
@@ -105,6 +117,7 @@ void dae::Qbert::MoveUpRight()
         }
 
     }
+
 
 }
 
@@ -135,6 +148,7 @@ void dae::Qbert::MoveUpLeft()
         if (not m_IsMoving)
         {
             GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
+            m_CurrentCubeIndex = -1;
 
             m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
             m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
@@ -179,6 +193,7 @@ void dae::Qbert::MoveDownRight()
         if (not m_IsMoving)
         {
             GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
+            m_CurrentCubeIndex = -1;
 
             m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
             m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
@@ -223,6 +238,7 @@ void dae::Qbert::MoveDownLeft()
         if (not m_IsMoving)
         {
             GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
+            m_CurrentCubeIndex = -1;
 
             m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
             m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
