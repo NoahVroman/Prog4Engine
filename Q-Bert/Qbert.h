@@ -32,10 +32,21 @@ namespace dae
 		Subject& GetSubject() { return m_Subject; }
 
 		glm::vec2 GetCurrentPos() const { return m_CurrentPos; }
-		int GetCurrentIndex() const { return m_CurrentCubeIndex; }
+		int GetCurrentIndex() const 
+		{
+			if (m_HasJustJumped)
+			{
+				return m_CurrentCubeIndex;
+			}
+			return -1;
+		}
 		int GetCurrentRow() const { return m_CurrentRow; }
 
 		bool IsJumpedOff() const { return m_JumpedOff; }
+		bool isMoving() const { return m_IsMoving; }	
+		bool IsFrozen() const { return m_Frozen; }
+
+		void SetFrozen(bool frozen) { m_Frozen = frozen; }
 
 		void Reset();
 
@@ -49,39 +60,40 @@ namespace dae
 			return m_CurrentCubeIndex == GetFirstCubeInRow(m_CurrentRow);
 		}
 
+	
 
-		private:
+		private: //PYRAMID 
      	LevelPyramid* m_pPyramid;
 		const float cubeSizeX = m_pPyramid->GetCubeSize().x;
 		const float cubeSizeY = m_pPyramid->GetCubeSize().y;
 		const float threeQuartersCubeSizeY = cubeSizeY * 0.75f;
+
+		private: //MOVEMENT
 		glm::vec2 m_CurrentPos;
-
 		glm::vec2 m_ControlPoint;
-
 		glm::vec2 m_TargetPos;
 		bool m_IsMoving;
-
 		float m_MovingDuration;
 		float m_MoveTimer;
 
-		
+		private: //BOOLEANS
 
-
+		bool m_Frozen{ false };
 		bool m_PendingJumpedOff{false};
 		bool m_JumpedOff{false};
+		bool m_HasJustJumped{false};
 
+		private: //CUBE INDEX
 		int m_CurrentRow;
 		int m_CurrentCubeIndex;
 
+		private: //MISC
 		GameObject* Parent;
-
 		dae::TextureComponent::SpriteInfo spriteInfo;
 		TextureComponent* m_pTextureComponent{ nullptr };
-		
 		Subject m_Subject;
 
-
+		private: //FUNCTIONS
 		unsigned int Factorial(unsigned int n)
 		{
 			if (n == 0)

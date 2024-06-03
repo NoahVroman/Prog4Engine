@@ -15,16 +15,22 @@ dae::SnakeState::~SnakeState()
 
 void dae::SnakeState::Update(Coily* coily)
 {
-    m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
-
-    if (m_JumpTimer >= m_JumpInterval)
+    if (GetPyramidMovementComponent()->HasJustJumped())
     {
-        HandleMovement(coily);
-
         if (GetPyramidMovementComponent()->GetCurrentIndex() == coily->GetQbert()->GetCurrentIndex())
         {
             coily->GetSubject().Notify(Event::QbertDied);
         }
+
+    }
+
+    m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
+
+    if (m_JumpTimer >= m_JumpInterval)
+    {
+        
+        HandleMovement(coily);
+
 
         m_JumpTimer = 0.0f;
     }
@@ -41,6 +47,7 @@ void dae::SnakeState::HandleMovement(Coily* coily)
     bool isOnSameRow = coily->GetQbert()->GetCurrentRow() == GetPyramidMovementComponent()->GetCurrentRow();
     qbertPos.y = -qbertPos.y;
 
+
     if (qbertPos.x >= 0 && (qbertPos.y > 0 || isOnSameRow))
     {
         if (!IsOnLastCubeInRow())
@@ -48,6 +55,7 @@ void dae::SnakeState::HandleMovement(Coily* coily)
             m_Direction = Direction::UpRight;
             GetPyramidMovementComponent()->MoveUpRight();
         }
+
     }
     else if (qbertPos.x < 0 && (qbertPos.y > 0 || isOnSameRow))
     {
@@ -73,6 +81,8 @@ void dae::SnakeState::HandleMovement(Coily* coily)
             GetPyramidMovementComponent()->MoveDownLeft();
         }
     }
+
+
 }
 
 void dae::SnakeState::UpdateTexture()

@@ -37,9 +37,20 @@ dae::CoilyState::CoilyStateEnum dae::EggState::GetNextState(Coily*)
     return CoilyStateEnum::Egg;
 }
 
-void dae::EggState::Update(Coily*)
+void dae::EggState::Update(Coily*coily)
 {
+
     m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
+
+    if (GetPyramidMovementComponent()->HasJustJumped())
+    {
+        if (GetPyramidMovementComponent()->GetCurrentIndex() == coily->GetQbert()->GetCurrentIndex())
+        {
+            coily->GetSubject().Notify(Event::QbertDied);
+        }
+
+    }
+
     if (GetPyramidMovementComponent()->GetCurrentRow() < GetPyramidMovementComponent()->GetRows() - 1)
     {
         if (GetPyramidMovementComponent()->IsMoving())

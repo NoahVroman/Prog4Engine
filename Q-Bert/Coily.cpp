@@ -52,8 +52,6 @@ void dae::Coily::Update()
 		m_CurrentState = m_pCoilyState[nextState].get();
 	}
 
-
-	
 }
 
 void dae::Coily::Reset()

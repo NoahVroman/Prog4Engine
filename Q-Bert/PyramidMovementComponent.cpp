@@ -16,6 +16,7 @@ dae::PyramidMovementComponent::PyramidMovementComponent(GameObject* const pParre
 	, threeQuartersCubeSizeY(cubeSizeY * 0.75f)
 	, m_CurrentRow(startRow)
 	, m_CurrentIndex(startIndex)
+	, m_HasJustJumped(false)
 
 
 {
@@ -166,6 +167,7 @@ void dae::PyramidMovementComponent::Update()
 void dae::PyramidMovementComponent::Jump(const glm::vec2& targetPos, const glm::vec2& controlPoint, float duration)
 {
 	m_IsMoving = true;
+	m_HasJustJumped = false;
 	m_TargetPos = targetPos;
 	m_ControlPoint = controlPoint;
 	m_MovingDuration = duration;
@@ -175,6 +177,7 @@ void dae::PyramidMovementComponent::Jump(const glm::vec2& targetPos, const glm::
 void dae::PyramidMovementComponent::HandleEndOfJump()
 {
 	m_IsMoving = false;
+	m_HasJustJumped= true;
 	m_MoveTimer = 0.0f;
 	m_CurrentPos = m_TargetPos;
 	m_pParent->GetTransform()->SetLocalPosition(m_TargetPos);

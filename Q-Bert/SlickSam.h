@@ -5,12 +5,13 @@
 #include "PyramidMovementComponent.h"
 #include "LevelPyramid.h"
 #include "Subject.h"
+#include "Qbert.h"
 namespace dae 
 {
 	class SlickSam : public Component
 	{
 		public:
-		SlickSam(GameObject* const pParent, LevelPyramid* pyramid, int StartRow, int StartingIndex);
+		SlickSam(GameObject* const pParent, LevelPyramid* pyramid,Qbert* pQbert ,int StartRow, int StartingIndex);
 		~SlickSam() = default;
 
 		SlickSam(const SlickSam& other) = delete;
@@ -26,6 +27,7 @@ namespace dae
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 		TextureComponent* m_pTextureComponent;
 		LevelPyramid* m_pPyramid;
+		Qbert* m_pQbert;
 
 		glm::vec2 m_CurrentPos;
 

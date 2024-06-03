@@ -2,7 +2,7 @@
 #include "GameTime.h"
 #include "LevelCube.h"
 
-dae::SlickSam::SlickSam(GameObject* const pParent, LevelPyramid* pyramid, int StartRow, int StartingIndex)
+dae::SlickSam::SlickSam(GameObject* const pParent, LevelPyramid* pyramid, Qbert* pQbert, int StartRow, int StartingIndex)
 	: Component(pParent)
 	, m_pParent{ pParent }
 	, m_pPyramid{ pyramid }
@@ -14,6 +14,7 @@ dae::SlickSam::SlickSam(GameObject* const pParent, LevelPyramid* pyramid, int St
 	, m_pTextureComponent{}
 	, m_Subject{}
 	, m_StartingIndex{ StartingIndex }
+	, m_pQbert{ pQbert }
 {
 
 	spriteInfo.width = 32;
@@ -34,6 +35,11 @@ void dae::SlickSam::Update()
 {
 	float deltaTime = GameTime::GetInstance().GetDeltaTime();
 	m_ElapsedTime += deltaTime;
+
+	if (m_pQbert->GetCurrentIndex() == m_pPyramidMovementComponent->GetCurrentIndex())
+	{
+		m_Subject.Notify(Event::SlickSamDied);
+	}
 
 	if (m_ElapsedTime >= m_Delay)
 	{

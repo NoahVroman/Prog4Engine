@@ -38,6 +38,7 @@ namespace dae
 		bool IsOnLastCubeInRow() { return m_CurrentIndex == GetLastCubeInRow(m_CurrentRow); }
 		bool IsOnFirstCubeInRow() { return m_CurrentIndex == GetFirstCubeInRow(m_CurrentRow); }
 
+		bool HasJustJumped() const { return m_HasJustJumped; }
 
 
 
@@ -54,7 +55,10 @@ namespace dae
 			float m_MovingDuration;
 			float m_MoveTimer;
 			bool m_IsMoving;
+
+
 		
+			bool m_HasJustJumped;
 
 			LevelPyramid* m_pPyramid;
 

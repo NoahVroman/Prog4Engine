@@ -11,6 +11,7 @@ namespace dae
 		QbertDied,
 		UggWrongWayDied,
 		CoilyDied,
+		SlickSamDied,
 		ScoreUpdated,
 		LivesChanged
 	

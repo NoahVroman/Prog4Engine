@@ -95,13 +95,13 @@ void load()
 	gameScene.Add(Ugg);
 
 	auto SlickSam = std::make_shared<dae::GameObject>();
-	SlickSam->AddComponent<dae::SlickSam>(pyramid, 1, 1);
+	SlickSam->AddComponent<dae::SlickSam>(pyramid,qbertcomponent, 1, 1);
 	gameScene.Add(SlickSam);
 
 
 
 	auto levelManager = std::make_shared<dae::GameObject>();
-	levelManager->AddComponent<dae::LevelManager>(pyramid, Qbert.get(), Coily.get(), Ugg.get());
+	levelManager->AddComponent<dae::LevelManager>(pyramid, Qbert.get(), Coily.get(), Ugg.get(),SlickSam.get());
 
 	gameScene.Add(levelManager);
 

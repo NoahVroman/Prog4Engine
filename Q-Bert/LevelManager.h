@@ -6,6 +6,7 @@
 #include "Qbert.h"
 #include "Coily.h"
 #include "UggWrongWay.h"
+#include "SlickSam.h"
 #include <memory>
 
 
@@ -15,7 +16,11 @@ namespace dae
 	{
 
 		public:
-		LevelManager(GameObject* const pParent,LevelPyramid* pyramid, GameObject* pQbert, GameObject* pCoily, GameObject* pUggWrongWay);
+			LevelManager(GameObject* const pParent, LevelPyramid* pyramid,
+						 GameObject* pQbert,
+						 GameObject* pCoily,
+						 GameObject* pUggWrongWay,
+						 GameObject* pSlickSam);
 		virtual ~LevelManager() = default;
 		void NotifyObserver(Subject* const gameObject, Event currentEvent) override;
 
@@ -39,6 +44,7 @@ namespace dae
 		GameObject* m_pQbert;
 		GameObject* m_pCoily;
 		GameObject* m_pUggWrongWay;
+		GameObject* m_pSlickSam;
 	};
 
 

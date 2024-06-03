@@ -39,21 +39,21 @@ dae::Qbert::~Qbert()
 
 void dae::Qbert::Update()
 {
-    std::cout << m_CurrentCubeIndex << std::endl;
+
+
+
     if (m_IsMoving)
     {
         float t = m_MoveTimer / m_MovingDuration;
 
-        glm::vec2 newPos = m_CurrentPos * (1 - t) * (1 - t) * (1 - t) +
-            m_ControlPoint * 3.f * t * (1 - t) * (1 - t) +
-            m_TargetPos * 3.f * t * t * (1 - t) +
-            m_TargetPos * t * t * t;
+        glm::vec2 newPos = glm::mix(glm::mix(m_CurrentPos, m_ControlPoint, t), glm::mix(m_ControlPoint, m_TargetPos, t), t);
 
         Parent->GetTransform()->SetLocalPosition(newPos);
         m_MoveTimer += GameTime::GetInstance().GetDeltaTime();
         if (m_MoveTimer >= m_MovingDuration)
         {
 		    m_IsMoving = false;
+            m_HasJustJumped = true;
 		    m_MoveTimer = 0.0f;
 		    m_CurrentPos = m_TargetPos;
             Parent->GetTransform()->SetLocalPosition(m_TargetPos);
@@ -73,49 +73,56 @@ void dae::Qbert::Update()
 
 void dae::Qbert::MoveUpRight()
 {
-    unsigned int JumpSoundIndex{};
-    if (JumpSoundIndex == UINT32_MAX)
-    {
-        JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
-    }
-    ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 100);
+   
 
-    if (not IsOnLastCubeInRow())
+    if (!m_Frozen)
     {
-        if (not m_IsMoving)
+        unsigned int JumpSoundIndex{};
+        if (JumpSoundIndex == UINT32_MAX)
         {
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
-
-            m_CurrentCubeIndex -= m_CurrentRow;
-            m_CurrentRow -= 1;
-
-            m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
-            m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
-
-            m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
-            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
-            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
         }
-    }
-    else
-    {
-        if (not m_IsMoving)
+        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
+
+        if (not IsOnLastCubeInRow())
         {
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
+            if (not m_IsMoving)
+            {
+                GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
 
-            m_CurrentCubeIndex = -1;
+                m_CurrentCubeIndex -= m_CurrentRow;
+                m_CurrentRow -= 1;
 
+                m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+                m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
 
-            m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
-            m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
-
-            m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
-            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
-
-            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
-            m_JumpedOff = true;
+                m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+                m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
+                Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+            }
         }
+        else
+        {
+            if (not m_IsMoving)
+            {
 
+                GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
+
+
+
+                m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+                m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
+
+                m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+                m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
+
+                Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+                m_JumpedOff = true;
+                m_CurrentCubeIndex = -1;
+
+            }
+
+        }
     }
 
 
@@ -123,135 +130,173 @@ void dae::Qbert::MoveUpRight()
 
 void dae::Qbert::MoveUpLeft()
 {
-    if (not IsOnFirstCubeInRow())
+    if (!m_Frozen)
     {
-        if (not m_IsMoving)
+        unsigned int JumpSoundIndex{};
+        if (JumpSoundIndex == UINT32_MAX)
         {
+            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
+        }
+        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
 
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
+        if (not IsOnFirstCubeInRow())
+        {
+            if (not m_IsMoving)
+            {
 
-            m_CurrentCubeIndex -= m_CurrentRow + 1;
-            m_CurrentRow -= 1;
+                GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
 
-            m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
-            m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
+                m_CurrentCubeIndex -= m_CurrentRow + 1;
+                m_CurrentRow -= 1;
 
-            m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.25f;
-            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
+                m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+                m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
 
-            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+                m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.25f;
+                m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
+
+                Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+            }
+
+        }
+        else
+        {
+            if (not m_IsMoving)
+            {
+                GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
+
+                m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+                m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
+
+                m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.25f;
+                m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
+
+                Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+                m_JumpedOff = true;
+                m_CurrentCubeIndex = -1;
+
+
+            }
+
         }
 
     }
-	else
-	{
-        if (not m_IsMoving)
-        {
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
-            m_CurrentCubeIndex = -1;
 
-            m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
-            m_TargetPos.y = m_CurrentPos.y - threeQuartersCubeSizeY;
-
-            m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.25f;
-            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 2.f;
-
-            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
-            m_JumpedOff = true;
-
-        }
-
-    }
 }
 
 void dae::Qbert::MoveDownRight()
 {
 
-    if (m_CurrentRow < m_pPyramid->GetRows() - 1)
+    if (!m_Frozen)
     {
-        if (not m_IsMoving)
+        unsigned int JumpSoundIndex{};
+        if (JumpSoundIndex == UINT32_MAX)
         {
-
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
-
-            m_CurrentCubeIndex += m_CurrentRow + 2;
-            m_CurrentRow += 1;
-
-            m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
-            m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
-
-            m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
-            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
-
-            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
-
-
+            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
         }
-    }
-    else
-    {
-        if (not m_IsMoving)
+        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
+
+        if (m_CurrentRow < m_pPyramid->GetRows() - 1)
         {
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
-            m_CurrentCubeIndex = -1;
+            if (not m_IsMoving)
+            {
 
-            m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
-            m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
+                GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
 
-            m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
-            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
+                m_CurrentCubeIndex += m_CurrentRow + 2;
+                m_CurrentRow += 1;
 
-            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
-            m_JumpedOff = true;
+                m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+                m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
 
+                m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+                m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
+
+                Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+
+
+            }
         }
+        else
+        {
+            if (not m_IsMoving)
+            {
+                GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
+
+                m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+                m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
+
+                m_ControlPoint.x = m_CurrentPos.x + cubeSizeX * 0.5f;
+                m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
+
+                Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+                m_JumpedOff = true;
+                m_CurrentCubeIndex = -1;
+
+            }
+        }
+
+
     }
+
 
 }
 
 void dae::Qbert::MoveDownLeft()
 {
-    if (m_CurrentRow < m_pPyramid->GetRows() - 1)
+    if (!m_Frozen)
     {
-        if (not m_IsMoving)
+        unsigned int JumpSoundIndex{};
+        if (JumpSoundIndex == UINT32_MAX)
         {
+            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
+        }
+        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
 
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
+        if (m_CurrentRow < m_pPyramid->GetRows() - 1)
+        {
+            if (not m_IsMoving)
+            {
 
-            m_CurrentCubeIndex += m_CurrentRow + 1;
-            m_CurrentRow += 1;
+                GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
 
-            m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
-            m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
+                m_CurrentCubeIndex += m_CurrentRow + 1;
+                m_CurrentRow += 1;
 
-            m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.5f;
-            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
+                m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+                m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
 
-            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+                m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+                m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
 
+                Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+
+
+            }
+
+        }
+        else
+        {
+            if (not m_IsMoving)
+            {
+                GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
+
+                m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+                m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
+
+                m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.5f;
+                m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
+
+                Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
+                m_JumpedOff = true;
+                m_CurrentCubeIndex = -1;
+
+            }
 
         }
 
     }
-    else
-	{
-        if (not m_IsMoving)
-        {
-            GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
-            m_CurrentCubeIndex = -1;
 
-            m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
-            m_TargetPos.y = m_CurrentPos.y + threeQuartersCubeSizeY;
-
-            m_ControlPoint.x = m_CurrentPos.x - cubeSizeX * 0.5f;
-            m_ControlPoint.y = m_CurrentPos.y - threeQuartersCubeSizeY * 1.5f;
-
-            Move(m_TargetPos, m_ControlPoint, m_MovingDuration);
-            m_JumpedOff = true;
-
-        }
-
-    }
 }
 
 void dae::Qbert::Reset()
@@ -264,7 +309,9 @@ void dae::Qbert::Reset()
 	m_ControlPoint = glm::vec2(0.0f, 0.0f);
 	m_IsMoving = false;
     m_JumpedOff = false;
+    m_Frozen = false;
 	m_MoveTimer = 0.0f;
+    m_HasJustJumped = false;
 	Parent->GetTransform()->SetLocalPosition(m_CurrentPos);
 	m_pTextureComponent->SetSourceInfo(0, 0, 16, 16);
 
@@ -274,6 +321,8 @@ void dae::Qbert::Reset()
 void dae::Qbert::Move(const glm::vec2& target, glm::vec2& controlPoint, float duration)
 {
 	m_IsMoving = true;
+    m_Frozen = false;
+    m_HasJustJumped = false;
 	m_TargetPos = target;
 	m_ControlPoint = controlPoint;
 	m_MovingDuration = duration;
