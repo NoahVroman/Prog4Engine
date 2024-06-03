@@ -33,8 +33,14 @@ namespace dae
 
 		LevelPyramid* m_pLevelPyramid;
 
+
+		float m_FlightTime;
+		bool m_FinalPositionReached;
+
+
 		float m_FloatTime;
 		float QbertFallSpeed;
+
 
 		int m_StartRow;
 		bool m_IsLeft;
@@ -51,6 +57,8 @@ namespace dae
 		int m_FPSIdle;
 		int m_CurrentFrame;
 		int m_MaxFramesIdle;
+
+
 
 		int m_PreviousRow;
 		int m_PreviousIndex;

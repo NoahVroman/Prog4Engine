@@ -78,8 +78,14 @@ namespace dae
 			}
 		}
 
-		void SetParent(GameObject* pParent);
+		void AddChild(GameObject* pChild);
+		void RemoveChild(GameObject* pChild);
+
+		void SetParent(GameObject* pParent, bool keepWorldPosition);
 		GameObject* GetParent() const { return m_pParent; }
+
+
+
 	
 		void RemoveAllChildren()
 		{
@@ -113,6 +119,9 @@ namespace dae
 		std::vector<std::unique_ptr<Component>> components;
 
 		TransfomComponent* m_pTransformComponent{ nullptr };
+
+		bool IsDescendantOf(GameObject* potentialAncestor) const;
+
 
 	};
 };

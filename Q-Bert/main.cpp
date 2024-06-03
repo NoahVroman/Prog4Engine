@@ -60,6 +60,8 @@ void load()
 
 	gameScene.Add(level);
 
+
+
 	auto Qbert = std::make_shared<dae::GameObject>();
 	auto qbertcomponent =  Qbert->AddComponent<dae::Qbert>(pyramid);
 	
@@ -69,6 +71,17 @@ void load()
 	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(Qbert));
 
 	gameScene.Add(Qbert);
+
+	auto Disk = std::make_shared<dae::GameObject>();
+	Disk->AddComponent<dae::Disk>(Qbert.get(), pyramid, 4, true, 0);
+
+	gameScene.Add(Disk);
+
+	auto Disk2 = std::make_shared<dae::GameObject>();
+	Disk2->AddComponent<dae::Disk>(Qbert.get(), pyramid, 6,false, 0);
+
+	gameScene.Add(Disk2);
+
 
 
 	auto Coily = std::make_shared<dae::GameObject>();
@@ -86,10 +99,6 @@ void load()
 	gameScene.Add(SlickSam);
 
 
-	auto Disk = std::make_shared<dae::GameObject>();
-	Disk->AddComponent<dae::Disk>(Qbert.get(), pyramid,4 , false, 0);
-
-	gameScene.Add(Disk);
 
 	auto levelManager = std::make_shared<dae::GameObject>();
 	levelManager->AddComponent<dae::LevelManager>(pyramid, Qbert.get(), Coily.get(), Ugg.get());

@@ -1,5 +1,6 @@
 #include "Disk.h"
 #include "GameTime.h"
+#include <glm/glm.hpp>
 
 dae::Disk::Disk(GameObject* const pParent, GameObject* qbert, LevelPyramid* levelPyramid, int startRow, bool isLeft, int colorindex)
 	:Component(pParent)
@@ -21,6 +22,8 @@ dae::Disk::Disk(GameObject* const pParent, GameObject* qbert, LevelPyramid* leve
 	,m_MaxFramesIdle{4}
 	,m_PreviousRow{-1}
 	,m_PreviousIndex{-1}
+	,m_FinalPositionReached{false}
+	,m_FlightTime{2.f}
 
 
 {
@@ -76,16 +79,39 @@ void dae::Disk::Update()
 	{
 		if (m_PreviousRow == m_StartRow && m_PreviousIndex == m_pLevelPyramid->GetFirstCubeInRow(m_StartRow))
 		{
-
+			m_Activated = true;
 		}
 	}
 	else if ((m_pQbert->GetCurrentRow() == m_StartRow) && m_pQbert->GetCurrentIndex() == -1 && !m_IsLeft)
 	{
 		if (m_PreviousRow == m_StartRow && m_PreviousIndex == m_pLevelPyramid->GetLastCubeInRow(m_StartRow))
 		{
-
+			m_Activated = true;
 		}
 	}
 	m_PreviousRow = m_pQbert->GetCurrentRow();
 	m_PreviousIndex = m_pQbert->GetCurrentIndex();
+
+	if (m_Activated)
+	{
+		m_FloatTime += GameTime::GetInstance().GetDeltaTime();
+
+		if (!m_FinalPositionReached)
+		{
+
+			
+			float progress = m_FloatTime / m_FlightTime;
+			glm::vec2 newPosition = glm::mix(m_CurrentPos, m_TargetPos, progress);
+			m_pParent->GetTransform()->SetLocalPosition(newPosition);
+
+
+			m_QbertObj->GetTransform()->SetLocalPosition({newPosition.x,newPosition.y - 27});
+
+			if (progress >= 1.0f)
+			{
+				m_FinalPositionReached = true;
+				m_pParent->Destroy();
+			}
+		}
+	}
 }
