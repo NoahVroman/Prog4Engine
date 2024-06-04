@@ -38,7 +38,6 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 		break;
 	case dae::Event::PyramidCompleted:
 		m_RoundWon = true;
-		m_pCoily->Destroy();
 		m_pQbert->GetComponent<Qbert>()->SetFrozen(true);
 		break;
 	case dae::Event::RoundWon:
@@ -50,6 +49,10 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 		m_Pyramid->NextRound();
 		m_pQbert->GetComponent<Qbert>()->Reset();
 		m_pQbert->GetComponent<Qbert>()->SetFrozen(false);
+		m_pCoily->Destroy();
+		m_pUggWrongWay->Destroy();
+		m_pSlickSam->Destroy();
+
 
 		for (auto& cube : m_Pyramid->GetCubes())
 		{
@@ -62,7 +65,7 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 		break;
 	case dae::Event::QbertDied:
 		m_pQbert->GetComponent<Qbert>()->SetDeath(true);
-
+		m_pCoily->Destroy();
 		break;
 	case dae::Event::UggWrongWayDied:
 		m_pUggWrongWay->Destroy();
@@ -76,7 +79,7 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 		break;
 		case dae::Event::SlickSamDied:
 			m_pSlickSam->Destroy();
-			break;
+		break;
 	default:
 		break;
 	}

@@ -18,6 +18,7 @@ namespace dae
 		UggWrongWay& operator=(const UggWrongWay& other) = delete;
 		UggWrongWay& operator=(UggWrongWay&& other) = delete;
 
+		void SetFreeze(bool freeze) { m_Freeze = freeze; }
 
 		void Update() override;
 
@@ -29,7 +30,9 @@ namespace dae
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 		TextureComponent* m_pTextureComponent;
 		LevelPyramid* m_pPyramid;
-		
+
+		bool m_Freeze;
+
 		glm::vec2 m_CurrentPos;
 
 		Subject m_Subject;

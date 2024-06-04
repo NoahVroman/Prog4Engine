@@ -19,11 +19,16 @@ namespace dae
 		SlickSam& operator=(const SlickSam& other) = delete;
 		SlickSam& operator=(SlickSam&& other) = delete;
 
+		void SetFreeze(bool freeze) { m_Freeze = freeze; }
+
 		void Update() override;
 
 		Subject& GetSubject() { return m_Subject; }
 
 		private:
+
+		bool m_Freeze;
+
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 		TextureComponent* m_pTextureComponent;
 		LevelPyramid* m_pPyramid;

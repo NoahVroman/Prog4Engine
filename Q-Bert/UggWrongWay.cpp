@@ -47,6 +47,10 @@ dae::UggWrongWay::UggWrongWay(GameObject* const pParent, LevelPyramid* pyramid, 
 
 void dae::UggWrongWay::Update()
 {
+	if (m_Freeze)
+	{
+		return;
+	}
 
 	
 	float deltaTime = GameTime::GetInstance().GetDeltaTime();

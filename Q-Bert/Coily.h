@@ -30,6 +30,7 @@ namespace dae
 
 		void Reset();
 
+		void SetFreeze(bool freeze) { m_Freeze = freeze; }
 
 		Qbert* GetQbert() const { return m_pQbert; }
 		LevelPyramid* GetPyramid() const { return m_pPyramid; }
@@ -40,6 +41,7 @@ namespace dae
 
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 
+		bool m_Freeze;
 
 		Qbert* m_pQbert;
 		LevelPyramid* m_pPyramid;

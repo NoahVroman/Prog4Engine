@@ -33,10 +33,15 @@ dae::SlickSam::SlickSam(GameObject* const pParent, LevelPyramid* pyramid, Qbert*
 
 void dae::SlickSam::Update()
 {
+	if (m_Freeze)
+	{
+		return;
+	}
+
 	float deltaTime = GameTime::GetInstance().GetDeltaTime();
 	m_ElapsedTime += deltaTime;
 
-	if (m_pQbert->GetCurrentIndex() == m_pPyramidMovementComponent->GetCurrentIndex())
+	if ((m_pQbert->GetCurrentIndex() == m_pPyramidMovementComponent->GetCurrentIndex()) || (m_pPyramidMovementComponent->GetCurrentRow() >= m_pPyramid->GetRows()-1))
 	{
 		m_Subject.Notify(Event::SlickSamDied);
 	}
