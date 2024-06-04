@@ -1,7 +1,7 @@
 #include "PyramidMovementComponent.h"
 #include "TransfomComponent.h"
 #include "GameTime.h"
-dae::PyramidMovementComponent::PyramidMovementComponent(GameObject* const pParrent, LevelPyramid* pPyramid, const glm::vec2& startPos, float movingDuration, int startIndex, int startRow)
+dae::PyramidMovementComponent::PyramidMovementComponent(GameObject* const pParrent, LevelPyramid* pPyramid, const glm::vec2& startPos, float movingDuration, int& startIndex, int& startRow)
 	: Component(pParrent)
 	, m_pPyramid(pPyramid)
 	, m_CurrentPos(startPos)
@@ -162,6 +162,11 @@ void dae::PyramidMovementComponent::Update()
 	}
 
 
+}
+
+bool dae::PyramidMovementComponent::HasJustJumped() const
+{
+	return m_HasJustJumped;
 }
 
 void dae::PyramidMovementComponent::Jump(const glm::vec2& targetPos, const glm::vec2& controlPoint, float duration)

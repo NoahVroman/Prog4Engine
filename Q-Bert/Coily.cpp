@@ -41,7 +41,6 @@ dae::Coily::Coily(GameObject* const pParent, Qbert* pQbert, LevelPyramid* pyrami
 
 void dae::Coily::Update()
 {
-
 	CoilyState::CoilyStateEnum nextState = m_CurrentState->GetNextState(this);
 	if (nextState == m_CurrentState->GetState())
 	{

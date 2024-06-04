@@ -85,7 +85,7 @@ void load()
 
 
 	auto Coily = std::make_shared<dae::GameObject>();
-	Coily->AddComponent<dae::Coily>(qbertcomponent,pyramid,2,1);
+	Coily->AddComponent<dae::Coily>(qbertcomponent,pyramid,4,2);
 
 	gameScene.Add(Coily);
 

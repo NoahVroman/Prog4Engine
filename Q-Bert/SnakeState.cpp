@@ -6,6 +6,7 @@ dae::SnakeState::SnakeState(GameObject* const pParent)
     , m_JumpTimer{ 0.0f }
     , m_Direction{ dae::SnakeState::Direction::UpRight }
 {
+
 }
 
 dae::SnakeState::~SnakeState()
@@ -15,14 +16,15 @@ dae::SnakeState::~SnakeState()
 
 void dae::SnakeState::Update(Coily* coily)
 {
-    if (GetPyramidMovementComponent()->HasJustJumped())
-    {
-        if (GetPyramidMovementComponent()->GetCurrentIndex() == coily->GetQbert()->GetCurrentIndex())
-        {
-            coily->GetSubject().Notify(Event::QbertDied);
-        }
+    glm::vec2 qbertPos = coily->GetQbert()->GetCurrentPos() - GetPyramidMovementComponent()->GetCurrentPos();
 
+
+
+    if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+    {
+        coily->GetSubject().Notify(Event::QbertDied);
     }
+
 
     m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
 
@@ -30,13 +32,10 @@ void dae::SnakeState::Update(Coily* coily)
     {
         
         HandleMovement(coily);
-
-
         m_JumpTimer = 0.0f;
     }
 
     UpdateTexture();
-
 
 
 }

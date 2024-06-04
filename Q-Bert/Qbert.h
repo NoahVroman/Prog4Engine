@@ -32,23 +32,33 @@ namespace dae
 		Subject& GetSubject() { return m_Subject; }
 
 		glm::vec2 GetCurrentPos() const { return m_CurrentPos; }
+
 		int GetCurrentIndex() const 
 		{
 			if (m_HasJustJumped)
 			{
 				return m_CurrentCubeIndex;
 			}
+			else if (m_CurrentCubeIndex == 0)
+			{
+				return 0;
+			}
 			return -1;
 		}
+
 		int GetCurrentRow() const { return m_CurrentRow; }
 
 		bool IsJumpedOff() const { return m_JumpedOff; }
 		bool isMoving() const { return m_IsMoving; }	
 		bool IsFrozen() const { return m_Frozen; }
-
 		void SetFrozen(bool frozen) { m_Frozen = frozen; }
-
+		bool isOnDisk() const { return m_isOnDisk; }
 		void Reset();
+
+		void Die();
+		void SetDeath(bool death) { m_IsDead = death; }
+		void SetIsOnDisk(bool isOnDisk) { m_isOnDisk = isOnDisk; }
+		void SetCurrentPos(const glm::vec2& pos) { m_CurrentPos = pos; }
 
 
 		bool IsOnLastCubeInRow()
@@ -59,8 +69,6 @@ namespace dae
 		{
 			return m_CurrentCubeIndex == GetFirstCubeInRow(m_CurrentRow);
 		}
-
-	
 
 		private: //PYRAMID 
      	LevelPyramid* m_pPyramid;
@@ -82,15 +90,24 @@ namespace dae
 		bool m_PendingJumpedOff{false};
 		bool m_JumpedOff{false};
 		bool m_HasJustJumped{false};
+		bool m_isOnDisk{ false };
 
 		private: //CUBE INDEX
 		int m_CurrentRow;
 		int m_CurrentCubeIndex;
 
+		private: //DEATH 
+		bool m_IsDead{ false };
+		float m_DeathTimer;
+		float m_DeathDuration;
+
+
 		private: //MISC
 		GameObject* Parent;
 		dae::TextureComponent::SpriteInfo spriteInfo;
-		TextureComponent* m_pTextureComponent{ nullptr };
+		TextureComponent* m_pCurseTexture{ nullptr };
+		TextureComponent* m_pQbertTexture{ nullptr };
+
 		Subject m_Subject;
 
 		private: //FUNCTIONS

@@ -9,7 +9,7 @@ namespace dae
 	class PyramidMovementComponent : public Component
 	{
 	public:
-		PyramidMovementComponent(GameObject* const pParrent,LevelPyramid* pPyramid, const glm::vec2& startPos,float movingDuration,int startIndex,int startRow);
+		PyramidMovementComponent(GameObject* const pParrent,LevelPyramid* pPyramid, const glm::vec2& startPos,float movingDuration,int& startIndex,int& startRow);
 		~PyramidMovementComponent();
 
 		void MoveDownRight();
@@ -38,7 +38,7 @@ namespace dae
 		bool IsOnLastCubeInRow() { return m_CurrentIndex == GetLastCubeInRow(m_CurrentRow); }
 		bool IsOnFirstCubeInRow() { return m_CurrentIndex == GetFirstCubeInRow(m_CurrentRow); }
 
-		bool HasJustJumped() const { return m_HasJustJumped; }
+		bool HasJustJumped() const;
 
 
 

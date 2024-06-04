@@ -2,10 +2,12 @@
 #include "Component.h"
 #include <string>
 #include <memory>
+#include <glm/glm.hpp>
+#include "GameObject.h"
+#include "TransfomComponent.h"
 
 namespace dae
 {
-	class GameObject;
 	class Texture2D;
 	class TextureComponent : public Component
 	{
@@ -45,8 +47,10 @@ namespace dae
 			m_SpriteInfo.SrcHeight = SourceHeight;
 
 		}
+		void SetHidden(bool hidden) { isHidden = hidden; }
 
 		const std::string& GetFilename() const { return m_Filename; }
+
 
 		
 		private:
@@ -55,7 +59,7 @@ namespace dae
 		bool m_NeedsUpdate{ true };
 
 		SpriteInfo m_SpriteInfo;
-
+		bool isHidden{ false };
 
 	};
 

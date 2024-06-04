@@ -37,7 +37,7 @@ dae::Disk::Disk(GameObject* const pParent, GameObject* qbert, LevelPyramid* leve
         m_pLevelPyramid->GetPosFirstCubeInRow(m_StartRow) + offset :
         m_pLevelPyramid->GetPosLastCubeInRow(m_StartRow) + offset;
 
-    m_SpriteInfo = { 32, 32, 0, 0, 16, 10 };
+    m_SpriteInfo = { 32, 16, 0, 0, 16, 10 };
     m_pTextureComponent = m_pParent->AddComponent<TextureComponent>("Disk.png", m_SpriteInfo);
 
     m_pParent->GetTransform()->SetLocalPosition(m_CurrentPos);
@@ -47,12 +47,14 @@ dae::Disk::~Disk() = default;
 
 void dae::Disk::Update()
 {
+
     UpdateAnimation();
     CheckQbertActivation();
 
     if (m_Activated)
     {
         UpdateFlight();
+
     }
 }
 
@@ -74,11 +76,13 @@ void dae::Disk::CheckQbertActivation()
     int currentRow = m_pQbert->GetCurrentRow();
     int currentIndex = m_pQbert->GetCurrentIndex();
 
+
     if ((currentRow == m_StartRow) && (currentIndex == -1))
     {
         if ((m_IsLeft && (m_PreviousRow == m_StartRow) && (m_PreviousIndex == m_pLevelPyramid->GetFirstCubeInRow(m_StartRow))) ||
             (!m_IsLeft && (m_PreviousRow == m_StartRow) && (m_PreviousIndex == m_pLevelPyramid->GetLastCubeInRow(m_StartRow))))
         {
+            m_pQbert->SetIsOnDisk(true);
             m_Activated = true;
         }
     }
@@ -89,37 +93,48 @@ void dae::Disk::CheckQbertActivation()
 
 void dae::Disk::UpdateFlight()
 {
-    if (!m_FinalPositionReached)
+    if (!m_pQbert->isMoving())
     {
-        m_pQbert->SetFrozen(true);
 
-        m_FloatTime += GameTime::GetInstance().GetDeltaTime();
-        float progress = m_FloatTime / m_FlightTime;
-
-        glm::vec2 newPosition = glm::mix(m_CurrentPos, m_TargetPos, progress);
-        m_pParent->GetTransform()->SetLocalPosition(newPosition);
-        m_QbertObj->GetTransform()->SetLocalPosition({ newPosition.x, newPosition.y - 27 });
-
-        if (progress >= 1.0f)
+        if (!m_FinalPositionReached)
         {
-            m_FinalPositionReached = true;
-            m_pParent->GetTransform()->SetLocalPosition(m_TargetPos - glm::vec2{ 0.f,1000.f });
+            m_pQbert->SetFrozen(true);
 
-            m_FallTime = 0.0f; 
+            m_FloatTime += GameTime::GetInstance().GetDeltaTime();
+            float progress = m_FloatTime / m_FlightTime;
+
+            glm::vec2 newPosition = glm::mix(m_CurrentPos, m_TargetPos, progress);
+            m_pParent->GetTransform()->SetLocalPosition(newPosition);
+            m_QbertObj->GetTransform()->SetLocalPosition({ newPosition.x, newPosition.y - 27 });
+
+            if (progress >= 1.0f)
+            {
+                m_FinalPositionReached = true;
+
+                m_pParent->GetTransform()->SetLocalPosition(m_TargetPos - glm::vec2{ 0.f,1000.f });
+
+                m_FallTime = 0.0f; 
+            }
         }
-    }
-    else
-    {
-        m_FallTime += GameTime::GetInstance().GetDeltaTime();
-        float fallProgress = m_FallTime / m_MaxFallTime;
-
-        glm::vec2 fallPosition = glm::mix(m_TargetPos, m_pQbert->GetCurrentPos(), fallProgress);
-        m_QbertObj->GetTransform()->SetLocalPosition(fallPosition);
-
-        if (fallProgress >= 1.0f)
+        else
         {
-            m_pParent->Destroy();
-            m_pQbert->Reset();
+
+            m_FallTime += GameTime::GetInstance().GetDeltaTime();
+            float fallProgress = m_FallTime / m_MaxFallTime;
+
+            
+            m_pQbert->SetCurrentPos(m_TargetPos + glm::vec2{ 0.f, -17 });
+
+            glm::vec2 fallPosition = glm::mix(m_pQbert->GetCurrentPos(), { m_TargetPos.x,m_TargetPos.y + 17.f }, fallProgress);
+            m_QbertObj->GetTransform()->SetLocalPosition(fallPosition);
+
+            if (fallProgress >= 1.0f)
+            {
+
+                m_pParent->Destroy();
+                m_pQbert->Reset();
+
+            }
         }
     }
 }

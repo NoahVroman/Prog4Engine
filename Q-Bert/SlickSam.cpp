@@ -54,7 +54,7 @@ void dae::SlickSam::Update()
 			m_pPyramidMovementComponent->MoveDownLeft();
 		}
 	}
-	if (not m_pPyramidMovementComponent->IsMoving())
+	if (m_pPyramidMovementComponent->HasJustJumped())
 	{
 
 		if (m_pPyramidMovementComponent->GetCurrentRow() <= m_pPyramid->GetRows() - 1)

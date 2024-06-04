@@ -3,6 +3,8 @@
 #include "SnakeState.h"
 #include "TextComponent.h"
 #include "GameTime.h"
+#include <iostream>
+
 dae::EggState::EggState(GameObject* const pParent)
     : CoilyState(CoilyState::CoilyStateEnum::Egg,pParent)
     , m_JumpInterval{ 1.f }
@@ -40,16 +42,14 @@ dae::CoilyState::CoilyStateEnum dae::EggState::GetNextState(Coily*)
 void dae::EggState::Update(Coily*coily)
 {
 
-    m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
 
-    if (GetPyramidMovementComponent()->HasJustJumped())
+    if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
     {
-        if (GetPyramidMovementComponent()->GetCurrentIndex() == coily->GetQbert()->GetCurrentIndex())
-        {
-            coily->GetSubject().Notify(Event::QbertDied);
-        }
-
+        coily->GetSubject().Notify(Event::QbertDied);
     }
+
+
+    m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
 
     if (GetPyramidMovementComponent()->GetCurrentRow() < GetPyramidMovementComponent()->GetRows() - 1)
     {
@@ -64,6 +64,7 @@ void dae::EggState::Update(Coily*coily)
 
         if (m_JumpTimer >= m_JumpInterval)
         {
+
             int random = rand() % 2;
             if (random == 0)
             {

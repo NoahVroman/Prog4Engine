@@ -51,7 +51,6 @@ void dae::LevelCube::ChangeColor()
 
 void dae::LevelCube::RevertColor()
 {
-
 	if (m_Turned)
 	{
 		if (m_Level == 1)
@@ -62,31 +61,32 @@ void dae::LevelCube::RevertColor()
 		{
 			if (m_HalfTurned)
 			{
-				ChangeToSecondColor();
-				m_HalfTurned = false ;
+				ChangeToFirstColor();
+				m_HalfTurned = false;
 			}
 			else
 			{
-				ChangeToFirstColor();
+				ChangeToSecondColor();
 			}
-		}
-		else
-		{
-			ChangeToFirstColor();
+
+			ChangeToSecondColor();
+			m_HalfTurned = true;
 		}
 
 		m_Turned = false;
 	}
 	else
 	{
-		if (m_Level == 2 && m_HalfTurned)
+		if (m_Level == 2)
 		{
-			ChangeToFirstColor();
-			m_HalfTurned = false;
+			if (m_HalfTurned)
+			{
+				ChangeToFirstColor();
+				m_HalfTurned = false;
+			}
 		}
 	}
 	m_Subject.Notify(Event::CubeChanged);
-
 }
 
 void dae::LevelCube::ChangeToFirstColor()

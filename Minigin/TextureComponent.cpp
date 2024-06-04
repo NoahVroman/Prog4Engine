@@ -20,6 +20,9 @@ dae::TextureComponent::~TextureComponent()
 
 void dae::TextureComponent::Render() const
 {
+	if (isHidden)
+		return;
+
 	const auto& pos = GetOwnerObject()->GetTransform()->GetWorldPosition();
 	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y,m_SpriteInfo.width,m_SpriteInfo.height,m_SpriteInfo.SrcX,m_SpriteInfo.SrcY,m_SpriteInfo.SrcWidth,m_SpriteInfo.SrcHeight);
 }

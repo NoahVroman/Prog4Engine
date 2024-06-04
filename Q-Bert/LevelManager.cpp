@@ -61,7 +61,7 @@ void dae::LevelManager::NotifyObserver(Subject* const, Event currentEvent)
 	case dae::Event::LevelCompleted:
 		break;
 	case dae::Event::QbertDied:
-		m_pQbert->GetComponent<Qbert>()->Reset();
+		m_pQbert->GetComponent<Qbert>()->SetDeath(true);
 
 		break;
 	case dae::Event::UggWrongWayDied:
