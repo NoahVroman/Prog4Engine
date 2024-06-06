@@ -16,6 +16,7 @@ namespace dae
 		ScoreUpdated,
 		LivesChanged,
 		QbertJumped,
+		JumpedOnDisk,
 	
 	};
 

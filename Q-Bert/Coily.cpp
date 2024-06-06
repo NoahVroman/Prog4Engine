@@ -7,9 +7,9 @@
 #include "SnakeState.h"
 #include "ServiceLocator.h"
 
-dae::Coily::Coily(GameObject* const pParent, Qbert* pQbert, LevelPyramid* pyramid, int StartingIndex, int StartRow)
+dae::Coily::Coily(GameObject* const pParent, std::vector<std::shared_ptr<GameObject>> qberts, LevelPyramid* pyramid, int StartingIndex, int StartRow)
 	:Component(pParent)
-	, m_pQbert(pQbert)
+	, m_pQbert(qberts)
 	, m_pPyramid(pyramid)
 	, m_StartingIndex(StartingIndex)
 	, m_StartRow(StartRow)
@@ -68,8 +68,19 @@ void dae::Coily::Reset()
 	m_pTextureComponent->SetSourceInfo(0,0,16,32);
 	m_CurrentState = m_pCoilyState[CoilyState::CoilyStateEnum::Egg].get();
 
+}
 
-
+dae::Qbert* dae::Coily::GetQbert() const
+{
+	for (auto& qbert : m_pQbert)
+	{
+		auto qbertComponent = qbert->GetComponent<Qbert>();
+		if (qbertComponent != nullptr)
+		{
+			return qbertComponent;
+		}
+	}
+	return nullptr;
 }
 
 

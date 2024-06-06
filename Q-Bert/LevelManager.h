@@ -17,10 +17,12 @@ namespace dae
     class LevelManager : public Component, public Observer
     {
     public:
-        LevelManager(GameObject* const pParent, LevelPyramid* pyramid, GameObject* pQbert);
+        LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert);
         void InitializeRound(int currentRound,bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval,int gameMode);
         void NotifyObserver(GameObject* const obj, Event currentEvent) override;
         void Update() override;
+        void SpawnCoily();
+
 
     private:
         void HandleRoundWon();
@@ -28,10 +30,9 @@ namespace dae
         void UpdateFlashingAnimation(float deltaTime);
         void SpawnSlickSam();
         void SpawnUggWrongWay();
-        void SpawnCoily();
 
         LevelPyramid* m_Pyramid;
-        GameObject* m_pQbert;
+        std::vector<std::shared_ptr<GameObject>> m_pQbert;
         GameObject* m_pCoily;
         std::vector<GameObject*> m_UggWrongWays;
         std::vector<GameObject*> m_SlickSams;
@@ -43,6 +44,9 @@ namespace dae
         int m_CurrentRound;
         bool m_SpawnSlickSams;
         bool m_SpawnUggWrongs;
+        bool m_SpawnCoily;
+
+        float m_CoilySpawnMaxTime;
         float m_SlickSamsSpawnInterval;
         float m_UggWrongSpawnInterval;
 
@@ -53,7 +57,9 @@ namespace dae
         int m_CurrentColor;
         bool m_RoundWon;
 
-        float m_SlickSamSpawnTimer;
+        float m_CoilySpawnTimer;
         float m_UggWrongWaySpawnTimer;
+        float m_SlickSamSpawnTimer;
+
     };
 }

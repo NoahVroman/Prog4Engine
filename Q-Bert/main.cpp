@@ -157,7 +157,6 @@ void LoadTextRound(const std::string& filePath) {
 		scenename += "-";
 		scenename += std::to_string(round.roundNumber);
 
-
 		auto& scene = dae::SceneManager::GetInstance().CreateScene(scenename);
 
 		auto level = std::make_shared<dae::GameObject>();
@@ -180,17 +179,17 @@ void LoadTextRound(const std::string& filePath) {
 
 		scene.Add(level);
 
-		auto Qbert = std::make_shared<dae::GameObject>();
-		Qbert->AddComponent<dae::Qbert>(pyramid);
 
+		std::vector<std::shared_ptr<dae::GameObject>> qberts;
 
 		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(Qbert));
 		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(Qbert));
 		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(Qbert));
-		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(Qbert));
 
+		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(Qbert1));
 
 		scene.Add(Qbert);
+		dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_LEFT , InputType::DownThisFrame, MoveUpLeftCommand(Qbert1));
 
 		auto Disk = std::make_shared<dae::GameObject>();
 		Disk->AddComponent<dae::Disk>(Qbert.get(), pyramid, 4, true, round.colorIdx);
@@ -207,26 +206,27 @@ void LoadTextRound(const std::string& filePath) {
 		//auto Coily = std::make_shared<dae::GameObject>();
 		//Coily->AddComponent<dae::Coily>(qbertcomponent, pyramid, 4, 2);
 
-		//scene.Add(Coily);
 
+		auto Disk = std::make_shared<dae::GameObject>();
+		Disk->AddComponent<dae::Disk>(Qbert1.get(), pyramid, 4, true, round.colorIdx);
 
-		//auto Ugg = std::make_shared<dae::GameObject>();
-		//Ugg->AddComponent<dae::UggWrongWay>(pyramid, 6, true);
-		//scene.Add(Ugg);
+		scene.Add(Disk);
 
-		//auto SlickSam = std::make_shared<dae::GameObject>();
-		//SlickSam->AddComponent<dae::SlickSam>(pyramid, qbertcomponent, 1, 1);
-		//scene.Add(SlickSam);
+		auto Disk2 = std::make_shared<dae::GameObject>();
+		Disk2->AddComponent<dae::Disk>(Qbert1.get(), pyramid, 6, false, round.colorIdx);
 
+		scene.Add(Disk2);
 
+	
 
 		auto levelManager = std::make_shared<dae::GameObject>();
-		levelManager->AddComponent<dae::LevelManager>(pyramid, Qbert.get());
+		levelManager->AddComponent<dae::LevelManager>(pyramid, qberts);
 		levelManager->GetComponent<dae::LevelManager>()->InitializeRound(round.roundNumber,round.spawnSlickSams, round.spawnUggWrongs, round.slickSamsSpawnInterval, round.uggWrongSpawnInterval, round.gameMode);
 
-		scene.Add(levelManager);
 
+		scene.Add(levelManager);
 	}
+
 
 
 }
@@ -242,10 +242,7 @@ void load()
 	dae::ServiceLocator::RegisterSoundSystem(std::move(soundSystem));
 
 
-
-	LoadTextRound("Level01Solo.txt");
-	
-
+	LoadTextRound("Level01CoOp.txt");
 
 
 	

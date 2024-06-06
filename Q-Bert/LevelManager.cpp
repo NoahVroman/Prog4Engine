@@ -11,7 +11,7 @@
 #include "Scene.h"
 #include "ServiceLocator.h"
 
-dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, GameObject* pQbert)
+dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert)
     : Component(pParent)
     , m_Pyramid{ pyramid }
     , m_pQbert{ pQbert }
@@ -28,10 +28,23 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
     , m_SlickSamsSpawnInterval{ 0 }
     , m_UggWrongSpawnInterval{ 0 }
     ,m_pParent{pParent}
+    ,m_GameMode{0}
+    ,m_CurrentRound{0}
+    ,m_SpawnCoily{false}
+    , m_CoilySpawnMaxTime{ 5.f }
+    ,m_CoilySpawnTimer{0}
+    ,m_pCoily{nullptr}
+
+
 {
 
     m_Pyramid->GetSubject().AddObserver(this);
-    m_pQbert->GetComponent<Qbert>()->GetSubject().AddObserver(this);
+
+    for (auto& qbert : m_pQbert)
+    {
+        qbert->GetComponent<Qbert>()->GetSubject().AddObserver(this);
+
+    }
 
     ServiceLocator::GetSoundSystem().AddSound("../Data/Sounds/QBertJump.wav");
 
@@ -58,13 +71,46 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
         break;
     case dae::Event::PyramidCompleted:
         m_RoundWon = true;
-        m_pQbert->GetComponent<Qbert>()->SetFrozen(true);
+
+        for (auto& qbert : m_pQbert)
+        {
+            qbert->GetComponent<Qbert>()->SetFrozen(true);
+
+        }
+
         break;
     case dae::Event::RoundWon:
         HandleRoundWon();
         break;
     case dae::Event::QbertDied:
-        m_pQbert->GetComponent<Qbert>()->SetDeath(true);
+
+        for (auto& qberts : m_pQbert)
+        {
+            qberts->GetComponent<Qbert>()->SetDeath(true);
+        }
+
+        for (auto& slicksams : m_SlickSams)
+        {
+            slicksams->Destroy();
+        }
+        m_SlickSams.clear();
+
+        for (auto& uggWrongWay : m_UggWrongWays)
+        {
+			uggWrongWay->Destroy();
+		}
+        m_UggWrongWays.clear();
+
+        if (m_pCoily != nullptr)
+        {
+            m_pCoily->Destroy();
+        }
+
+        m_SpawnCoily = false;
+		m_CoilySpawnTimer = 0;
+        m_UggWrongWaySpawnTimer = 0;
+        m_SlickSamSpawnTimer = 0;
+        
         break;
     case dae::Event::UggWrongWayDied:
         obj->Destroy();
@@ -87,6 +133,9 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
 
         break;
     }
+    case dae::Event::JumpedOnDisk:
+
+		break;
 
     default:
         break;
@@ -96,6 +145,17 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
 void dae::LevelManager::Update()
 {
     float deltaTime = GameTime::GetInstance().GetDeltaTime();
+
+    if (!m_SpawnCoily)
+    {
+		m_CoilySpawnTimer += deltaTime;
+        if (m_CoilySpawnTimer >= m_CoilySpawnMaxTime)
+        {
+			SpawnCoily();
+			m_CoilySpawnTimer = 0;
+            m_SpawnCoily = true;
+		}
+	}
 
     if (m_RoundWon)
     {
@@ -167,8 +227,13 @@ void dae::LevelManager::UpdateFlashingAnimation(float deltaTime)
 
 void dae::LevelManager::ResetLevel()
 {
-    m_pQbert->GetComponent<Qbert>()->Reset();
-    m_pQbert->GetComponent<Qbert>()->SetFrozen(false);
+    for (auto& qberts : m_pQbert)
+    {
+        qberts->GetComponent<Qbert>()->Reset();
+        qberts->GetComponent<Qbert>()->SetFrozen(false);
+
+    }
+
 
     for (auto& uggWrongWay : m_UggWrongWays)
     {
@@ -195,7 +260,7 @@ void dae::LevelManager::SpawnSlickSam()
 
 
     auto slickSam = std::make_shared<GameObject>();
-    slickSam->AddComponent<SlickSam>(m_Pyramid, m_pQbert->GetComponent<Qbert>(), 1, 1);
+    slickSam->AddComponent<SlickSam>(m_Pyramid, m_pQbert[0]->GetComponent<Qbert>(), 1, 1);
     dae::SceneManager::GetInstance().GetCurrentScene()->Add(slickSam);
     slickSam->GetComponent<SlickSam>()->GetSubject().AddObserver(this);
     m_SlickSams.push_back(slickSam.get());
@@ -214,7 +279,8 @@ void dae::LevelManager::SpawnCoily()
 {
 
     auto coily = std::make_shared<GameObject>();
-    coily->AddComponent<Coily>(m_pQbert->GetComponent<Qbert>(), m_Pyramid ,2,1);
+    coily->AddComponent<Coily>(m_pQbert, m_Pyramid ,2,1);
+    coily->GetComponent<Coily>()->GetSubject().AddObserver(this);
     dae::SceneManager::GetInstance().GetCurrentScene()->Add(coily);
     m_pCoily = coily.get();
 
