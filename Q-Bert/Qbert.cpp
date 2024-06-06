@@ -261,7 +261,6 @@ void dae::Qbert::MoveDownLeft()
         {
             if (not m_IsMoving)
             {
-                m_Subject.Notify(Event::QbertJumped, Parent);
 
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
 
@@ -283,7 +282,6 @@ void dae::Qbert::MoveDownLeft()
         {
             if (not m_IsMoving)
             {
-                m_Subject.Notify(Event::QbertJumped, Parent);
 
 
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);

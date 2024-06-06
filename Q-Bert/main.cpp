@@ -182,30 +182,34 @@ void LoadTextRound(const std::string& filePath) {
 
 		std::vector<std::shared_ptr<dae::GameObject>> qberts;
 
-		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(Qbert));
-		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(Qbert));
-		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(Qbert));
+		auto Qbert1 = std::make_shared<dae::GameObject>();
+		Qbert1->AddComponent<dae::Qbert>(pyramid);
+		qberts.push_back(Qbert1);
 
+
+		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(Qbert1));
+		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(Qbert1));
+		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(Qbert1));
 		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(Qbert1));
 
-		scene.Add(Qbert);
-		dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_LEFT , InputType::DownThisFrame, MoveUpLeftCommand(Qbert1));
+		if (round.gameMode == 1)
+		{
+			auto Qbert2 = std::make_shared<dae::GameObject>();
+			Qbert2->AddComponent<dae::Qbert>(pyramid);
+			qberts.push_back(Qbert2);
 
-		auto Disk = std::make_shared<dae::GameObject>();
-		Disk->AddComponent<dae::Disk>(Qbert.get(), pyramid, 4, true, round.colorIdx);
-
-		scene.Add(Disk);
-
-		auto Disk2 = std::make_shared<dae::GameObject>();
-		Disk2->AddComponent<dae::Disk>(Qbert.get(), pyramid, 6, false, round.colorIdx);
-
-		scene.Add(Disk2);
+			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_L, InputType::DownThisFrame, MoveDownRightCommand(Qbert2));
+			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_K, InputType::DownThisFrame, MoveDownLeftCommand(Qbert2));
+			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_J, InputType::DownThisFrame, MoveUpLeftCommand(Qbert2));
+			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_I, InputType::DownThisFrame, MoveUpRightCommand(Qbert2));
 
 
+		}
 
-		//auto Coily = std::make_shared<dae::GameObject>();
-		//Coily->AddComponent<dae::Coily>(qbertcomponent, pyramid, 4, 2);
-
+		for (const auto& qbert : qberts)
+		{
+			scene.Add(qbert);
+		}
 
 		auto Disk = std::make_shared<dae::GameObject>();
 		Disk->AddComponent<dae::Disk>(Qbert1.get(), pyramid, 4, true, round.colorIdx);
