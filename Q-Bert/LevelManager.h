@@ -18,7 +18,7 @@ namespace dae
     {
     public:
         LevelManager(GameObject* const pParent, LevelPyramid* pyramid, GameObject* pQbert);
-        void InitializeRound(bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval,int gameMode);
+        void InitializeRound(int currentRound,bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval,int gameMode);
         void NotifyObserver(GameObject* const obj, Event currentEvent) override;
         void Update() override;
 
@@ -40,6 +40,7 @@ namespace dae
 
         int m_GameMode;
         
+        int m_CurrentRound;
         bool m_SpawnSlickSams;
         bool m_SpawnUggWrongs;
         float m_SlickSamsSpawnInterval;

@@ -14,7 +14,8 @@ namespace dae
 		CoilyDied,
 		SlickSamDied,
 		ScoreUpdated,
-		LivesChanged
+		LivesChanged,
+		QbertJumped,
 	
 	};
 

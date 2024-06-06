@@ -9,6 +9,7 @@
 #include "SlickSam.h"
 #include "LevelPyramid.h"
 #include "Scene.h"
+#include "ServiceLocator.h"
 
 dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, GameObject* pQbert)
     : Component(pParent)
@@ -32,12 +33,14 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
     m_Pyramid->GetSubject().AddObserver(this);
     m_pQbert->GetComponent<Qbert>()->GetSubject().AddObserver(this);
 
+    ServiceLocator::GetSoundSystem().AddSound("../Data/Sounds/QBertJump.wav");
 
 
 }
 
-void dae::LevelManager::InitializeRound(bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval, int gameMode)
+void dae::LevelManager::InitializeRound(int currentRound ,bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval, int gameMode)
 {
+    m_CurrentRound = currentRound;
     m_SpawnSlickSams = spawnSlickSams;
     m_SpawnUggWrongs = spawnUggWrongs;
     m_SlickSamsSpawnInterval = slickSamsSpawnInterval;
@@ -65,7 +68,6 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
         break;
     case dae::Event::UggWrongWayDied:
         obj->Destroy();
-
         break;
     case dae::Event::CoilyDied:
         obj->Destroy();
@@ -73,6 +75,19 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
     case dae::Event::SlickSamDied:
         obj->Destroy();
         break;
+
+    case dae::Event::QbertJumped:
+    {
+        unsigned int JumpSoundIndex{};
+        if (JumpSoundIndex == UINT32_MAX)
+        {
+            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
+        }
+        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
+
+        break;
+    }
+
     default:
         break;
     }

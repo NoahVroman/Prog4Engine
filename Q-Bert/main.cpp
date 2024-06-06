@@ -52,6 +52,7 @@ void SoloLevel1()
 
 
 	Round rounds[3]{};
+
 	rounds[0].roundNumber = 1;
 	rounds[0].level = 1;
 	rounds[0].colorIdx = 0;
@@ -149,8 +150,6 @@ void LoadTextRound(const std::string& filePath) {
 	levelFile.close();
 
 
-
-
 	for (auto& round : rounds)
 	{
 		std::string scenename = "Level10";
@@ -223,7 +222,7 @@ void LoadTextRound(const std::string& filePath) {
 
 		auto levelManager = std::make_shared<dae::GameObject>();
 		levelManager->AddComponent<dae::LevelManager>(pyramid, Qbert.get());
-		levelManager->GetComponent<dae::LevelManager>()->InitializeRound(round.spawnSlickSams, round.spawnUggWrongs, round.slickSamsSpawnInterval, round.uggWrongSpawnInterval, round.gameMode);
+		levelManager->GetComponent<dae::LevelManager>()->InitializeRound(round.roundNumber,round.spawnSlickSams, round.spawnUggWrongs, round.slickSamsSpawnInterval, round.uggWrongSpawnInterval, round.gameMode);
 
 		scene.Add(levelManager);
 

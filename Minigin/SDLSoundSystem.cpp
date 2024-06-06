@@ -233,8 +233,10 @@ private:
 					Mix_Chunk* pSound{ Mix_LoadWAV(soundEvent.data.c_str()) };
 					if (pSound)
 					{
+						lock.lock();
 						Sound sound{ pSound, soundEvent.data.c_str() };
 						m_LoadedSounds.emplace_back(sound);
+						lock.unlock();
 					}
 				}
 				break;

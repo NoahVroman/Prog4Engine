@@ -10,7 +10,7 @@ dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid)
 	,m_IsMoving(false)
     ,Parent(pParent)
     ,m_CurrentRow(0)
-    ,m_MovingDuration(0.3f)
+    ,m_MovingDuration(0.4f)
     ,m_MoveTimer(0.0f)
     ,m_ControlPoint(0.0f, 0.0f)
     ,m_HasJustJumped(false)
@@ -21,7 +21,6 @@ dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid)
     m_CurrentPos = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
     m_TargetPos  = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
     
-   ServiceLocator::GetSoundSystem().AddSound("../Data/Sounds/QBertJump.wav");
     
 	spriteInfo.width = 32;
 	spriteInfo.height = 32;
@@ -41,9 +40,6 @@ dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid)
     curseSpriteInfo.SrcY = 0;
     curseSpriteInfo.SrcWidth = 48;
     curseSpriteInfo.SrcHeight = 25;
-
-    
-
 
     m_pCurseTexture = Parent->AddComponent<TextureComponent>("Curses.png", curseSpriteInfo);
     m_pCurseTexture->SetHidden(true);
@@ -75,6 +71,8 @@ void dae::Qbert::Update()
         m_MoveTimer += GameTime::GetInstance().GetDeltaTime();
         if (m_MoveTimer >= m_MovingDuration)
         {
+            m_Subject.Notify(Event::QbertJumped, Parent);
+
 		    m_IsMoving = false;
             m_HasJustJumped = true;
 		    m_MoveTimer = 0.0f;
@@ -100,17 +98,12 @@ void dae::Qbert::MoveUpRight()
 
     if (!m_Frozen && !m_IsDead)
     {
-        unsigned int JumpSoundIndex{};
-        if (JumpSoundIndex == UINT32_MAX)
-        {
-            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
-        }
-        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
 
         if (not IsOnLastCubeInRow())
         {
             if (not m_IsMoving)
             {
+
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
 
                 m_CurrentCubeIndex -= m_CurrentRow;
@@ -129,6 +122,7 @@ void dae::Qbert::MoveUpRight()
             if (not m_IsMoving)
             {
 
+
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
 
 
@@ -146,6 +140,7 @@ void dae::Qbert::MoveUpRight()
             }
 
         }
+
     }
 
 
@@ -155,17 +150,12 @@ void dae::Qbert::MoveUpLeft()
 {
     if (!m_Frozen && !m_IsDead)
     {
-        unsigned int JumpSoundIndex{};
-        if (JumpSoundIndex == UINT32_MAX)
-        {
-            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
-        }
-        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
 
         if (not IsOnFirstCubeInRow())
         {
             if (not m_IsMoving)
             {
+
 
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
 
@@ -186,6 +176,7 @@ void dae::Qbert::MoveUpLeft()
         {
             if (not m_IsMoving)
             {
+
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
 
                 m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
@@ -203,6 +194,7 @@ void dae::Qbert::MoveUpLeft()
 
         }
 
+
     }
 
 }
@@ -212,12 +204,6 @@ void dae::Qbert::MoveDownRight()
 
     if (!m_Frozen && !m_IsDead)
     {
-        unsigned int JumpSoundIndex{};
-        if (JumpSoundIndex == UINT32_MAX)
-        {
-            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
-        }
-        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
 
         if (m_CurrentRow < m_pPyramid->GetRows() - 1)
         {
@@ -244,6 +230,7 @@ void dae::Qbert::MoveDownRight()
         {
             if (not m_IsMoving)
             {
+
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
 
                 m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
@@ -269,17 +256,12 @@ void dae::Qbert::MoveDownLeft()
 {
     if (!m_Frozen && !m_IsDead)
     {
-        unsigned int JumpSoundIndex{};
-        if (JumpSoundIndex == UINT32_MAX)
-        {
-            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
-        }
-        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
 
         if (m_CurrentRow < m_pPyramid->GetRows() - 1)
         {
             if (not m_IsMoving)
             {
+                m_Subject.Notify(Event::QbertJumped, Parent);
 
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
 
@@ -301,6 +283,9 @@ void dae::Qbert::MoveDownLeft()
         {
             if (not m_IsMoving)
             {
+                m_Subject.Notify(Event::QbertJumped, Parent);
+
+
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
 
                 m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
@@ -316,6 +301,7 @@ void dae::Qbert::MoveDownLeft()
             }
 
         }
+
 
     }
 
