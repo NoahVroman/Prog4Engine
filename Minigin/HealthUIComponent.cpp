@@ -26,11 +26,11 @@ void dae::HealthUIComponent::FixedUpdate()
 {
 }
 
-void dae::HealthUIComponent::NotifyObserver(Subject* const pSubject , Event currentEvent)
+void dae::HealthUIComponent::NotifyObserver(GameObject* const pGameobj , Event currentEvent)
 {
 	if (currentEvent == Event::LivesChanged)
 	{
-		auto healthComponent = dynamic_cast<HealthComponent*>(pSubject);
+		auto healthComponent = pGameobj->GetComponent<HealthComponent>();
 		if (healthComponent)
 		{
 			UpdateText(healthComponent->GetLives());

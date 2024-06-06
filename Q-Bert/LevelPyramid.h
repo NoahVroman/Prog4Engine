@@ -31,7 +31,7 @@ namespace dae
 		~LevelPyramid();
 
 
-		virtual void NotifyObserver(Subject* const gameObject, Event currentEvent);
+		virtual void NotifyObserver(GameObject* const gameObject, Event currentEvent);
 
 		LevelPyramid(const LevelPyramid& other) = delete;
 		LevelPyramid(LevelPyramid&& other) = delete;
@@ -75,6 +75,7 @@ namespace dae
 		void ContstructPyramid();
 
 		PyramidSettings m_Settings;
+		GameObject* m_pParent;
 
 		std::vector<std::shared_ptr<GameObject>> m_pCubes;
 

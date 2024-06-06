@@ -10,6 +10,7 @@ dae::LevelPyramid::LevelPyramid(GameObject* const pParent, const PyramidSettings
 	: Component{ pParent }
 	, m_Settings{ settings }
 	, m_AmountOfCubes{ settings.Rows * (settings.Rows + 1) / 2 }
+    ,m_pParent{pParent}
 {
 
 	assert(m_Settings.Level >= 0 && m_Settings.Level <= 3 && "Level is out of range");
@@ -28,7 +29,7 @@ dae::LevelPyramid::~LevelPyramid()
 {
 	RemoveAllCubes();
 }
-void dae::LevelPyramid::NotifyObserver(Subject* const, Event)
+void dae::LevelPyramid::NotifyObserver(GameObject* const, Event)
 {
 
     bool isComplete = std::all_of(m_pCubes.begin(), m_pCubes.end(), [&](const std::shared_ptr<GameObject>& pCube)
@@ -38,7 +39,7 @@ void dae::LevelPyramid::NotifyObserver(Subject* const, Event)
 
     if (isComplete)
     {
-		m_Subject.Notify(Event::PyramidCompleted);
+		m_Subject.Notify(Event::PyramidCompleted,m_pParent);
 	}
 
 }

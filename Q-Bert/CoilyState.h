@@ -31,6 +31,7 @@ namespace dae
 		protected:
 		CoilyStateEnum m_State;
 
+		GameObject* m_pParent;
 
 		PyramidMovementComponent* GetPyramidMovementComponent() const { return m_pPyramidMovementComponent; }
 		TextureComponent* GetTextureComponent() const { return m_pTextureComponent; }

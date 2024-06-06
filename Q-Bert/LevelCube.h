@@ -48,6 +48,8 @@ namespace dae
 		glm::vec2 m_Size;
 		int m_ColorIndex;
 
+		GameObject* m_pParent;
+
 		bool m_Turned;
 		bool m_HalfTurned;
 

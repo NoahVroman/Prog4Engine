@@ -45,7 +45,7 @@ void dae::EggState::Update(Coily*coily)
 
     if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
     {
-        coily->GetSubject().Notify(Event::QbertDied);
+        coily->GetSubject().Notify(Event::QbertDied,m_pParent);
     }
 
 

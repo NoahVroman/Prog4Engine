@@ -2,6 +2,7 @@
 namespace dae
 {
 	class Subject;
+	class GameObject;
 	enum class Event
 	{
 		CubeChanged,
@@ -23,7 +24,7 @@ namespace dae
 
 		public:
 		virtual ~Observer() = default;
-		virtual void NotifyObserver(Subject* const gameObject, Event currentEvent) = 0;
+		virtual void NotifyObserver(GameObject* const gameObject, Event currentEvent) = 0;
 	};
 }
 

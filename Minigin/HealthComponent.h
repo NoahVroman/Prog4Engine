@@ -23,7 +23,7 @@ namespace dae
 		void SetLives(int lives)
 		{
 			m_Lives = lives;
-			Notify(Event::LivesChanged);
+			Notify(Event::LivesChanged,GetOwnerObject());
 		};
 		int GetLives() const { return m_Lives; }
 

@@ -23,7 +23,7 @@ namespace dae
 		void AddScore(int score)
 		{
 			m_Score += score;
-			Notify(Event::ScoreUpdated);
+			Notify(Event::ScoreUpdated,GetOwnerObject());
 		}
 		int GetScore() const { return m_Score; }
 		void ResetScore() { m_Score = 0; }

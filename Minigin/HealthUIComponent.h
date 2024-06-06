@@ -19,7 +19,7 @@ namespace dae
 		void Update() override;
 		void FixedUpdate() override;
 
-		void NotifyObserver(Subject* const gameObject, Event currentEvent) override;
+		void NotifyObserver(GameObject* const gameObject, Event currentEvent) override;
 		
 		private:
 			TextComponent* m_pTextComponent{};

@@ -4,39 +4,41 @@
 
 void dae::SceneManager::Update()
 {
-	for(auto& scene : m_scenes)
-	{
-		scene->Update();
-	}
+	
+	m_scenes[m_CurrentScene]->Update();
+
 }
 
 void dae::SceneManager::FixedUpdate()
 {
-	for (auto& scene : m_scenes)
-	{
-		scene->FixedUpdate();
-	}
+
+	m_scenes[m_CurrentScene]->FixedUpdate();
+
 }
 
 void dae::SceneManager::Render()
 {
-	for (const auto& scene : m_scenes)
-	{
-		scene->Render();
-	}
+
+	m_scenes[m_CurrentScene]->Render();
+
 }
 
 void dae::SceneManager::CleanUp()
 {
 
-	for (auto& scene : m_scenes)
-	{
-		scene->DeleteDestroyedObjects();
-	}
+	m_scenes[m_CurrentScene]->DeleteDestroyedObjects();
+
 }
 
+void dae::SceneManager::ChangeScene(int newScene)
+{
 
+	if (newScene < int(m_scenes.size()))
+	{
+		m_CurrentScene = newScene;
+	}
 
+}
 
 
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)

@@ -87,7 +87,7 @@ void dae::Qbert::Update()
             }
             else if (!m_isOnDisk)
             {
-                m_Subject.Notify(Event::QbertDied);
+                m_Subject.Notify(Event::QbertDied,Parent);
             }
 		}
     }

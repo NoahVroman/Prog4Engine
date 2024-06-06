@@ -4,7 +4,7 @@
 #include <unordered_map>
 namespace dae
 {
-
+    class GameObject;
 	class Subject
 	{
 		public:
@@ -21,16 +21,17 @@ namespace dae
                 m_Observers.erase(std::remove(m_Observers.begin(), m_Observers.end(), pObserver), m_Observers.end());
             }
 
-            void Notify(Event currentEvent)
+            void Notify(Event currentEvent,GameObject* gameobject)
             {
                 
                 for (auto& observer : m_Observers)
                 {
-                    observer->NotifyObserver(this, currentEvent);
+                    observer->NotifyObserver(gameobject, currentEvent);
                 }
             }
 	private:
         std::vector<Observer*> m_Observers;
+
 	};
 
 }

@@ -24,7 +24,7 @@ dae::Disk::Disk(GameObject* const pParent, GameObject* qbert, LevelPyramid* leve
     , m_PreviousIndex{ -1 }
     , m_FinalPositionReached{ false }
     , m_FlightTime{ 2.0f }
-    , m_MaxFallTime{ 1.f }
+    , m_MaxFallTime{ 0.2f }
     , m_FallTime{ 0.0f }
 {
     m_pQbert = m_QbertObj->GetComponent<Qbert>();

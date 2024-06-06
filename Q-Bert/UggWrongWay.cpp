@@ -109,7 +109,7 @@ void dae::UggWrongWay::Update()
 
 		if (m_pPyramidMovementComponent->IsOnLastCubeInRow())
 		{
-			m_Subject.Notify(Event::UggWrongWayDied);
+			m_Subject.Notify(Event::UggWrongWayDied,m_pParent);
 		}
 
 	}
@@ -117,7 +117,7 @@ void dae::UggWrongWay::Update()
 	{
 		if (m_pPyramidMovementComponent->IsOnFirstCubeInRow())
 		{		
-			m_Subject.Notify(Event::UggWrongWayDied);
+			m_Subject.Notify(Event::UggWrongWayDied,m_pParent);
 		}
 	}
 

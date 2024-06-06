@@ -12,10 +12,10 @@ dae::ScoreUIComponent::ScoreUIComponent(GameObject* const pParent, int StartingS
 }
 
 
-void dae::ScoreUIComponent::NotifyObserver(Subject* const pSubject, Event currentEvent)
+void dae::ScoreUIComponent::NotifyObserver(GameObject* const Gameobj, Event currentEvent)
 {
     if (currentEvent == Event::ScoreUpdated) {
-        auto scoreComponent = dynamic_cast<ScoreComponent*>(pSubject);
+        auto scoreComponent = Gameobj->GetComponent<ScoreComponent>();
         if (scoreComponent) {
             UpdateText(scoreComponent->GetScore());
         }

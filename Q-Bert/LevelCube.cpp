@@ -7,6 +7,7 @@ dae::LevelCube::LevelCube(GameObject* pParent, int level, const glm::vec2& size,
 	, m_ColorIndex(colorIndex)
 	, m_Turned(false)
 	, m_HalfTurned(false)
+	,m_pParent(pParent)
 {
 }
 
@@ -45,7 +46,7 @@ void dae::LevelCube::ChangeColor()
 		}
 
 	}
-	m_Subject.Notify(Event::CubeChanged);
+	m_Subject.Notify(Event::CubeChanged,m_pParent);
 
 }
 
@@ -86,7 +87,7 @@ void dae::LevelCube::RevertColor()
 			}
 		}
 	}
-	m_Subject.Notify(Event::CubeChanged);
+	m_Subject.Notify(Event::CubeChanged,m_pParent);
 }
 
 void dae::LevelCube::ChangeToFirstColor()
