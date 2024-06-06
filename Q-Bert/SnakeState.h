@@ -18,7 +18,7 @@ namespace dae
 
 
 		virtual void Update(Coily* coily) override;
-		void HandleMovement(Coily* coily);
+		void HandleMovement(Coily* coily, Qbert* closestQbert);
 
 		void UpdateTexture();
 

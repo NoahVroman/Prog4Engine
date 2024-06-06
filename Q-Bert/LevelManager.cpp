@@ -269,7 +269,7 @@ void dae::LevelManager::SpawnSlickSam()
 void dae::LevelManager::SpawnUggWrongWay()
 {
     auto uggWrongWay = std::make_shared<GameObject>();
-    uggWrongWay->AddComponent<UggWrongWay>(m_Pyramid, 6, true);
+    uggWrongWay->AddComponent<UggWrongWay>(m_pQbert, m_Pyramid ,6, true);
     dae::SceneManager::GetInstance().GetCurrentScene()->Add(uggWrongWay);
     uggWrongWay->GetComponent<UggWrongWay>()->GetSubject().AddObserver(this);
     m_UggWrongWays.push_back(uggWrongWay.get());

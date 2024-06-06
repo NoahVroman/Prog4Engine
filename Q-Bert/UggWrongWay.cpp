@@ -1,8 +1,9 @@
 #include "UggWrongWay.h"
 #include "GameTime.h"
 #include <iostream>
+#include "Qbert.h"
 
-dae::UggWrongWay::UggWrongWay(GameObject* const pParent, LevelPyramid* pyramid, int StartRow,bool isStartingLeft)
+dae::UggWrongWay::UggWrongWay(GameObject* const pParent,std::vector<std::shared_ptr<GameObject>> qberts,LevelPyramid* pyramid, int StartRow,bool isStartingLeft)
 	:Component(pParent)
 	, m_StartRow(StartRow)
 	, m_pParent(pParent)
@@ -10,6 +11,7 @@ dae::UggWrongWay::UggWrongWay(GameObject* const pParent, LevelPyramid* pyramid, 
 	, m_IsStartingLeft(isStartingLeft)
 	, m_ElapsedTime(0)
 	, m_Delay(1.f)
+	,m_pQberts(qberts)
 {
 
 	int startingIndex{};
@@ -102,6 +104,15 @@ void dae::UggWrongWay::Update()
 			}
 		}
 		
+	}
+
+	for (const auto& qbert : m_pQberts)
+	{
+		if (qbert->GetComponent<Qbert>()->GetCurrentIndex() == m_pPyramidMovementComponent->GetCurrentIndex())
+		{
+			m_Subject.Notify(Event::QbertDied, m_pParent);
+			break; 
+		}
 	}
 
 	if (m_IsStartingLeft)

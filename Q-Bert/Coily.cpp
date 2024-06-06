@@ -72,15 +72,29 @@ void dae::Coily::Reset()
 
 dae::Qbert* dae::Coily::GetQbert() const
 {
+	Qbert* closestQbert = nullptr;
+	float closestDistance = std::numeric_limits<float>::max(); // Initialize with a large value
+
 	for (auto& qbert : m_pQbert)
 	{
 		auto qbertComponent = qbert->GetComponent<Qbert>();
 		if (qbertComponent != nullptr)
 		{
-			return qbertComponent;
+			// Calculate distance between Coily and current Qbert
+			glm::vec2 coilyPos = m_pPyramidMovementComponent->GetCurrentPos();
+			glm::vec2 qbertPos = qbertComponent->GetCurrentPos();
+			float distance = std::abs(qbertPos.x - coilyPos.x) + std::abs(qbertPos.y - coilyPos.y);
+
+			// Update closest Qbert if this Qbert is closer
+			if (distance < closestDistance)
+			{
+				closestQbert = qbertComponent;
+				closestDistance = distance;
+			}
 		}
 	}
-	return nullptr;
+
+	return closestQbert;
 }
 
 

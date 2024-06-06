@@ -10,7 +10,7 @@ namespace dae
 	class UggWrongWay : public Component
 	{
 	public:
-		UggWrongWay(GameObject* const pParent, LevelPyramid* pyramid, int StartRow, bool isStartingLeft);
+		UggWrongWay(GameObject* const pParent,std::vector<std::shared_ptr<GameObject>> qberts ,LevelPyramid* pyramid, int StartRow, bool isStartingLeft);
 		~UggWrongWay() = default;
 
 		UggWrongWay(const UggWrongWay& other) = delete;
@@ -30,6 +30,8 @@ namespace dae
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 		TextureComponent* m_pTextureComponent;
 		LevelPyramid* m_pPyramid;
+
+		std::vector<std::shared_ptr<GameObject>> m_pQberts;
 
 		bool m_Freeze;
 

@@ -16,13 +16,17 @@ dae::SnakeState::~SnakeState()
 
 void dae::SnakeState::Update(Coily* coily)
 {
-    glm::vec2 qbertPos = coily->GetQbert()->GetCurrentPos() - GetPyramidMovementComponent()->GetCurrentPos();
-
-
-
-    if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+    Qbert* closestQbert = coily->GetQbert();
+    if (closestQbert)
     {
-        coily->GetSubject().Notify(Event::QbertDied,m_pParent);
+        glm::vec2 qbertPos = closestQbert->GetCurrentPos() - GetPyramidMovementComponent()->GetCurrentPos();
+
+
+
+        if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+        {
+            coily->GetSubject().Notify(Event::QbertDied, m_pParent);
+        }
     }
 
 
@@ -31,7 +35,7 @@ void dae::SnakeState::Update(Coily* coily)
     if (m_JumpTimer >= m_JumpInterval)
     {
         
-        HandleMovement(coily);
+        HandleMovement(coily, closestQbert);
         m_JumpTimer = 0.0f;
     }
 
@@ -40,10 +44,10 @@ void dae::SnakeState::Update(Coily* coily)
 
 }
 
-void dae::SnakeState::HandleMovement(Coily* coily)
+void dae::SnakeState::HandleMovement(Coily*,Qbert* closestQbert)
 {
-    glm::vec2 qbertPos = coily->GetQbert()->GetCurrentPos() - GetPyramidMovementComponent()->GetCurrentPos();
-    bool isOnSameRow = coily->GetQbert()->GetCurrentRow() == GetPyramidMovementComponent()->GetCurrentRow();
+    glm::vec2 qbertPos = closestQbert->GetCurrentPos() - GetPyramidMovementComponent()->GetCurrentPos();
+    bool isOnSameRow = closestQbert->GetCurrentRow() == GetPyramidMovementComponent()->GetCurrentRow();
     qbertPos.y = -qbertPos.y;
 
 
