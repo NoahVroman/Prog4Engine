@@ -181,10 +181,19 @@ void LoadTextRound(const std::string& filePath) {
 
 
 		std::vector<std::shared_ptr<dae::GameObject>> qberts;
-
 		auto Qbert1 = std::make_shared<dae::GameObject>();
-		Qbert1->AddComponent<dae::Qbert>(pyramid);
-		qberts.push_back(Qbert1);
+
+		if (round.gameMode == 0)
+		{
+			Qbert1->AddComponent<dae::Qbert>(pyramid,0,0 ,false);
+			qberts.push_back(Qbert1);
+
+		}
+		else if (round.gameMode == 1)
+		{
+			Qbert1->AddComponent<dae::Qbert>(pyramid,21,6 ,false);
+			qberts.push_back(Qbert1);
+		}
 
 
 		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(Qbert1));
@@ -195,7 +204,7 @@ void LoadTextRound(const std::string& filePath) {
 		if (round.gameMode == 1)
 		{
 			auto Qbert2 = std::make_shared<dae::GameObject>();
-			Qbert2->AddComponent<dae::Qbert>(pyramid);
+			Qbert2->AddComponent<dae::Qbert>(pyramid,27,6,true);
 			qberts.push_back(Qbert2);
 
 			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_L, InputType::DownThisFrame, MoveDownRightCommand(Qbert2));
@@ -212,12 +221,12 @@ void LoadTextRound(const std::string& filePath) {
 		}
 
 		auto Disk = std::make_shared<dae::GameObject>();
-		Disk->AddComponent<dae::Disk>(Qbert1.get(), pyramid, 4, true, round.colorIdx);
+		Disk->AddComponent<dae::Disk>(qberts, pyramid, 4, true, round.colorIdx);
 
 		scene.Add(Disk);
 
 		auto Disk2 = std::make_shared<dae::GameObject>();
-		Disk2->AddComponent<dae::Disk>(Qbert1.get(), pyramid, 6, false, round.colorIdx);
+		Disk2->AddComponent<dae::Disk>(qberts, pyramid, 6, false, round.colorIdx);
 
 		scene.Add(Disk2);
 

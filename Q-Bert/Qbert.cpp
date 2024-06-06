@@ -3,19 +3,20 @@
 #include "GameTime.h"
 
 
-dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid)
+dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid, int startingIndex, int StartingRow, bool isPlayer2)
 	: Component(pParent)
 	,m_pPyramid(pyramid)
-    ,m_CurrentCubeIndex(0)
+    ,m_CurrentCubeIndex(startingIndex)
 	,m_IsMoving(false)
     ,Parent(pParent)
-    ,m_CurrentRow(0)
+    ,m_CurrentRow(StartingRow)
     ,m_MovingDuration(0.4f)
     ,m_MoveTimer(0.0f)
     ,m_ControlPoint(0.0f, 0.0f)
     ,m_HasJustJumped(false)
     ,m_DeathDuration(1.f)
     ,m_DeathTimer(0.0f)
+    ,m_PreviousCubeIndex(m_CurrentCubeIndex)
 
 {
     m_CurrentPos = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
@@ -30,7 +31,15 @@ dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid)
 	spriteInfo.SrcHeight = 32;
 
     Parent->GetTransform()->SetLocalPosition(m_CurrentPos);
-    m_pQbertTexture = Parent->AddComponent<TextureComponent>("QbertP1.png", spriteInfo);
+    if (!isPlayer2)
+    {
+        m_pQbertTexture = Parent->AddComponent<TextureComponent>("QbertP1.png", spriteInfo);
+
+    }
+    else
+    {
+		m_pQbertTexture = Parent->AddComponent<TextureComponent>("QbertP2.png", spriteInfo);
+	}
 
 
     TextureComponent::SpriteInfo curseSpriteInfo;
@@ -107,6 +116,7 @@ void dae::Qbert::MoveUpRight()
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(0, 0, 16, 16);
 
                 m_CurrentCubeIndex -= m_CurrentRow;
+                m_PreviousCubeIndex = m_CurrentCubeIndex;
                 m_CurrentRow -= 1;
 
                 m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
@@ -160,6 +170,7 @@ void dae::Qbert::MoveUpLeft()
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17, 0, 16, 16);
 
                 m_CurrentCubeIndex -= m_CurrentRow + 1;
+                m_PreviousCubeIndex = m_CurrentCubeIndex;
                 m_CurrentRow -= 1;
 
                 m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
@@ -213,6 +224,7 @@ void dae::Qbert::MoveDownRight()
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 2, 0, 16, 16);
 
                 m_CurrentCubeIndex += m_CurrentRow + 2;
+                m_PreviousCubeIndex = m_CurrentCubeIndex;
                 m_CurrentRow += 1;
 
                 m_TargetPos.x = m_CurrentPos.x + cubeSizeX * 0.5f;
@@ -265,6 +277,7 @@ void dae::Qbert::MoveDownLeft()
                 GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(17 * 3, 0, 16, 16);
 
                 m_CurrentCubeIndex += m_CurrentRow + 1;
+                m_PreviousCubeIndex = m_CurrentCubeIndex;
                 m_CurrentRow += 1;
 
                 m_TargetPos.x = m_CurrentPos.x - cubeSizeX * 0.5f;
@@ -310,6 +323,7 @@ void dae::Qbert::Reset()
     m_IsDead = false;
     m_isOnDisk = false;
     m_pCurseTexture->SetHidden(true);
+    m_PreviousCubeIndex = 0;
     m_CurrentCubeIndex = 0;
 	m_CurrentRow = 0;
 	m_CurrentPos = m_pPyramid->GetStartPos(m_CurrentCubeIndex);

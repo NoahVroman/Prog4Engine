@@ -10,7 +10,7 @@ namespace dae
 	class Disk : public Component
 	{
     public:
-        Disk(GameObject* const pParent, GameObject* qbert, LevelPyramid* levelPyramid, int startRow, bool isLeft, int colorIndex);
+        Disk(GameObject* const pParent,std::vector<std::shared_ptr<GameObject>> qberts, LevelPyramid* levelPyramid, int startRow, bool isLeft, int colorIndex);
         ~Disk() override;
 
         void Update() override;
@@ -21,10 +21,10 @@ namespace dae
         void UpdateFlight();
 
         GameObject* const m_pParent;
-        GameObject* const m_QbertObj;
+        std::vector<std::shared_ptr<GameObject>> m_QbertObj;
         LevelPyramid* const m_pLevelPyramid;
 
-        Qbert* m_pQbert;
+        std::vector<Qbert*> m_pQbert;
         TextureComponent* m_pTextureComponent;
 
         glm::vec2 m_CurrentPos;
@@ -51,6 +51,8 @@ namespace dae
         bool m_FinalPositionReached;
 
         TextureComponent::SpriteInfo m_SpriteInfo;
+
+        std::shared_ptr<GameObject> m_ActivatingQbert;
 	};
 
 

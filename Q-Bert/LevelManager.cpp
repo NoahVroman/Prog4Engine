@@ -247,12 +247,6 @@ void dae::LevelManager::ResetLevel()
     }
     m_SlickSams.clear();
 
-    for (auto& cube : m_Pyramid->GetCubes())
-    {
-        cube->GetComponent<LevelCube>()->SetTurned(false);
-        cube->GetComponent<LevelCube>()->SetHalfTurned(false);
-        cube->GetComponent<LevelCube>()->ChangeToFirstColor();
-    }
 }
 
 void dae::LevelManager::SpawnSlickSam()

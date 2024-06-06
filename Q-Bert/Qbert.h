@@ -15,7 +15,7 @@ namespace dae
 	class Qbert final : public Component
 	{
 		public:
-		Qbert(GameObject* pParent, LevelPyramid* pyramid);
+		Qbert(GameObject* pParent, LevelPyramid* pyramid,int startingIndex,int StartingRow,bool isPlayer2);
 		~Qbert();
 		Qbert(const Qbert& other) = delete;
 		Qbert(Qbert&& other) = delete;
@@ -35,15 +35,19 @@ namespace dae
 
 		int GetCurrentIndex() const 
 		{
-			if (m_HasJustJumped)
+			if ((m_HasJustJumped || !m_isOnDisk) && m_CurrentCubeIndex >= 0)
 			{
 				return m_CurrentCubeIndex;
 			}
-			else if (m_CurrentCubeIndex == 0)
+			else if (m_CurrentCubeIndex == 0 && !m_HasJustJumped)
 			{
 				return 0;
 			}
-			return -1;
+			else
+			{
+				return -1;
+			}
+
 		}
 
 		int GetCurrentRow() const { return m_CurrentRow; }
@@ -53,6 +57,8 @@ namespace dae
 		bool IsFrozen() const { return m_Frozen; }
 		void SetFrozen(bool frozen) { m_Frozen = frozen; }
 		bool isOnDisk() const { return m_isOnDisk; }
+
+		bool HasJustJumped() const { return m_HasJustJumped; }
 		void Reset();
 
 		void Die();
@@ -60,6 +66,7 @@ namespace dae
 		void SetIsOnDisk(bool isOnDisk) { m_isOnDisk = isOnDisk; }
 		void SetCurrentPos(const glm::vec2& pos) { m_CurrentPos = pos; }
 
+		int GetPreviousIndex() const { return m_PreviousCubeIndex; }
 
 		bool IsOnLastCubeInRow()
 		{
@@ -95,6 +102,7 @@ namespace dae
 		private: //CUBE INDEX
 		int m_CurrentRow;
 		int m_CurrentCubeIndex;
+		int m_PreviousCubeIndex;
 
 		private: //DEATH 
 		bool m_IsDead{ false };

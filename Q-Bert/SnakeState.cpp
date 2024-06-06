@@ -44,7 +44,7 @@ void dae::SnakeState::Update(Coily* coily)
 
 }
 
-void dae::SnakeState::HandleMovement(Coily*,Qbert* closestQbert)
+void dae::SnakeState::HandleMovement(Coily* ,Qbert* closestQbert)
 {
     glm::vec2 qbertPos = closestQbert->GetCurrentPos() - GetPyramidMovementComponent()->GetCurrentPos();
     bool isOnSameRow = closestQbert->GetCurrentRow() == GetPyramidMovementComponent()->GetCurrentRow();
