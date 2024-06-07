@@ -84,10 +84,22 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
         break;
     case dae::Event::QbertDied:
 
-        for (auto& qberts : m_pQbert)
+        if (auto qbertComponent = obj->GetComponent<Qbert>())
         {
-            qberts->GetComponent<Qbert>()->SetDeath(true);
+            qbertComponent->SetDeath(true);
         }
+        else
+        {
+            // If obj is not a Qbert, set the death state for all Qberts
+            for (auto& qbert : m_pQbert)
+            {
+                if (auto qbertComp = qbert->GetComponent<Qbert>())
+                {
+                    qbertComp->SetDeath(true);
+                }
+            }
+        }
+
 
         for (auto& slicksams : m_SlickSams)
         {
@@ -273,7 +285,7 @@ void dae::LevelManager::SpawnCoily()
 {
 
     auto coily = std::make_shared<GameObject>();
-    coily->AddComponent<Coily>(m_pQbert, m_Pyramid ,2,1);
+    coily->AddComponent<Coily>(m_pQbert, m_Pyramid ,2,1,true);
     coily->GetComponent<Coily>()->GetSubject().AddObserver(this);
     dae::SceneManager::GetInstance().GetCurrentScene()->Add(coily);
     m_pCoily = coily.get();
