@@ -61,6 +61,8 @@ namespace dae
 		bool HasJustJumped() const { return m_HasJustJumped; }
 		void Reset();
 
+		void SetToTopCube();
+
 		void Die();
 		void SetDeath(bool death) { m_IsDead = death; }
 		void SetIsOnDisk(bool isOnDisk) { m_isOnDisk = isOnDisk; }
@@ -76,6 +78,8 @@ namespace dae
 		{
 			return m_CurrentCubeIndex == GetFirstCubeInRow(m_CurrentRow);
 		}
+
+		void InitializePosition(int cubeIndex, int row);
 
 		private: //PYRAMID 
      	LevelPyramid* m_pPyramid;
@@ -103,6 +107,9 @@ namespace dae
 		int m_CurrentRow;
 		int m_CurrentCubeIndex;
 		int m_PreviousCubeIndex;
+
+		int m_StartIndex;
+		int m_StartRow;
 
 		private: //DEATH 
 		bool m_IsDead{ false };

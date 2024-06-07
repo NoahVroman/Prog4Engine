@@ -17,6 +17,8 @@ dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid, int startingIndex,
     ,m_DeathDuration(1.f)
     ,m_DeathTimer(0.0f)
     ,m_PreviousCubeIndex(m_CurrentCubeIndex)
+    ,m_StartIndex(startingIndex)
+    ,m_StartRow(StartingRow)
 
 {
     m_CurrentPos = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
@@ -320,26 +322,35 @@ void dae::Qbert::MoveDownLeft()
 
 void dae::Qbert::Reset()
 {
+    // Initialize to starting index and row
+    InitializePosition(m_StartIndex, m_StartRow);
+
     m_IsDead = false;
     m_isOnDisk = false;
-    m_pCurseTexture->SetHidden(true);
-    m_PreviousCubeIndex = 0;
-    m_CurrentCubeIndex = 0;
-	m_CurrentRow = 0;
-	m_CurrentPos = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
-	m_TargetPos = m_pPyramid->GetStartPos(m_CurrentCubeIndex);
-	m_ControlPoint = glm::vec2(0.0f, 0.0f);
-	m_IsMoving = false;
     m_JumpedOff = false;
     m_Frozen = false;
-	m_MoveTimer = 0.0f;
+    m_MoveTimer = 0.0f;
     m_HasJustJumped = false;
-	Parent->GetTransform()->SetLocalPosition(m_CurrentPos);
-	m_pQbertTexture->SetSourceInfo(0, 0, 16, 16);
 
-
+    m_pCurseTexture->SetHidden(true);
+    m_pQbertTexture->SetSourceInfo(0, 0, 16, 16);
 }
 
+void dae::Qbert::SetToTopCube()
+{
+    // Initialize to the top cube position
+    InitializePosition(0, 0);
+
+    m_IsDead = false;
+    m_isOnDisk = false;
+    m_JumpedOff = false;
+    m_Frozen = false;
+    m_MoveTimer = 0.0f;
+    m_HasJustJumped = false;
+
+    m_pCurseTexture->SetHidden(true);
+    m_pQbertTexture->SetSourceInfo(0, 0, 16, 16);
+}
 void dae::Qbert::Die()
 {
     m_DeathTimer += GameTime::GetInstance().GetDeltaTime();
@@ -354,6 +365,26 @@ void dae::Qbert::Die()
         m_Frozen = false;
         m_DeathTimer = 0.0f;
 	}
+}
+
+void dae::Qbert::InitializePosition(int cubeIndex, int row)
+{
+    m_PreviousCubeIndex = cubeIndex;
+    m_CurrentCubeIndex = cubeIndex;
+    m_CurrentRow = row;
+
+    // Get the initial position from the pyramid
+    m_CurrentPos = m_pPyramid->GetStartPos(cubeIndex);
+    m_TargetPos = m_pPyramid->GetStartPos(cubeIndex);
+
+    // Reset the control point and movement state
+    m_ControlPoint = glm::vec2(0.0f, 0.0f);
+    m_IsMoving = false;
+
+    // Set the local position of the parent to the current position
+    if (Parent) {
+        Parent->GetTransform()->SetLocalPosition(m_CurrentPos);
+    }
 }
 
 void dae::Qbert::Move(const glm::vec2& target, glm::vec2& controlPoint, float duration)

@@ -153,7 +153,7 @@ void Disk::UpdateFlight()
             if (m_ActivatingQbert)
             {
                 auto qbert = m_ActivatingQbert->GetComponent<Qbert>();
-                qbert->Reset();
+                qbert->SetToTopCube();
             }
         }
     }
