@@ -72,6 +72,7 @@ void dae::Qbert::Update()
         return;
     }
 
+
     if (m_IsMoving)
     {
         float t = m_MoveTimer / m_MovingDuration;

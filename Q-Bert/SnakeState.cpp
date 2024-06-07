@@ -16,16 +16,20 @@ dae::SnakeState::~SnakeState()
 
 void dae::SnakeState::Update(Coily* coily)
 {
+
     Qbert* closestQbert = coily->GetQbert();
     if (closestQbert)
     {
         glm::vec2 qbertPos = closestQbert->GetCurrentPos() - GetPyramidMovementComponent()->GetCurrentPos();
 
-
-
-        if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+        
+        if (coily->GetQbert()->HasJustJumped() || coily->GetQbert()->GetPreviousIndex() == 0 || GetPyramidMovementComponent()->HasJustJumped())
         {
-            coily->GetSubject().Notify(Event::QbertDied, m_pParent);
+            if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+            {
+                coily->GetSubject().Notify(Event::QbertDied, m_pParent);
+            }
+
         }
     }
 

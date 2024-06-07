@@ -41,11 +41,13 @@ dae::CoilyState::CoilyStateEnum dae::EggState::GetNextState(Coily*)
 
 void dae::EggState::Update(Coily*coily)
 {
-
-
-    if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+    if (coily->GetQbert()->HasJustJumped())
     {
-        coily->GetSubject().Notify(Event::QbertDied,m_pParent);
+
+        if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+        {
+            coily->GetSubject().Notify(Event::QbertDied, m_pParent);
+        }
     }
 
 

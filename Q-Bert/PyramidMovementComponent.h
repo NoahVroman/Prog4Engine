@@ -17,6 +17,9 @@ namespace dae
 		void MoveUpRight();
 		void MoveUpLeft();
 
+		void JumpOffRight();
+		void JumpOffLeft();
+
 		void MoveUpRIghtUgg();
 		void MoveUpLeftUgg();
 
@@ -39,6 +42,7 @@ namespace dae
 		bool IsOnFirstCubeInRow() { return m_CurrentIndex == GetFirstCubeInRow(m_CurrentRow); }
 
 		bool HasJustJumped() const;
+		bool HasJumpedOff() const;
 
 
 
@@ -56,6 +60,7 @@ namespace dae
 			float m_MoveTimer;
 			bool m_IsMoving;
 
+			bool JumpedOff;
 
 		
 			bool m_HasJustJumped;

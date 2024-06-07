@@ -169,6 +169,8 @@ void dae::LevelManager::Update()
 		}
 	}
 
+    //SPAWNING DISKS ON A RANDOM ROW BUT NOT ON THE LAST ROW
+
     if (m_RoundWon)
     {
         UpdateFlashingAnimation(deltaTime);
@@ -285,7 +287,7 @@ void dae::LevelManager::SpawnCoily()
 {
 
     auto coily = std::make_shared<GameObject>();
-    coily->AddComponent<Coily>(m_pQbert, m_Pyramid ,2,1,true);
+    coily->AddComponent<Coily>(m_pQbert, m_Pyramid ,2,1);
     coily->GetComponent<Coily>()->GetSubject().AddObserver(this);
     dae::SceneManager::GetInstance().GetCurrentScene()->Add(coily);
     m_pCoily = coily.get();

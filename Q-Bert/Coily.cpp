@@ -68,7 +68,11 @@ void dae::Coily::Reset()
 	m_pTextureComponent->SetSourceInfo(0,0,16,32);
 	m_CurrentState = m_pCoilyState[CoilyState::CoilyStateEnum::Egg].get();
 
+	
+
 }
+
+
 
 dae::Qbert* dae::Coily::GetQbert() const
 {

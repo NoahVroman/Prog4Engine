@@ -41,6 +41,7 @@ namespace dae
 		bool IsOnFirstCubeInRow(){return m_pPyramidMovementComponent->GetCurrentIndex() == GetFirstCubeInRow(m_pPyramidMovementComponent->GetCurrentRow());}
 
 		private:
+
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 		TextureComponent* m_pTextureComponent;
 

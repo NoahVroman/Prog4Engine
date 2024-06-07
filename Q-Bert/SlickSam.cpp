@@ -41,10 +41,15 @@ void dae::SlickSam::Update()
 	float deltaTime = GameTime::GetInstance().GetDeltaTime();
 	m_ElapsedTime += deltaTime;
 
-	if ((m_pQbert->GetCurrentIndex() == m_pPyramidMovementComponent->GetCurrentIndex()) || (m_pPyramidMovementComponent->GetCurrentRow() >= m_pPyramid->GetRows()))
+	if (m_pQbert->HasJustJumped())
 	{
-		m_Subject.Notify(Event::SlickSamDied,m_pParent);
+		if ((m_pQbert->GetPreviousIndex() == m_pPyramidMovementComponent->GetCurrentIndex()) || (m_pPyramidMovementComponent->GetCurrentRow() >= m_pPyramid->GetRows()))
+		{
+			m_Subject.Notify(Event::SlickSamDied, m_pParent);
+		}
+
 	}
+
 
 	if (m_ElapsedTime >= m_Delay)
 	{

@@ -108,11 +108,17 @@ void dae::UggWrongWay::Update()
 
 	for (const auto& qbert : m_pQberts)
 	{
-		if (qbert->GetComponent<Qbert>()->GetCurrentIndex() == m_pPyramidMovementComponent->GetCurrentIndex())
-		{
-			m_Subject.Notify(Event::QbertDied, m_pParent);
-			break; 
-		}
+			if (qbert->GetComponent<Qbert>()->GetPreviousIndex() == m_pPyramidMovementComponent->GetCurrentIndex())
+			{
+				if (qbert->GetComponent<Qbert>()->HasJustJumped())
+				{
+					m_Subject.Notify(Event::QbertDied, m_pParent);
+
+				}
+				break;
+			}
+
+
 	}
 
 	if (m_IsStartingLeft)
