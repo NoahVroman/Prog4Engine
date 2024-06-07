@@ -41,8 +41,7 @@ namespace dae
 		bool IsOnLastCubeInRow() { return m_CurrentIndex == GetLastCubeInRow(m_CurrentRow); }
 		bool IsOnFirstCubeInRow() { return m_CurrentIndex == GetFirstCubeInRow(m_CurrentRow); }
 
-		bool HasJustJumped() const;
-		bool HasJumpedOff() const;
+		bool HasJustJumped();
 
 
 
@@ -60,7 +59,6 @@ namespace dae
 			float m_MoveTimer;
 			bool m_IsMoving;
 
-			bool JumpedOff;
 
 		
 			bool m_HasJustJumped;

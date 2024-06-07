@@ -41,7 +41,7 @@ dae::CoilyState::CoilyStateEnum dae::EggState::GetNextState(Coily*)
 
 void dae::EggState::Update(Coily*coily)
 {
-    if (coily->GetQbert()->HasJustJumped())
+    if (coily->GetQbert()->HasJustJumped() || GetPyramidMovementComponent()->HasJustJumped())
     {
 
         if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())

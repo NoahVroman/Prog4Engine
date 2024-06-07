@@ -74,6 +74,18 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 
 void dae::Renderer::RenderTexture(const Texture2D& texture, float x, float y, float width, float height, float srcX, float srcY, float srcWidth, float srcHeight) const
 {
+	SDL_Renderer* sdlRenderer = GetSDLRenderer();
+	if (!sdlRenderer) {
+		std::cerr << "Error: SDL renderer is null." << std::endl;
+		return;
+	}
+
+	SDL_Texture* sdlTexture = texture.GetSDLTexture();
+	if (!sdlTexture) {
+		std::cerr << "Error: SDL texture is null." << std::endl;
+		return;
+	}
+
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);

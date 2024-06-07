@@ -51,8 +51,9 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
 
 }
 
-void dae::LevelManager::InitializeRound(int currentRound ,bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval, int gameMode)
+void dae::LevelManager::InitializeRound(int level,int currentRound ,bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval, int gameMode)
 {
+    m_CurrentLevel = level;
     m_CurrentRound = currentRound;
     m_SpawnSlickSams = spawnSlickSams;
     m_SpawnUggWrongs = spawnUggWrongs;
@@ -71,12 +72,7 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
         break;
     case dae::Event::PyramidCompleted:
         m_RoundWon = true;
-
-        for (auto& qbert : m_pQbert)
-        {
-            qbert->GetComponent<Qbert>()->SetFrozen(true);
-
-        }
+      
 
         break;
     case dae::Event::RoundWon:
@@ -158,6 +154,9 @@ void dae::LevelManager::Update()
 {
     float deltaTime = GameTime::GetInstance().GetDeltaTime();
 
+ 
+
+
     if (!m_SpawnCoily)
     {
 		m_CoilySpawnTimer += deltaTime;
@@ -173,6 +172,11 @@ void dae::LevelManager::Update()
 
     if (m_RoundWon)
     {
+        for (auto& qbert : m_pQbert)
+        {
+            qbert->GetComponent<Qbert>()->SetFrozen(true);
+
+        }
         UpdateFlashingAnimation(deltaTime);
     }
 
@@ -204,9 +208,9 @@ void dae::LevelManager::HandleRoundWon()
     m_AnimationTimer = 0;
     m_FlashingTimer = 0;
     m_CurrentColor = 1;
+    ResetLevel();
 
     SceneManager::GetInstance().ChangeScene(SceneManager::GetInstance().GetCurrentSceneIndex() + 1);
-    ResetLevel();
 }
 
 
@@ -241,13 +245,7 @@ void dae::LevelManager::UpdateFlashingAnimation(float deltaTime)
 
 void dae::LevelManager::ResetLevel()
 {
-    for (auto& qberts : m_pQbert)
-    {
-        qberts->GetComponent<Qbert>()->Reset();
-        qberts->GetComponent<Qbert>()->SetFrozen(false);
-
-    }
-
+   
 
     for (auto& uggWrongWay : m_UggWrongWays)
     {
@@ -260,6 +258,15 @@ void dae::LevelManager::ResetLevel()
         slickSam->Destroy();
     }
     m_SlickSams.clear();
+
+    for (auto& qberts : m_pQbert)
+    {
+
+        qberts->GetComponent<Qbert>()->SetFrozen(false);
+        qberts->GetComponent<Qbert>()->Reset();
+
+    }
+
 
 }
 

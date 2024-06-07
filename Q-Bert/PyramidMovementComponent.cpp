@@ -17,7 +17,6 @@ dae::PyramidMovementComponent::PyramidMovementComponent(GameObject* const pParre
 	, m_CurrentRow(startRow)
 	, m_CurrentIndex(startIndex)
 	, m_HasJustJumped(false)
-	,JumpedOff(false)
 
 
 {
@@ -190,6 +189,7 @@ void dae::PyramidMovementComponent::Update()
 		m_pParent->GetTransform()->SetLocalPosition(newPos);
 
 		m_MoveTimer += GameTime::GetInstance().GetDeltaTime();
+
 		if (m_MoveTimer >= m_MovingDuration)
 		{
 			HandleEndOfJump();
@@ -200,15 +200,11 @@ void dae::PyramidMovementComponent::Update()
 
 }
 
-bool dae::PyramidMovementComponent::HasJustJumped() const
+bool dae::PyramidMovementComponent::HasJustJumped()
 {
 	return m_HasJustJumped;
 }
 
-bool dae::PyramidMovementComponent::HasJumpedOff() const
-{
-	return JumpedOff;
-}
 
 void dae::PyramidMovementComponent::Jump(const glm::vec2& targetPos, const glm::vec2& controlPoint, float duration)
 {
@@ -217,22 +213,17 @@ void dae::PyramidMovementComponent::Jump(const glm::vec2& targetPos, const glm::
 	m_TargetPos = targetPos;
 	m_ControlPoint = controlPoint;
 	m_MovingDuration = duration;
-
-	JumpedOff = false;
 }
 
 void dae::PyramidMovementComponent::HandleEndOfJump()
 {
 	m_IsMoving = false;
-	m_HasJustJumped= true;
 	m_MoveTimer = 0.0f;
 	m_CurrentPos = m_TargetPos;
 	m_pParent->GetTransform()->SetLocalPosition(m_TargetPos);
 
+	m_HasJustJumped = true;
 
-	if (IsOnLastCubeInRow() || IsOnFirstCubeInRow())
-	{
-		JumpedOff = true;
-	}
+	
 }
 

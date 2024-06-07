@@ -100,6 +100,65 @@ void SoloLevel1()
 		std::cout << "Level 01 Solo file wasn't properly written\n";
 	}
 }
+void SoloLevel2()
+{
+
+	std::ofstream levelOne("Level02Solo.txt");
+
+	if (!levelOne) {
+		std::cout << "Level 01 Solo file couldn't be created\n";
+		return;
+	}
+
+
+	Round rounds[3]{};
+
+	rounds[0].roundNumber = 1;
+	rounds[0].level = 2;
+	rounds[0].colorIdx = 3;
+	rounds[0].spawnSlickSams = true;
+	rounds[0].spawnUggWrongs = true;
+	rounds[0].slickSamsSpawnInterval = 11.f;
+	rounds[0].uggWrongSpawnInterval = 5.f;
+	rounds[0].gameMode = 0;
+
+	rounds[1].roundNumber = 2;
+	rounds[1].level = 2;
+	rounds[1].colorIdx = 4;
+	rounds[1].spawnSlickSams = false;
+	rounds[1].spawnUggWrongs = false;
+	rounds[1].slickSamsSpawnInterval = 0;
+	rounds[1].uggWrongSpawnInterval = 0;
+	rounds[1].gameMode = 0;
+
+	rounds[2].roundNumber = 3;
+	rounds[2].level = 2;
+	rounds[2].colorIdx = 5;
+	rounds[2].spawnSlickSams = false;
+	rounds[2].spawnUggWrongs = false;
+	rounds[2].slickSamsSpawnInterval = 0;
+	rounds[2].uggWrongSpawnInterval = 0;
+	rounds[2].gameMode = 0;
+
+
+	for (int i = 0; i < 3; ++i) {
+		levelOne << "Round " << rounds[i].roundNumber << "\n"
+			<< "Level " << rounds[i].level << "\n"
+			<< "ColorIdx " << rounds[i].colorIdx << "\n"
+			<< "SpawnSlickSams " << rounds[i].spawnSlickSams << "\n"
+			<< "SpawnUggWrongs " << rounds[i].spawnUggWrongs << "\n"
+			<< "SlickSamsSpawnInterval " << rounds[i].slickSamsSpawnInterval << "\n"
+			<< "UggWrongSpawnInterval " << rounds[i].uggWrongSpawnInterval << "\n"
+			<< "GameMode " << rounds[i].gameMode << "\n\n";
+	}
+
+	levelOne.close();
+
+	if (!levelOne.good()) {
+		std::cout << "Level 01 Solo file wasn't properly written\n";
+	}
+}
+
 
 void LoadTextRound(const std::string& filePath) {
 	std::ifstream levelFile(filePath);
@@ -234,7 +293,7 @@ void LoadTextRound(const std::string& filePath) {
 
 		auto levelManager = std::make_shared<dae::GameObject>();
 		levelManager->AddComponent<dae::LevelManager>(pyramid, qberts);
-		levelManager->GetComponent<dae::LevelManager>()->InitializeRound(round.roundNumber,round.spawnSlickSams, round.spawnUggWrongs, round.slickSamsSpawnInterval, round.uggWrongSpawnInterval, round.gameMode);
+		levelManager->GetComponent<dae::LevelManager>()->InitializeRound(round.level,round.roundNumber,round.spawnSlickSams, round.spawnUggWrongs, round.slickSamsSpawnInterval, round.uggWrongSpawnInterval, round.gameMode);
 
 
 		scene.Add(levelManager);
@@ -254,9 +313,10 @@ void load()
 	std::unique_ptr<dae::SoundService> soundSystem = std::make_unique<dae::LoggingSoundSystem>(std::make_unique<dae::SDLSoundSystem>());
 	dae::ServiceLocator::RegisterSoundSystem(std::move(soundSystem));
 
+	//SoloLevel2();
 
-	LoadTextRound("Level01CoOp.txt");
-
+	LoadTextRound("Level01Solo.txt");
+	LoadTextRound("Level02Solo.txt");
 
 	
 }

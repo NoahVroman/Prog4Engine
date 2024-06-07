@@ -18,7 +18,7 @@ namespace dae
     {
     public:
         LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert);
-        void InitializeRound(int currentRound,bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval,int gameMode);
+        void InitializeRound(int level,int currentRound,bool spawnSlickSams, bool spawnUggWrongs, float slickSamsSpawnInterval, float uggWrongSpawnInterval,int gameMode);
         void NotifyObserver(GameObject* const obj, Event currentEvent) override;
         void Update() override;
         void SpawnCoily();
@@ -40,6 +40,7 @@ namespace dae
         GameObject* m_pParent;
 
         int m_GameMode;
+        int m_CurrentLevel;
         
         int m_CurrentRound;
         bool m_SpawnSlickSams;

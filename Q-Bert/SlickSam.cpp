@@ -41,7 +41,7 @@ void dae::SlickSam::Update()
 	float deltaTime = GameTime::GetInstance().GetDeltaTime();
 	m_ElapsedTime += deltaTime;
 
-	if (m_pQbert->HasJustJumped())
+	if (m_pQbert->HasJustJumped() || m_pPyramidMovementComponent->HasJustJumped())
 	{
 		if ((m_pQbert->GetPreviousIndex() == m_pPyramidMovementComponent->GetCurrentIndex()) || (m_pPyramidMovementComponent->GetCurrentRow() >= m_pPyramid->GetRows()))
 		{
