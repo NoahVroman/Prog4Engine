@@ -26,24 +26,26 @@
 #include "Disk.h"
 #include "StartScreenSelection.h"
 #include "MenuCommands.h"
+#include "ScoreAndLivesManager.h"
+#include "RoundManager.h"
 
 #include <fstream>
 #include <sstream>
 
 // MiguelCPereiras code but with textfiles instead of binary files
-struct Round {
-	int roundNumber;
-	int level;
-	int colorIdx;
-	bool spawnSlickSams;
-	bool spawnUggWrongs;
-	float slickSamsSpawnInterval;
-	float uggWrongSpawnInterval;
-	int gameMode;
-};
+//struct Round {
+//	int roundNumber;
+//	int level;
+//	int colorIdx;
+//	bool spawnSlickSams;
+//	bool spawnUggWrongs;
+//	float slickSamsSpawnInterval;
+//	float uggWrongSpawnInterval;
+//	int gameMode;
+//};
 
 
-void LoadStartScreen()
+void LoadStartScreen(std::shared_ptr<dae::RoundManager> roundManager)
 {
 	constexpr int width = 640;
 	//constexpr int height = 480;
@@ -106,11 +108,47 @@ void LoadStartScreen()
 
 	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, StartScreenMoveDown(startScreenSelection));
 	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, StartScreenMoveUp(startScreenSelection));
-	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_SPACE, InputType::DownThisFrame, StartScreenSelect(startScreenSelection));
+	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_RETURN, InputType::DownThisFrame, StartScreenSelect(startScreenSelection,roundManager));
 
 	scene.Add(startScreen);
 }
 
+std::vector<std::shared_ptr<dae::GameObject>> MakeUI(int round, int level)
+{
+	auto& resourceManager = dae::ResourceManager::GetInstance();
+	auto mainTextFont = resourceManager.LoadFont("Minecraft.ttf", 20);
+
+	std::vector<std::shared_ptr<dae::GameObject>> UI;
+
+	std::string livesStr = "Lives: 3";
+	std::string roundStr = "Round: " + std::to_string(round);
+	std::string levelStr = "Level: " + std::to_string(level);
+
+	auto score = std::make_shared<dae::GameObject>();
+	score->GetTransform()->SetLocalPosition(glm::vec2{ 0,0 });
+	score->AddComponent<dae::TextComponent>("Score: 0", mainTextFont);
+
+	UI.push_back(score);
+
+	auto lives = std::make_shared<dae::GameObject>();
+	lives->GetTransform()->SetLocalPosition(glm::vec2{ 0,50 });
+	lives->AddComponent<dae::TextComponent>(livesStr, mainTextFont);
+	UI.push_back(lives);
+
+
+
+	auto roundText = std::make_shared<dae::GameObject>();
+	roundText->GetTransform()->SetLocalPosition(glm::vec2{ 250,440 });
+	roundText->AddComponent<dae::TextComponent>(roundStr, mainTextFont);
+	UI.push_back(roundText);
+
+	auto levelText = std::make_shared<dae::GameObject>();
+	levelText->GetTransform()->SetLocalPosition(glm::vec2{ 350,440 });
+	levelText->AddComponent<dae::TextComponent>(levelStr, mainTextFont);
+	UI.push_back(levelText);
+
+	return UI;
+}
 void SoloLevel1()
 {
 
@@ -291,169 +329,196 @@ void VersuzLevel1()
 }
 
 
-void LoadTextRound(const std::string& filePath) {
-	std::ifstream levelFile(filePath);
-
-	if (!levelFile) {
-		std::cout << "Level file couldn't be opened\n";
-		return;
-	}
-
-
-	std::vector<Round> rounds;
-	std::string line;
-	while (std::getline(levelFile, line)) {
-		Round round;
-		std::istringstream iss(line);
-		std::string key;
-		while (iss >> key) {
-			if (key == "Round") {
-				iss >> round.roundNumber;
-			}
-			else if (key == "Level") {
-				iss >> round.level;
-			}
-			else if (key == "ColorIdx") {
-				iss >> round.colorIdx;
-			}
-			else if (key == "SpawnSlickSams") {
-				iss >> round.spawnSlickSams;
-			}
-			else if (key == "SpawnUggWrongs") {
-				iss >> round.spawnUggWrongs;
-			}
-			else if (key == "SlickSamsSpawnInterval") {
-				iss >> round.slickSamsSpawnInterval;
-			}
-			else if (key == "UggWrongSpawnInterval") {
-				iss >> round.uggWrongSpawnInterval;
-			}
-			else if (key == "GameMode") {
-				iss >> round.gameMode;
-			}
-		}
-
-		if (line.empty()) {
-			rounds.push_back(round);
-		}
-	}
-
-	levelFile.close();
-
-
-	for (auto& round : rounds)
-	{
-		std::string scenename = "Level10";
-		scenename += std::to_string(round.level);
-		scenename += "-";
-		scenename += std::to_string(round.roundNumber);
-
-		auto& scene = dae::SceneManager::GetInstance().CreateScene(scenename);
-
-		auto level = std::make_shared<dae::GameObject>();
-		level->GetTransform()->SetLocalPosition(glm::vec2{ 0,0 });
-
-		dae::LevelPyramid::PyramidSettings settings{};
-		settings.StartPos = glm::vec2{ 300,70 };
-		settings.Rows = 7;
-		settings.CubeSize = glm::vec2{ 62, 64 };
-		settings.Level = round.level;
-		settings.ColorIndex = round.colorIdx;
-		settings.SpriteSize = glm::vec2{ 32, 32 };
-
-		auto pyramid = level->AddComponent<dae::LevelPyramid>(settings);
-
-		for (const auto& cube : pyramid->GetCubes())
-		{
-			scene.Add(cube);
-		}
-
-		scene.Add(level);
-
-
-		std::vector<std::shared_ptr<dae::GameObject>> qberts;
-		auto Qbert1 = std::make_shared<dae::GameObject>();
-
-		
-		if (round.gameMode == 1)
-		{
-			Qbert1->AddComponent<dae::Qbert>(pyramid,21,6 ,false);
-			qberts.push_back(Qbert1);
-		}
-		else
-		{
-			
-				Qbert1->AddComponent<dae::Qbert>(pyramid, 0, 0, false);
-				qberts.push_back(Qbert1);
-
-		}
-
-		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(Qbert1));
-		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(Qbert1));
-		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(Qbert1));
-		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(Qbert1));
-
-		if (round.gameMode == 1)
-		{
-			auto Qbert2 = std::make_shared<dae::GameObject>();
-			Qbert2->AddComponent<dae::Qbert>(pyramid,27,6,true);
-			qberts.push_back(Qbert2);
-
-			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_L, InputType::DownThisFrame, MoveDownRightCommand(Qbert2));
-			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_K, InputType::DownThisFrame, MoveDownLeftCommand(Qbert2));
-			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_J, InputType::DownThisFrame, MoveUpLeftCommand(Qbert2));
-			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_I, InputType::DownThisFrame, MoveUpRightCommand(Qbert2));
-
-
-		}
-
-		for (const auto& qbert : qberts)
-		{
-			scene.Add(qbert);
-		}
-
-		auto Disk = std::make_shared<dae::GameObject>();
-		Disk->AddComponent<dae::Disk>(qberts, pyramid, 4, true, round.colorIdx);
-
-		scene.Add(Disk);
-
-		auto Disk2 = std::make_shared<dae::GameObject>();
-		Disk2->AddComponent<dae::Disk>(qberts, pyramid, 6, false, round.colorIdx);
-
-		scene.Add(Disk2);
-
-	
-
-		auto levelManager = std::make_shared<dae::GameObject>();
-		levelManager->AddComponent<dae::LevelManager>(pyramid, qberts);
-		levelManager->GetComponent<dae::LevelManager>()->InitializeRound(round.level,round.roundNumber,round.spawnSlickSams, round.spawnUggWrongs, round.slickSamsSpawnInterval, round.uggWrongSpawnInterval, round.gameMode);
-
-
-		scene.Add(levelManager);
-	}
-
-
-
-}
+//void LoadTextRound(const std::string& filePath) {
+//	std::ifstream levelFile(filePath);
+//
+//	if (!levelFile) {
+//		std::cout << "Level file couldn't be opened\n";
+//		return;
+//	}
+//
+//
+//	std::vector<Round> rounds;
+//	std::string line;
+//	while (std::getline(levelFile, line)) {
+//		Round round;
+//		std::istringstream iss(line);
+//		std::string key;
+//		while (iss >> key) {
+//			if (key == "Round") {
+//				iss >> round.roundNumber;
+//			}
+//			else if (key == "Level") {
+//				iss >> round.level;
+//			}
+//			else if (key == "ColorIdx") {
+//				iss >> round.colorIdx;
+//			}
+//			else if (key == "SpawnSlickSams") {
+//				iss >> round.spawnSlickSams;
+//			}
+//			else if (key == "SpawnUggWrongs") {
+//				iss >> round.spawnUggWrongs;
+//			}
+//			else if (key == "SlickSamsSpawnInterval") {
+//				iss >> round.slickSamsSpawnInterval;
+//			}
+//			else if (key == "UggWrongSpawnInterval") {
+//				iss >> round.uggWrongSpawnInterval;
+//			}
+//			else if (key == "GameMode") {
+//				iss >> round.gameMode;
+//			}
+//		}
+//
+//		if (line.empty()) {
+//			rounds.push_back(round);
+//		}
+//	}
+//
+//	levelFile.close();  
+//
+//	std::vector<std::shared_ptr<dae::GameObject>> UI = MakeUI(rounds[0].roundNumber, rounds[0].level);
+//
+//	for (auto& round : rounds)
+//	{
+//		std::string scenename = "Level10";
+//		scenename += std::to_string(round.level);
+//		scenename += "-";
+//		scenename += std::to_string(round.roundNumber);
+//
+//		auto& scene = dae::SceneManager::GetInstance().CreateScene(scenename);
+//
+//		auto level = std::make_shared<dae::GameObject>();
+//		level->GetTransform()->SetLocalPosition(glm::vec2{ 0,0 });
+//
+//		dae::LevelPyramid::PyramidSettings settings{};
+//		settings.StartPos = glm::vec2{ 300,70 };
+//		settings.Rows = 7;
+//		settings.CubeSize = glm::vec2{ 62, 64 };
+//		settings.Level = round.level;
+//		settings.ColorIndex = round.colorIdx;
+//		settings.SpriteSize = glm::vec2{ 32, 32 };
+//
+//		auto pyramid = level->AddComponent<dae::LevelPyramid>(settings);
+//
+//		for (const auto& cube : pyramid->GetCubes())
+//		{
+//			scene.Add(cube);
+//		}
+//
+//		scene.Add(level);
+//		
+//
+//		std::vector<std::shared_ptr<dae::GameObject>> qberts;
+//		auto Qbert1 = std::make_shared<dae::GameObject>();
+//		if (round.gameMode == 1)
+//		{
+//				Qbert1->AddComponent<dae::Qbert>(pyramid,21,6 ,false);
+//				qberts.push_back(Qbert1);
+//		}
+//		else
+//		{
+//			
+//				Qbert1->AddComponent<dae::Qbert>(pyramid, 0, 0, false);
+//				qberts.push_back(Qbert1);
+//
+//		}
+//
+//		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(Qbert1));
+//		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(Qbert1));
+//		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(Qbert1));
+//		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(Qbert1));
+//
+//		Qbert1->GetComponent<dae::Qbert>()->SetFrozen(true);
+//
+//		if (round.gameMode == 1)
+//		{
+//			auto Qbert2 = std::make_shared<dae::GameObject>();
+//			Qbert2->AddComponent<dae::Qbert>(pyramid,27,6,true);
+//			qberts.push_back(Qbert2);
+//
+//
+//			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_L, InputType::DownThisFrame, MoveDownRightCommand(Qbert2));
+//			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_K, InputType::DownThisFrame, MoveDownLeftCommand(Qbert2));
+//			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_J, InputType::DownThisFrame, MoveUpLeftCommand(Qbert2));
+//			dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_I, InputType::DownThisFrame, MoveUpRightCommand(Qbert2));
+//			Qbert2->GetComponent<dae::Qbert>()->SetFrozen(true);
+//
+//
+//		}
+//
+//		for (const auto& qbert : qberts)
+//		{
+//			scene.Add(qbert);
+//		}
+//
+//		for (const auto& ui : UI)
+//		{
+//			scene.Add(ui);
+//		}
+//
+//		auto Disk = std::make_shared<dae::GameObject>();
+//		Disk->AddComponent<dae::Disk>(qberts, pyramid, 4, true, round.colorIdx);
+//
+//		scene.Add(Disk);
+//
+//		auto Disk2 = std::make_shared<dae::GameObject>();
+//		Disk2->AddComponent<dae::Disk>(qberts, pyramid, 6, false, round.colorIdx);
+//
+//		scene.Add(Disk2);
+//
+//	
+//
+//		auto levelManager = std::make_shared<dae::GameObject>();
+//		levelManager->AddComponent<dae::LevelManager>(pyramid, qberts);
+//		levelManager->GetComponent<dae::LevelManager>()->InitializeRound(round.level,round.roundNumber,round.spawnSlickSams, round.spawnUggWrongs, round.slickSamsSpawnInterval, round.uggWrongSpawnInterval, round.gameMode);
+//
+//
+//		scene.Add(levelManager);
+//	}
+//
+//
+//
+//}
 
 
 void load()
 {
 	auto& resourceManager = dae::ResourceManager::GetInstance();
 	auto mainTextFont = resourceManager.LoadFont("Minecraft.ttf", 36);
-
+    auto roundManager{std::make_shared<dae::RoundManager>()};
 
 	std::unique_ptr<dae::SoundService> soundSystem = std::make_unique<dae::LoggingSoundSystem>(std::make_unique<dae::SDLSoundSystem>());
 	dae::ServiceLocator::RegisterSoundSystem(std::move(soundSystem));
-
 	//SoloLevel2();
+
 
 	//LoadTextRound("Level01Solo.txt");
 	//LoadTextRound("Level02Solo.txt");
-	LoadStartScreen();
-	LoadTextRound("Level01Solo.txt");
-	LoadTextRound("Level01CoOp.txt");
-	LoadTextRound("Level01Versuz.txt");
+
+	
+	//rescourcemanager.loadround("level02solo.txt");
+	//rescourcemanager.loadround("level01coop.txt");
+	//rescourcemanager.loadround("level02coop.txt");
+	//rescourcemanager.loadround("level01versuz.txt");
+	//rescourcemanager.loadround("level02versuz.txt");
+
+	LoadStartScreen(roundManager);
+	//LoadTextRound("Level01Solo.txt");
+	roundManager->LoadRoundData("Level01Solo.txt","SoloLevel1");
+	roundManager->LoadRoundData("Level01CoOp.txt", "CoOpLevel2");
+	roundManager->LoadRoundData("Level01Versuz.txt", "VersuzLevel1");
+
+
+
+
+	//rescourcemanager.loadround("level01solo.txt");
+	//rescourcemanager.
+	
+
+	//LoadTextRound("Level01CoOp.txt");
+	//LoadTextRound("Level01Versuz.txt");
 
 
 	

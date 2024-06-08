@@ -13,8 +13,8 @@ namespace dae
 	{
 		public:
 
-		TextComponent(GameObject* const pParent,const std::string text,std::shared_ptr<Font> font);
-		virtual ~TextComponent();
+		TextComponent(GameObject* const pParent,const std::string& text,std::shared_ptr<Font> font);
+		~TextComponent();
 
 		TextComponent(const TextComponent& other) = delete;
 		TextComponent(TextComponent&& other) = delete;
@@ -31,12 +31,12 @@ namespace dae
 		std::shared_ptr<Font> GetFont() const { return m_Font; }
 
 		private:
-			std::string m_Text{};
-			std::shared_ptr<Font> m_Font{};
+			std::string m_Text;
+			std::shared_ptr<Font> m_Font;
 
 			std::shared_ptr<Texture2D> m_TextTexture{};
 
-			bool m_NeedsUpdate{true};
+			bool m_NeedsUpdate{};
 	};
 
 }

@@ -13,8 +13,9 @@
 #include "InputManager.h"
 #include "CoilyCommands.h"
 #include "QbertCommands.h"
+#include "ScoreAndLivesManager.h"
 
-dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert)
+dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert, RoundManager* roundmanager)
     : Component(pParent)
     , m_Pyramid{ pyramid }
     , m_pQbert{ pQbert }
@@ -37,6 +38,7 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
     , m_CoilySpawnMaxTime{ 5.f }
     ,m_CoilySpawnTimer{0}
     ,m_pCoily{nullptr}
+    ,m_pRoundManager{roundmanager}
 
 
 {
@@ -73,7 +75,6 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
 {
     switch (currentEvent) {
     case Event::CubeChanged:
-        // Handle CubeChanged event if necessary
         break;
     case Event::PyramidCompleted:
         m_RoundWon = true;
@@ -85,7 +86,8 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
         if (auto qbertComponent = obj->GetComponent<Qbert>()) {
             qbertComponent->SetDeath(true);
         }
-        else {
+        else 
+        {
             for (auto& qbert : m_pQbert) {
                 if (auto qbertComp = qbert->GetComponent<Qbert>()) {
                     qbertComp->SetDeath(true);
@@ -93,7 +95,6 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
             }
         }
 
-        // Clear enemies upon Qbert's death
         for (auto& slicksams : m_SlickSams) {
             slicksams->Destroy();
         }
@@ -208,7 +209,8 @@ void dae::LevelManager::HandleRoundWon()
     m_CurrentColor = 1;
     ResetLevel();
 
-    SceneManager::GetInstance().ChangeScene(SceneManager::GetInstance().GetCurrentSceneIndex() + 1);
+    m_pRoundManager->SwitchToNextRound();
+
 }
 
 
@@ -264,6 +266,7 @@ void dae::LevelManager::ResetLevel()
         qberts->GetComponent<Qbert>()->Reset();
 
     }
+
 
 
 }

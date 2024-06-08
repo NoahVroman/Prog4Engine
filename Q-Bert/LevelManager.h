@@ -11,11 +11,13 @@
 #include "Coily.h"
 #include "SlickSam.h"
 #include "UggWrongWay.h"
+#include "RoundManager.h"
 
 namespace dae {
+
     class LevelManager : public Component, public Observer {
     public:
-        LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert);
+        LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert,RoundManager* roundmanager);
 
         void InitializeRound(int level, int currentRound, bool spawnSlickSams, bool spawnUggWrongs,
                              float slickSamsSpawnInterval, float uggWrongSpawnInterval, int gameMode);
@@ -39,6 +41,8 @@ namespace dae {
         std::vector<GameObject*> m_UggWrongWays;
         GameObject* m_pCoily;
         std::shared_ptr<GameObject> m_pCoilyshared;
+
+        RoundManager* m_pRoundManager;
 
         GameObject* m_pParent;
 

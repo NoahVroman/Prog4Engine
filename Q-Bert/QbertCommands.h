@@ -20,6 +20,7 @@ class MoveDownRightCommand : public dae::GameObjectCommand
 			if (auto qbert = GetGameObject()->GetComponent<dae::Qbert>())
 			{
 				qbert->MoveDownRight();
+				qbert->SetFrozen(false);
 			}
 
 		};
@@ -42,6 +43,7 @@ public:
 		if (auto qbert = GetGameObject()->GetComponent<dae::Qbert>())
 		{
 			qbert->MoveDownLeft();
+			qbert->SetFrozen(false);
 		}
 
 	};
@@ -64,6 +66,7 @@ public:
 		if (auto qbert = GetGameObject()->GetComponent<dae::Qbert>())
 		{
 			qbert->MoveUpLeft();
+			qbert->SetFrozen(false);
 		}
 
 	};
@@ -87,6 +90,7 @@ public:
 		if (auto qbert = GetGameObject()->GetComponent<dae::Qbert>())
 		{
 			qbert->MoveUpRight();
+			qbert->SetFrozen(false);
 		}
 
 	};

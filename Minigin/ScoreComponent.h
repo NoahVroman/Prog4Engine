@@ -30,6 +30,7 @@ namespace dae
 
 		private:
 			int m_Score{};
+
 	};
 
 }

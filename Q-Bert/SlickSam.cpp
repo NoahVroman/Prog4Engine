@@ -47,7 +47,7 @@ void dae::SlickSam::Update()
 		{
 			if (m_pQbert->GetCurrentIndex() == m_pPyramidMovementComponent->GetCurrentIndex())
 			{
-				m_Subject.Notify(Event::QbertDied, m_pParent);
+				m_Subject.Notify(Event::SlickSamDied, m_pParent);
 			}
 
 		}

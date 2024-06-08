@@ -164,6 +164,9 @@
     <ClCompile Include="PyramidMovementComponent.cpp" />
     <ClCompile Include="Qbert.cpp" />
     <ClCompile Include="QbertCommands.cpp" />
+    <ClCompile Include="RoundManager.cpp" />
+    <ClCompile Include="ScoreAndLivesManager.cpp" />
+    <ClCompile Include="ScoreUI.cpp" />
     <ClCompile Include="SlickSam.cpp" />
     <ClCompile Include="SnakeState.cpp" />
     <ClCompile Include="StartScreenSelection.cpp" />
@@ -182,6 +185,9 @@
     <ClInclude Include="PyramidMovementComponent.h" />
     <ClInclude Include="Qbert.h" />
     <ClInclude Include="QbertCommands.h" />
+    <ClInclude Include="RoundManager.h" />
+    <ClInclude Include="ScoreAndLivesManager.h" />
+    <ClInclude Include="ScoreUI.h" />
     <ClInclude Include="SlickSam.h" />
     <ClInclude Include="SnakeState.h" />
     <ClInclude Include="StartScreenSelection.h" />

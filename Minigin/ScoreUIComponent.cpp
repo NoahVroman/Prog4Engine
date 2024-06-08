@@ -3,26 +3,16 @@
 #include "ResourceManager.h"
 #include "ScoreComponent.h"
 
-dae::ScoreUIComponent::ScoreUIComponent(GameObject* const pParent, int StartingScore) : Component(pParent)
+dae::ScoreUIComponent::ScoreUIComponent(GameObject* const pParent, int ) : Component(pParent)
 
 {
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
-	m_pTextComponent = GetOwnerObject()->AddComponent<TextComponent>("Score: ", font);
-	UpdateText(StartingScore);
 }
 
 
-void dae::ScoreUIComponent::NotifyObserver(GameObject* const Gameobj, Event currentEvent)
+void dae::ScoreUIComponent::NotifyObserver(GameObject* const , Event )
 {
-    if (currentEvent == Event::ScoreUpdated) {
-        auto scoreComponent = Gameobj->GetComponent<ScoreComponent>();
-        if (scoreComponent) {
-            UpdateText(scoreComponent->GetScore());
-        }
-    }
 }
 
-void dae::ScoreUIComponent::UpdateText(int Score)
+void dae::ScoreUIComponent::UpdateText(int )
 {
-	m_pTextComponent->SetText("Score: " + std::to_string(Score));
 }

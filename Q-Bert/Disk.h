@@ -15,6 +15,9 @@ namespace dae
 
         void Update() override;
 
+        void SetColorIndex(int index) { m_ColorIndex = index; }
+
+
     private:
         void UpdateAnimation();
         void CheckQbertActivation();

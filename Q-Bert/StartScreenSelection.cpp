@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "TransfomComponent.h"
 #include "SceneManager.h"
+#include "RoundManager.h"
 
 namespace dae
 {
@@ -34,24 +35,27 @@ namespace dae
 		
 	}
 
-	void StartScreenSelection::Confirm()
+	void StartScreenSelection::Confirm(RoundManager& roundmanager)
 	{
 		auto& scene = SceneManager::GetInstance();
 		switch (m_SelectedIndex)
 		{
 			case 0:
-				scene.ChangeScene(1);
+				scene.ChangeScene(1); 
 		
 			break;
 			case 1:
-				scene.ChangeScene(4);
+				scene.ChangeScene(2); // Scene for coop
 			break;
 			case 2:
 
-				scene.ChangeScene(7);
+				scene.ChangeScene(3); // Scene for versus
+
 			break;
 					
 		}
+		roundmanager.LoadLevel();
+
 	}
 
 }

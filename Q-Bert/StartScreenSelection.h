@@ -2,6 +2,7 @@
 #include "Component.h"
 namespace dae
 {
+	class RoundManager;
 	class StartScreenSelection : public Component
 	{
 	public:
@@ -14,7 +15,7 @@ namespace dae
 
 		void MoveUp();
 		void MoveDown();
-		void Confirm();
+		void Confirm(RoundManager& roundmanager);
 
 	private:
 		int m_SelectedIndex;

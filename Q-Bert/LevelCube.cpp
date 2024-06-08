@@ -1,5 +1,6 @@
 #include "LevelCube.h"
 
+
 dae::LevelCube::LevelCube(GameObject* pParent, int level, const glm::vec2& size, int colorIndex)
 	: Component(pParent)
 	, m_Level(level)
