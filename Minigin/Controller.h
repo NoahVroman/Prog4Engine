@@ -20,6 +20,8 @@ namespace dae
 		{
 			BindGamePadAction(GamePadInputBinding(button, inputType, command));
 		}
+
+		void ClearBindings();
 	private:
 
 		class Pimpl;

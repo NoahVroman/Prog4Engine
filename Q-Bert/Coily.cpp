@@ -7,7 +7,7 @@
 #include "SnakeState.h"
 #include "ServiceLocator.h"
 
-dae::Coily::Coily(GameObject* const pParent, std::vector<std::shared_ptr<GameObject>> qberts, LevelPyramid* pyramid, int StartingIndex, int StartRow)
+dae::Coily::Coily(GameObject* const pParent, std::vector<std::shared_ptr<GameObject>> qberts, LevelPyramid* pyramid, int StartingIndex, int StartRow, bool isPlayer)
 	:Component(pParent)
 	, m_pQbert(qberts)
 	, m_pPyramid(pyramid)
@@ -36,7 +36,7 @@ dae::Coily::Coily(GameObject* const pParent, std::vector<std::shared_ptr<GameObj
 
 
 	m_pCoilyState[CoilyState::CoilyStateEnum::Egg] = std::make_unique<EggState>(m_pParent);
-	m_pCoilyState[CoilyState::CoilyStateEnum::Snake] = std::make_unique<SnakeState>(m_pParent);
+	m_pCoilyState[CoilyState::CoilyStateEnum::Snake] = std::make_unique<SnakeState>(m_pParent,isPlayer);
 	m_CurrentState = m_pCoilyState[CoilyState::CoilyStateEnum::Egg].get();
 }
 
@@ -56,6 +56,8 @@ void dae::Coily::Update()
 		m_CurrentState = m_pCoilyState[nextState].get();
 	}
 
+
+
 }
 
 void dae::Coily::Reset()
@@ -73,6 +75,18 @@ void dae::Coily::Reset()
 }
 
 
+
+dae::PyramidMovementComponent* dae::Coily::GetPyramidMovementComponent() const
+{
+	if (m_CurrentState && m_CurrentState->GetState() == CoilyState::CoilyStateEnum::Snake)
+	{
+		return m_pPyramidMovementComponent;
+	}
+	else
+	{
+		return nullptr; // Return nullptr if not in Snake state
+	}
+}
 
 dae::Qbert* dae::Coily::GetQbert() const
 {

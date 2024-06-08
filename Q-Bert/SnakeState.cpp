@@ -1,10 +1,11 @@
 #include "SnakeState.h"
 #include "GameTime.h"
-dae::SnakeState::SnakeState(GameObject* const pParent)
+dae::SnakeState::SnakeState(GameObject* const pParent, bool isPlayer)
 	: CoilyState(CoilyStateEnum::Snake,pParent)
     , m_JumpInterval{ 1.f }
     , m_JumpTimer{ 0.0f }
     , m_Direction{ dae::SnakeState::Direction::UpRight }
+    , m_IsPlayer{ isPlayer }
 {
 
 }
@@ -20,27 +21,35 @@ void dae::SnakeState::Update(Coily* coily)
     std::cout << GetPyramidMovementComponent()->HasJustJumped() << std::endl;
     Qbert* closestQbert = coily->GetQbert();
 
-    m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
-
-    if (m_JumpTimer >= m_JumpInterval)
+    if (!m_IsPlayer)
     {
-        
-        HandleMovement(coily, closestQbert);
-        m_JumpTimer = 0.0f;
+        m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
+
+        if (m_JumpTimer >= m_JumpInterval)
+        {
+
+            HandleMovement(coily, closestQbert);
+            m_JumpTimer = 0.0f;
+        }
+
     }
+
 
     UpdateTexture();
 
     if (closestQbert)
     {
-        glm::vec2 qbertPos = closestQbert->GetCurrentPos() - GetPyramidMovementComponent()->GetCurrentPos();
 
 
-        if (coily->GetQbert()->GetPreviousIndex() == 0 || GetPyramidMovementComponent()->HasJustJumped() || closestQbert->HasJustJumped())
+        if (coily->GetQbert()->GetPreviousIndex() == 0 || closestQbert->HasJustJumped())
         {
-            if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+            if (!closestQbert->isOnDisk())
             {
-                coily->GetSubject().Notify(Event::QbertDied, m_pParent);
+                if (coily->GetQbert()->GetCurrentIndex() == GetPyramidMovementComponent()->GetCurrentIndex())
+                {
+                    coily->GetSubject().Notify(Event::QbertDied, m_pParent);
+                }
+
             }
 
         }

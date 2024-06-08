@@ -158,6 +158,66 @@ void SoloLevel2()
 		std::cout << "Level 01 Solo file wasn't properly written\n";
 	}
 }
+void VersuzLevel1()
+{
+
+	std::ofstream levelOne("Level01Versuz.txt");
+
+	if (!levelOne) {
+		std::cout << "Level 01 Solo file couldn't be created\n";
+		return;
+	}
+
+
+	Round rounds[3]{};
+
+	rounds[0].roundNumber = 1;
+	rounds[0].level = 1;
+	rounds[0].colorIdx = 0;
+	rounds[0].spawnSlickSams = false;
+	rounds[0].spawnUggWrongs = false;
+	rounds[0].slickSamsSpawnInterval = 0.f;
+	rounds[0].uggWrongSpawnInterval = 0.f;
+	rounds[0].gameMode = 3;
+
+	rounds[1].roundNumber = 2;
+	rounds[1].level = 1;
+	rounds[1].colorIdx = 1;
+	rounds[1].spawnSlickSams = false;
+	rounds[1].spawnUggWrongs = false;
+	rounds[1].slickSamsSpawnInterval = 0;
+	rounds[1].uggWrongSpawnInterval = 0;
+	rounds[1].gameMode = 3;
+
+	rounds[2].roundNumber = 3;
+	rounds[2].level = 1;
+	rounds[2].colorIdx = 2;
+	rounds[2].spawnSlickSams = false;
+	rounds[2].spawnUggWrongs = false;
+	rounds[2].slickSamsSpawnInterval = 0;
+	rounds[2].uggWrongSpawnInterval = 0;
+	rounds[2].gameMode = 3;
+
+
+
+
+	for (int i = 0; i < 3; ++i) {
+		levelOne << "Round " << rounds[i].roundNumber << "\n"
+			<< "Level " << rounds[i].level << "\n"
+			<< "ColorIdx " << rounds[i].colorIdx << "\n"
+			<< "SpawnSlickSams " << rounds[i].spawnSlickSams << "\n"
+			<< "SpawnUggWrongs " << rounds[i].spawnUggWrongs << "\n"
+			<< "SlickSamsSpawnInterval " << rounds[i].slickSamsSpawnInterval << "\n"
+			<< "UggWrongSpawnInterval " << rounds[i].uggWrongSpawnInterval << "\n"
+			<< "GameMode " << rounds[i].gameMode << "\n\n";
+	}
+
+	levelOne.close();
+
+	if (!levelOne.good()) {
+		std::cout << "Level 01 Solo file wasn't properly written\n";
+	}
+}
 
 
 void LoadTextRound(const std::string& filePath) {
@@ -242,16 +302,18 @@ void LoadTextRound(const std::string& filePath) {
 		std::vector<std::shared_ptr<dae::GameObject>> qberts;
 		auto Qbert1 = std::make_shared<dae::GameObject>();
 
-		if (round.gameMode == 0)
-		{
-			Qbert1->AddComponent<dae::Qbert>(pyramid,0,0 ,false);
-			qberts.push_back(Qbert1);
-
-		}
-		else if (round.gameMode == 1)
+		
+		if (round.gameMode == 1)
 		{
 			Qbert1->AddComponent<dae::Qbert>(pyramid,21,6 ,false);
 			qberts.push_back(Qbert1);
+		}
+		else
+		{
+			
+				Qbert1->AddComponent<dae::Qbert>(pyramid, 0, 0, false);
+				qberts.push_back(Qbert1);
+
 		}
 
 
@@ -315,8 +377,9 @@ void load()
 
 	//SoloLevel2();
 
-	LoadTextRound("Level01Solo.txt");
-	LoadTextRound("Level02Solo.txt");
+	//LoadTextRound("Level01Solo.txt");
+	//LoadTextRound("Level02Solo.txt");
+	LoadTextRound("Level01Versuz.txt");
 
 	
 }

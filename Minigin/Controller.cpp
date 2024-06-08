@@ -75,6 +75,10 @@ namespace dae
 			m_InputBindings.emplace_back(binding);
 		}
 
+		void ClearBindings()
+		{
+			m_InputBindings.clear();
+		}
     private:
 
         int m_ControllerIndex{ -1 };
@@ -129,6 +133,11 @@ void dae::Controller::BindGamePadAction(const GamePadInputBinding& binding)
 {
 	m_pPimpl->BindGamePadAction(binding);
 
+}
+
+void dae::Controller::ClearBindings()
+{
+	m_pPimpl->ClearBindings();
 }
 
 

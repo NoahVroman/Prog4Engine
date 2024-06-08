@@ -9,7 +9,7 @@ namespace dae
 	public:
 
 
-		SnakeState(GameObject* const pParent);
+		SnakeState(GameObject* const pParent,bool isPlayer);
 		virtual ~SnakeState();
 		SnakeState(const SnakeState& other) = delete;
 		SnakeState(SnakeState&& other) = delete;
@@ -27,6 +27,8 @@ namespace dae
 		private:
 			float m_JumpInterval;
 			float m_JumpTimer;
+			
+			bool m_IsPlayer;
 
 			enum class Direction
 			{

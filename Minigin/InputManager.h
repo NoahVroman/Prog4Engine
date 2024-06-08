@@ -32,6 +32,14 @@ namespace dae
 			m_KeyBoard->BindKeyboardAction(key,inputType ,command);
 		}
 
+		void ClearBindings() {
+			for (int i = 0; i < AmountOfControllers; i++)
+			{
+				m_GamePadControllers[i]->ClearBindings();
+			}
+			m_KeyBoard->ClearBindings();
+		}
+
 		private:
 			std::vector<std::unique_ptr<dae::Controller>> m_GamePadControllers{};
 			const int AmountOfControllers{ 2 };

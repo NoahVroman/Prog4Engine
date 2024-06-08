@@ -57,7 +57,7 @@
     <ClCompile Include="Disk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RoundManager.cpp">
+    <ClCompile Include="CoilyCommands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,7 +101,7 @@
     <ClInclude Include="Disk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RoundManager.h">
+    <ClInclude Include="CoilyCommands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

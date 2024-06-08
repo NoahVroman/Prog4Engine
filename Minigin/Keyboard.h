@@ -16,6 +16,9 @@ namespace dae
 				m_InputBindings.emplace_back(std::make_unique<KeyBoardInputBinding>(key,inputType ,command));
 			}
 			
+			void ClearBindings() {
+				m_InputBindings.clear();
+			}
 
 	private:
 

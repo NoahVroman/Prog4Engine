@@ -31,7 +31,17 @@ namespace dae
 		glm::vec2 GetControlPoint() const { return m_ControlPoint; }
 		bool IsMoving() const { return m_IsMoving; }
 		int GetCurrentRow() const { return m_CurrentRow; }
-		int GetCurrentIndex() const { return m_CurrentIndex; }
+		int GetCurrentIndex() const 
+		{
+			if (m_HasJustJumped && m_CurrentIndex >= 0)
+			{
+				return m_CurrentIndex;
+			}
+			else
+			{
+				return -1;
+			}
+		}
 
 
 		void SetCurrentPos(const glm::vec2& pos) { m_CurrentPos = pos; }

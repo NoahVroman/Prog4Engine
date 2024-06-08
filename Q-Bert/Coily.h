@@ -18,7 +18,7 @@ namespace dae
 
 
 
-		Coily(GameObject* const pParent,std::vector<std::shared_ptr<GameObject>> qberts , LevelPyramid* pyramid,int StartingIndex, int StartRow);
+		Coily(GameObject* const pParent,std::vector<std::shared_ptr<GameObject>> qberts , LevelPyramid* pyramid,int StartingIndex, int StartRow,bool isPlayer);
 		~Coily() = default; 
 		Coily(const Coily& other) = delete;
 		Coily(Coily&& other) = delete;
@@ -31,6 +31,8 @@ namespace dae
 		void Reset();
 
 		void SetFreeze(bool freeze) { m_Freeze = freeze; }
+
+		PyramidMovementComponent* GetPyramidMovementComponent() const;
 
 		Qbert* GetQbert() const;
 		LevelPyramid* GetPyramid() const { return m_pPyramid; }

@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Coily.cpp" />
+    <ClCompile Include="CoilyCommands.cpp" />
     <ClCompile Include="CoilyState.cpp" />
     <ClCompile Include="Disk.cpp" />
     <ClCompile Include="EggState.cpp" />
@@ -168,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coily.h" />
+    <ClInclude Include="CoilyCommands.h" />
     <ClInclude Include="CoilyState.h" />
     <ClInclude Include="Disk.h" />
     <ClInclude Include="EggState.h" />

@@ -10,6 +10,9 @@
 #include "LevelPyramid.h"
 #include "Scene.h"
 #include "ServiceLocator.h"
+#include "InputManager.h"
+#include "CoilyCommands.h"
+#include "QbertCommands.h"
 
 dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert)
     : Component(pParent)
@@ -66,84 +69,62 @@ void dae::LevelManager::InitializeRound(int level,int currentRound ,bool spawnSl
 
 void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent)
 {
-    switch (currentEvent)
-    {
-    case dae::Event::CubeChanged:
+    switch (currentEvent) {
+    case Event::CubeChanged:
+        // Handle CubeChanged event if necessary
         break;
-    case dae::Event::PyramidCompleted:
+    case Event::PyramidCompleted:
         m_RoundWon = true;
-      
-
         break;
-    case dae::Event::RoundWon:
+    case Event::RoundWon:
         HandleRoundWon();
         break;
-    case dae::Event::QbertDied:
-
-        if (auto qbertComponent = obj->GetComponent<Qbert>())
-        {
+    case Event::QbertDied:
+        if (auto qbertComponent = obj->GetComponent<Qbert>()) {
             qbertComponent->SetDeath(true);
         }
-        else
-        {
-            // If obj is not a Qbert, set the death state for all Qberts
-            for (auto& qbert : m_pQbert)
-            {
-                if (auto qbertComp = qbert->GetComponent<Qbert>())
-                {
+        else {
+            for (auto& qbert : m_pQbert) {
+                if (auto qbertComp = qbert->GetComponent<Qbert>()) {
                     qbertComp->SetDeath(true);
                 }
             }
         }
 
-
-        for (auto& slicksams : m_SlickSams)
-        {
+        // Clear enemies upon Qbert's death
+        for (auto& slicksams : m_SlickSams) {
             slicksams->Destroy();
         }
         m_SlickSams.clear();
 
-        for (auto& uggWrongWay : m_UggWrongWays)
-        {
-			uggWrongWay->Destroy();
-		}
+        for (auto& uggWrongWay : m_UggWrongWays) {
+            uggWrongWay->Destroy();
+        }
         m_UggWrongWays.clear();
 
-        if (m_pCoily != nullptr)
-        {
+        if (m_pCoily) {
             m_pCoily->Destroy();
         }
-
         m_SpawnCoily = false;
-		m_CoilySpawnTimer = 0;
+        m_CoilySpawnTimer = 0;
         m_UggWrongWaySpawnTimer = 0;
         m_SlickSamSpawnTimer = 0;
-        
         break;
-    case dae::Event::UggWrongWayDied:
-        obj->Destroy();
-        break;
-    case dae::Event::CoilyDied:
-        obj->Destroy();
-        break;
-    case dae::Event::SlickSamDied:
+
+    case Event::UggWrongWayDied:
+    case Event::CoilyDied:
+    case Event::SlickSamDied:
         obj->Destroy();
         break;
 
-    case dae::Event::QbertJumped:
-    {
+    case Event::QbertJumped: {
         unsigned int JumpSoundIndex{};
-        if (JumpSoundIndex == UINT32_MAX)
-        {
+        if (JumpSoundIndex == UINT32_MAX) {
             JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
         }
         ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
-
         break;
     }
-    case dae::Event::JumpedOnDisk:
-
-		break;
 
     default:
         break;
@@ -292,12 +273,39 @@ void dae::LevelManager::SpawnUggWrongWay()
 
 void dae::LevelManager::SpawnCoily()
 {
+    if (m_GameMode == 3)
+    {
+        auto coily = std::make_shared<GameObject>();
+        coily->AddComponent<Coily>(m_pQbert, m_Pyramid, 2, 1,true);
+        coily->GetComponent<Coily>()->GetSubject().AddObserver(this);
+        dae::SceneManager::GetInstance().GetCurrentScene()->Add(coily);
+        m_pCoily = coily.get();
 
-    auto coily = std::make_shared<GameObject>();
-    coily->AddComponent<Coily>(m_pQbert, m_Pyramid ,2,1);
-    coily->GetComponent<Coily>()->GetSubject().AddObserver(this);
-    dae::SceneManager::GetInstance().GetCurrentScene()->Add(coily);
-    m_pCoily = coily.get();
+        InputManager::GetInstance().ClearBindings();
+
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(m_pQbert[0]));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(m_pQbert[0]));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(m_pQbert[0]));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(m_pQbert[0]));
+
+
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_RIGHT, InputType::DownThisFrame, MoveDownRightCommandCoily(coily));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_DOWN, InputType::DownThisFrame, MoveDownLeftCommandCoily(coily));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_LEFT, InputType::DownThisFrame, MoveUpLeftCommandCoily(coily));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_UP, InputType::DownThisFrame, MoveUpRightCommandCoily(coily));
+
+
+
+    }
+    else
+    {
+        auto coily = std::make_shared<GameObject>();
+        coily->AddComponent<Coily>(m_pQbert, m_Pyramid, 2, 1,false);
+        coily->GetComponent<Coily>()->GetSubject().AddObserver(this);
+        dae::SceneManager::GetInstance().GetCurrentScene()->Add(coily);
+        m_pCoily = coily.get();
+
+    }
 
 }
 
