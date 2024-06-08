@@ -38,6 +38,7 @@ namespace dae {
         std::vector<GameObject*> m_SlickSams;
         std::vector<GameObject*> m_UggWrongWays;
         GameObject* m_pCoily;
+        std::shared_ptr<GameObject> m_pCoilyshared;
 
         GameObject* m_pParent;
 

@@ -24,6 +24,8 @@
 #include "UggWrongWay.h"
 #include "SlickSam.h"
 #include "Disk.h"
+#include "StartScreenSelection.h"
+#include "MenuCommands.h"
 
 #include <fstream>
 #include <sstream>
@@ -39,6 +41,75 @@ struct Round {
 	float uggWrongSpawnInterval;
 	int gameMode;
 };
+
+
+void LoadStartScreen()
+{
+	constexpr int width = 640;
+	//constexpr int height = 480;
+	constexpr int halfWidth = width / 2;
+	//constexpr int halfHeight = height / 2;
+	
+	auto& resourceManager = dae::ResourceManager::GetInstance();
+	auto mainTextFont = resourceManager.LoadFont("Minecraft.ttf", 36);
+
+	
+	auto& scene = dae::SceneManager::GetInstance().CreateScene("StartScreen");
+	auto startScreen = std::make_shared<dae::GameObject>();
+	startScreen->GetTransform()->SetLocalPosition(glm::vec2{ 0,0 });
+
+	auto SoloButton = std::make_shared<dae::GameObject>();
+	SoloButton->GetTransform()->SetLocalPosition(glm::vec2{ halfWidth-36,200 });
+	SoloButton->AddComponent<dae::TextComponent>("Solo", mainTextFont);
+	scene.Add(SoloButton);
+
+	auto VersuzButton = std::make_shared<dae::GameObject>();
+	VersuzButton->GetTransform()->SetLocalPosition(glm::vec2{ halfWidth-36,300 });
+	VersuzButton->AddComponent<dae::TextComponent>("Versuz", mainTextFont);
+	scene.Add(VersuzButton);
+	
+	auto CoopButton = std::make_shared<dae::GameObject>();
+	CoopButton->GetTransform()->SetLocalPosition(glm::vec2{ halfWidth-36,250 });
+	CoopButton->AddComponent<dae::TextComponent>("Coop", mainTextFont);
+	scene.Add(CoopButton);
+
+	dae::TextureComponent::SpriteInfo spriteInfo{};
+	spriteInfo.width = 350;
+	spriteInfo.height = 150;
+	spriteInfo.SrcX = 0;
+	spriteInfo.SrcY = 0;
+	spriteInfo.SrcWidth = 474;
+	spriteInfo.SrcHeight = 150;
+
+	auto Logo = std::make_shared<dae::GameObject>();
+	Logo->GetTransform()->SetLocalPosition(glm::vec2{ halfWidth - 175,15 });
+	Logo->AddComponent<dae::TextureComponent>("GameTitle.png", spriteInfo);
+	scene.Add(Logo);
+
+	dae::TextureComponent::SpriteInfo spriteInfoSelectArrow{};
+	spriteInfoSelectArrow.width = 32;
+	spriteInfoSelectArrow.height = 32;
+	spriteInfoSelectArrow.SrcX = 0;
+	spriteInfoSelectArrow.SrcY = 0;
+	spriteInfoSelectArrow.SrcWidth = 6;
+	spriteInfoSelectArrow.SrcHeight = 9;
+
+
+	auto selectionArrow = std::make_shared<dae::GameObject>();
+	selectionArrow->GetTransform()->SetLocalPosition(glm::vec2{ halfWidth - 70,200 });
+	selectionArrow->AddComponent<dae::TextureComponent>("SelectionArrow.png", spriteInfoSelectArrow);
+	scene.Add(selectionArrow);
+
+	auto startScreenSelection = std::make_shared<dae::GameObject>();
+	startScreenSelection->AddComponent<dae::StartScreenSelection>(selectionArrow.get(), 50.f);
+	scene.Add(startScreenSelection);
+
+	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, StartScreenMoveDown(startScreenSelection));
+	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, StartScreenMoveUp(startScreenSelection));
+	dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_SPACE, InputType::DownThisFrame, StartScreenSelect(startScreenSelection));
+
+	scene.Add(startScreen);
+}
 
 void SoloLevel1()
 {
@@ -228,6 +299,7 @@ void LoadTextRound(const std::string& filePath) {
 		return;
 	}
 
+
 	std::vector<Round> rounds;
 	std::string line;
 	while (std::getline(levelFile, line)) {
@@ -316,7 +388,6 @@ void LoadTextRound(const std::string& filePath) {
 
 		}
 
-
 		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(Qbert1));
 		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(Qbert1));
 		dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(Qbert1));
@@ -379,7 +450,11 @@ void load()
 
 	//LoadTextRound("Level01Solo.txt");
 	//LoadTextRound("Level02Solo.txt");
+	LoadStartScreen();
+	LoadTextRound("Level01Solo.txt");
+	LoadTextRound("Level01CoOp.txt");
 	LoadTextRound("Level01Versuz.txt");
+
 
 	
 }

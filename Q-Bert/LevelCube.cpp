@@ -39,10 +39,18 @@ void dae::LevelCube::ChangeColor()
 				m_HalfTurned = true;
 			}
 		}
+		else if (m_Level == 3 )
+		{
+			ChangeToFirstColor();
+			m_HalfTurned = false;
+			m_Turned = false;
+
+		}
 		else
 		{
 			ChangeToSecondColor();
 			m_Turned = true;
+
 		}
 
 	}

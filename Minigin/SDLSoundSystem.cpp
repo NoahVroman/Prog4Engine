@@ -27,6 +27,7 @@ public:
 	{
 		m_Thread.request_stop();
 		m_ThreadCondition.notify_all();
+		m_Thread.join();
 		Mix_HaltChannel(-1);
 
 		for (Sound& sound : m_LoadedSounds)

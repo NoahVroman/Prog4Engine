@@ -65,6 +65,8 @@ void dae::LevelManager::InitializeRound(int level,int currentRound ,bool spawnSl
     m_SlickSamSpawnTimer = 0;
     m_UggWrongWaySpawnTimer = 0;
     m_GameMode = gameMode;
+
+
 }
 
 void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent)
@@ -135,7 +137,22 @@ void dae::LevelManager::Update()
 {
     float deltaTime = GameTime::GetInstance().GetDeltaTime();
 
- 
+    if (m_GameMode == 3)
+    {
+        InputManager::GetInstance().ClearBindings();
+
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(m_pQbert[0]));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(m_pQbert[0]));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(m_pQbert[0]));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(m_pQbert[0]));
+
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_RIGHT, InputType::DownThisFrame, MoveDownRightCommandCoily(m_pCoilyshared));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_DOWN, InputType::DownThisFrame, MoveDownLeftCommandCoily(m_pCoilyshared));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_LEFT, InputType::DownThisFrame, MoveUpLeftCommandCoily(m_pCoilyshared));
+        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_UP, InputType::DownThisFrame, MoveUpRightCommandCoily(m_pCoilyshared));
+
+
+    }
 
 
     if (!m_SpawnCoily)
@@ -280,21 +297,7 @@ void dae::LevelManager::SpawnCoily()
         coily->GetComponent<Coily>()->GetSubject().AddObserver(this);
         dae::SceneManager::GetInstance().GetCurrentScene()->Add(coily);
         m_pCoily = coily.get();
-
-        InputManager::GetInstance().ClearBindings();
-
-        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_D, InputType::DownThisFrame, MoveDownRightCommand(m_pQbert[0]));
-        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_S, InputType::DownThisFrame, MoveDownLeftCommand(m_pQbert[0]));
-        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(m_pQbert[0]));
-        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(m_pQbert[0]));
-
-
-        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_RIGHT, InputType::DownThisFrame, MoveDownRightCommandCoily(coily));
-        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_DOWN, InputType::DownThisFrame, MoveDownLeftCommandCoily(coily));
-        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_LEFT, InputType::DownThisFrame, MoveUpLeftCommandCoily(coily));
-        InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_UP, InputType::DownThisFrame, MoveUpRightCommandCoily(coily));
-
-
+        m_pCoilyshared = coily;
 
     }
     else
