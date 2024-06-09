@@ -41,20 +41,33 @@ namespace dae
 		switch (m_SelectedIndex)
 		{
 			case 0:
-				scene.ChangeScene(1); 
-		
+				scene.ChangeScene(1);
+				roundmanager.LoadLevel();
+
 			break;
 			case 1:
-				scene.ChangeScene(2); // Scene for coop
+				 // Scene for coop
+				scene.ChangeScene(3);
+
+				roundmanager.ClearRounds();
+				roundmanager.SetCurrentRound(0);
+				roundmanager.LoadRoundData("Level01CoOp.txt", "CoOpLevel1");
+				roundmanager.LoadLevel();
+
 			break;
 			case 2:
 
-				scene.ChangeScene(3); // Scene for versus
+				 // Scene for versus
+				scene.ChangeScene(3);
 
+				roundmanager.ClearRounds();
+				roundmanager.SetCurrentRound(0);
+				roundmanager.LoadRoundData("Level01Versuz.txt", "VersuzLevel1");
+				roundmanager.LoadLevel();
+				
 			break;
 					
 		}
-		roundmanager.LoadLevel();
 
 	}
 

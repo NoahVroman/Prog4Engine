@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
 struct Round {
     int roundNumber;
     int level;
@@ -17,7 +18,9 @@ namespace dae
 	class LevelPyramid;
 	class LevelManager;
 	class Disk;
-	class RoundManager
+
+    class GameObject;
+    class RoundManager : public std::enable_shared_from_this<RoundManager>
 	{
     public:
         RoundManager();
@@ -25,6 +28,7 @@ namespace dae
 
         void LoadRoundData(const std::string& filePath,const std::string& SceneName);
 
+        std::vector<std::shared_ptr<GameObject>> MakeUI();
 
         void SwitchToNextRound();
         void ResetRound();
@@ -33,6 +37,9 @@ namespace dae
 
         void LoadLevel();
 
+        void SetCurrentRound(int roundIdx);
+
+        void ClearRounds();
         
 
         Round& GetRound(size_t index)

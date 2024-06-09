@@ -15,7 +15,7 @@
 #include "QbertCommands.h"
 #include "ScoreAndLivesManager.h"
 
-dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert, RoundManager* roundmanager)
+dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert, std::shared_ptr<RoundManager> roundmanager)
     : Component(pParent)
     , m_Pyramid{ pyramid }
     , m_pQbert{ pQbert }
@@ -120,14 +120,20 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
         obj->Destroy();
         break;
 
-    case Event::QbertJumped: {
-        unsigned int JumpSoundIndex{};
-        if (JumpSoundIndex == UINT32_MAX) {
-            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
+    case Event::QbertJumped: 
+        {
+           unsigned int JumpSoundIndex{};
+           if (JumpSoundIndex == UINT32_MAX) 
+           {
+               JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
+           }
+           ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
+           break;
         }
-        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
+    case Event::CubeTurned:
+          ScoreAndLivesManager::GetInstance().AddScore(25);
         break;
-    }
+    
 
     default:
         break;
@@ -137,6 +143,8 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
 void dae::LevelManager::Update()
 {
     float deltaTime = GameTime::GetInstance().GetDeltaTime();
+
+
 
     if (m_GameMode == 3)
     {
@@ -208,6 +216,7 @@ void dae::LevelManager::HandleRoundWon()
     m_FlashingTimer = 0;
     m_CurrentColor = 1;
     ResetLevel();
+
 
     m_pRoundManager->SwitchToNextRound();
 

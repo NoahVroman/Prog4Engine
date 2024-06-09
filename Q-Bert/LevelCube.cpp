@@ -18,7 +18,7 @@ glm::vec2 dae::LevelCube::GetCenter() const
 					  GetOwnerObject()->GetTransform()->GetLocalPosition().y - m_Size.y * 0.5f };
 }
 
-void dae::LevelCube::ChangeColor()
+bool dae::LevelCube::ChangeColor()
 {
 	if (!m_Turned)
 	{
@@ -26,6 +26,9 @@ void dae::LevelCube::ChangeColor()
 		{
 			ChangeToSecondColor();
 			m_Turned = true;
+			return true;
+
+
 		}
 		else if (m_Level == 2)
 		{
@@ -33,6 +36,8 @@ void dae::LevelCube::ChangeColor()
 			{
 				ChangeToThirdColor();
 				m_Turned = true;
+				return true;
+
 			}
 			else
 			{
@@ -51,11 +56,15 @@ void dae::LevelCube::ChangeColor()
 		{
 			ChangeToSecondColor();
 			m_Turned = true;
+			return true;
+			
 
 		}
 
 	}
+	
 	m_Subject.Notify(Event::CubeChanged,m_pParent);
+	return false;
 
 }
 
@@ -101,6 +110,7 @@ void dae::LevelCube::RevertColor()
 
 void dae::LevelCube::ChangeToFirstColor()
 {
+
 	GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(float(m_ColorIndex)* m_Size.x,0,m_Size.x,m_Size.y);
 }
 

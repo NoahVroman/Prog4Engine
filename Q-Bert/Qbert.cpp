@@ -94,7 +94,10 @@ void dae::Qbert::Update()
 
             if (m_JumpedOff == false)
             {
-                m_pPyramid->GetCubes()[m_CurrentCubeIndex]->GetComponent<dae::LevelCube>()->ChangeColor();
+                if (m_pPyramid->GetCubes()[m_CurrentCubeIndex]->GetComponent<dae::LevelCube>()->ChangeColor())
+                {
+                    m_Subject.Notify(Event::CubeTurned, Parent);
+                }
 
             }
             else if (!m_isOnDisk)
@@ -109,7 +112,6 @@ void dae::Qbert::Update()
 void dae::Qbert::MoveUpRight()
 {
    
-
     if (!m_Frozen && !m_IsDead)
     {
 

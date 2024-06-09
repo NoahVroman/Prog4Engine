@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "LevelCube.h"
 #include "TransfomComponent.h"
+#include "ScoreAndLivesManager.h"
 
 #include <cassert>
 #include <algorithm>
@@ -34,6 +35,7 @@ void dae::LevelPyramid::NotifyObserver(GameObject* const, Event)
 
     bool isComplete = std::all_of(m_pCubes.begin(), m_pCubes.end(), [&](const std::shared_ptr<GameObject>& pCube)
                                   {
+
                                       return pCube->GetComponent<dae::LevelCube>()->IsTurned();
                                   });
 

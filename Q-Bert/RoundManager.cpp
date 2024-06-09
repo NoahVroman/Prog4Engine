@@ -45,8 +45,6 @@ namespace dae
 
 	void RoundManager::LoadRoundData(const std::string& filePath, const std::string& SceneName)
 	{
-		m_Rounds.clear();
-
         SceneManager::GetInstance().CreateScene(SceneName);
 
         std::ifstream levelFile(filePath);
@@ -94,6 +92,43 @@ namespace dae
         levelFile.close();
 	}
 
+	std::vector<std::shared_ptr<GameObject>> RoundManager::MakeUI()
+	{
+		auto& resourceManager = dae::ResourceManager::GetInstance();
+		auto mainTextFont = resourceManager.LoadFont("Minecraft.ttf", 20);
+
+		std::vector<std::shared_ptr<dae::GameObject>> UI;
+
+		std::string livesStr = "Lives: 3";
+		std::string roundStr = "Round: " + std::to_string(m_Rounds[m_CurrentRoundIdx].roundNumber);
+		std::string levelStr = "Level: " + std::to_string(m_Rounds[m_CurrentRoundIdx].level);
+
+		auto score = std::make_shared<dae::GameObject>();
+		score->GetTransform()->SetLocalPosition(glm::vec2{ 0,0 });
+		score->AddComponent<dae::TextComponent>("Score: 0", mainTextFont);
+
+		UI.push_back(score);
+
+		auto lives = std::make_shared<dae::GameObject>();
+		lives->GetTransform()->SetLocalPosition(glm::vec2{ 0,50 });
+		lives->AddComponent<dae::TextComponent>(livesStr, mainTextFont);
+		UI.push_back(lives);
+
+		ScoreAndLivesManager::GetInstance().Initialize(score->GetComponent<dae::TextComponent>(), lives->GetComponent<dae::TextComponent>());
+
+		auto roundText = std::make_shared<dae::GameObject>();
+		roundText->GetTransform()->SetLocalPosition(glm::vec2{ 250,440 });
+		roundText->AddComponent<dae::TextComponent>(roundStr, mainTextFont);
+		UI.push_back(roundText);
+
+		auto levelText = std::make_shared<dae::GameObject>();
+		levelText->GetTransform()->SetLocalPosition(glm::vec2{ 350,440 });
+		levelText->AddComponent<dae::TextComponent>(levelStr, mainTextFont);
+		UI.push_back(levelText);
+
+		return UI;
+	}
+
 
 
 
@@ -101,8 +136,8 @@ namespace dae
 	void RoundManager::SwitchToNextRound()
 	{
 		++m_CurrentRoundIdx;
-		ResetRound();
-	
+			ResetRound();
+
 	}
 
 	void RoundManager::ResetRound()
@@ -206,12 +241,12 @@ namespace dae
 			scene->Add(qbert);
 		}
 
-		//std::vector<std::shared_ptr<dae::GameObject>> UI = MakeUI(m_Rounds[m_CurrentRoundIdx].roundNumber, m_Rounds[m_CurrentRoundIdx].level);
+		std::vector<std::shared_ptr<dae::GameObject>> UI = MakeUI();
 
-		//for (const auto& ui : UI)
-		//{
-		//	scene->Add(ui);
-		//}
+		for (const auto& ui : UI)
+		{
+			scene->Add(ui);
+		}
 
 		auto Disk = std::make_shared<dae::GameObject>();
 		m_pDisk = Disk->AddComponent<dae::Disk>(qberts, m_pLevelPyramid, 4, true, m_Rounds[m_CurrentRoundIdx].colorIdx);
@@ -219,19 +254,31 @@ namespace dae
 		scene->Add(Disk);
 
 		auto Disk2 = std::make_shared<dae::GameObject>();
-		m_pDisk2 = Disk2->AddComponent<dae::Disk>(qberts, m_pLevelPyramid, 6, false, m_Rounds[m_CurrentRoundIdx].colorIdx);
+		m_pDisk2 = Disk2->AddComponent<dae::Disk>(qberts, m_pLevelPyramid, 5, false, m_Rounds[m_CurrentRoundIdx].colorIdx);
 
 		scene->Add(Disk2);
 
 
 
 		auto levelManager = std::make_shared<dae::GameObject>();
-		m_pLevelManager = levelManager->AddComponent<dae::LevelManager>(m_pLevelPyramid, qberts,this);
+		m_pLevelManager = levelManager->AddComponent<dae::LevelManager>(m_pLevelPyramid, qberts,shared_from_this());
 		levelManager->GetComponent<dae::LevelManager>()->InitializeRound(m_Rounds[m_CurrentRoundIdx].level, m_Rounds[m_CurrentRoundIdx].roundNumber, m_Rounds[m_CurrentRoundIdx].spawnSlickSams, m_Rounds[m_CurrentRoundIdx].spawnUggWrongs, m_Rounds[m_CurrentRoundIdx].slickSamsSpawnInterval, m_Rounds[m_CurrentRoundIdx].uggWrongSpawnInterval, m_Rounds[m_CurrentRoundIdx].gameMode);
 
 
 		scene->Add(levelManager);
     }
+
+	void RoundManager::SetCurrentRound(int roundIdx)
+	{
+			m_CurrentRoundIdx = roundIdx;
+	}
+
+	void RoundManager::ClearRounds()
+	{
+		m_Rounds.clear();
+		m_CurrentRoundIdx = 0;
+		m_CurrentLevelIdx = 0;
+	}
 
 
 
