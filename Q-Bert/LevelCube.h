@@ -28,7 +28,7 @@ namespace dae
 
 		Subject& GetSubject() { return m_Subject; }
 
-		bool ChangeColor();
+		void ChangeColor();
 
 		void RevertColor();
 

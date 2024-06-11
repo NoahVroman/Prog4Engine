@@ -1,5 +1,6 @@
 #include "SnakeState.h"
 #include "GameTime.h"
+#include "ServiceLocator.h"
 dae::SnakeState::SnakeState(GameObject* const pParent, bool isPlayer)
 	: CoilyState(CoilyStateEnum::Snake,pParent)
     , m_JumpInterval{ 1.f }
@@ -7,7 +8,6 @@ dae::SnakeState::SnakeState(GameObject* const pParent, bool isPlayer)
     , m_Direction{ dae::SnakeState::Direction::UpRight }
     , m_IsPlayer{ isPlayer }
 {
-
 }
 
 dae::SnakeState::~SnakeState()
@@ -23,10 +23,19 @@ void dae::SnakeState::Update(Coily* coily)
 
     if (!m_IsPlayer)
     {
+
+
         m_JumpTimer += GameTime::GetInstance().GetDeltaTime();
 
         if (m_JumpTimer >= m_JumpInterval)
         {
+            unsigned int CoilyJump{ UINT32_MAX };
+            if (CoilyJump == UINT32_MAX) {
+                CoilyJump = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/CoilySnakeJump.wav");
+            }
+            ServiceLocator::GetSoundSystem().Play(CoilyJump, 100);
+
+
 
             HandleMovement(coily, closestQbert);
             m_JumpTimer = 0.0f;

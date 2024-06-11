@@ -2,7 +2,7 @@
 #include "GameTime.h"
 #include "LevelCube.h"
 
-dae::SlickSam::SlickSam(GameObject* const pParent, LevelPyramid* pyramid, Qbert* pQbert, int StartRow, int StartingIndex)
+dae::SlickSam::SlickSam(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert, int StartRow, int StartingIndex)
 	: Component(pParent)
 	, m_pParent{ pParent }
 	, m_pPyramid{ pyramid }
@@ -14,8 +14,14 @@ dae::SlickSam::SlickSam(GameObject* const pParent, LevelPyramid* pyramid, Qbert*
 	, m_pTextureComponent{}
 	, m_Subject{}
 	, m_StartingIndex{ StartingIndex }
-	, m_pQbert{ pQbert }
+	, m_pQberts{ pQbert }
+	, m_Freeze{ false }
 {
+
+	for (auto& qberts : m_pQberts)
+	{
+		m_pQbert = qberts->GetComponent<Qbert>();
+	}
 
 	spriteInfo.width = 32;
 	spriteInfo.height = 32;

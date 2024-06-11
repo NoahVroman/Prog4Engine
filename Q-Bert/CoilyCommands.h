@@ -19,29 +19,30 @@ public:
 		
 		if (GetGameObject() != nullptr)
 		{
-
-			if (auto coily = GetGameObject()->GetComponent<dae::Coily>())
+			auto coily = GetGameObject()->GetComponent<dae::Coily>();
+			if (!coily)
 			{
-				// Check if Coily has the PyramidMovementComponent
-				auto movementComponent = coily->GetPyramidMovementComponent();
-				if (!movementComponent)
-				{
-					std::cout << "Coily is not in the Snake state; cannot move." << std::endl;
-					return;
-				}
-
-				// Check movement conditions and execute movement
-				if (!movementComponent->IsOnFirstCubeInRow() && !movementComponent->IsOnLastCubeInRow())
-				{
-					movementComponent->MoveDownRight();
-				}
-				else
-				{
-					std::cout << "Movement condition not met for MoveDownRight." << std::endl;
-				}
-
-
+				std::cout << "No Coily component found; cannot move." << std::endl;
+				return;
 			}
+
+			// Check if Coily has the PyramidMovementComponent
+			auto movementComponent = coily->GetPyramidMovementComponent();
+			if (!movementComponent)
+			{
+				std::cout << "Coily is not in the Snake state; cannot move." << std::endl;
+				return;
+			}
+
+			if (movementComponent->GetCurrentRow() < movementComponent->GetRows() - 1)
+			{
+				movementComponent->MoveDownRight();
+			}
+			else
+			{
+				std::cout << "Movement condition not met for MoveDownRight." << std::endl;
+			}
+
 		}
 
 	};
@@ -63,32 +64,29 @@ class MoveDownLeftCommandCoily : public dae::GameObjectCommand
 		{
 			if (GetGameObject() != nullptr)
 			{
-				if (auto coily = GetGameObject()->GetComponent<dae::Coily>())
+				auto coily = GetGameObject()->GetComponent<dae::Coily>();
+				if (!coily)
 				{
-					auto movementComponent = coily->GetPyramidMovementComponent();
-					if (!movementComponent)
-					{
-						std::cout << "Coily is not in the Snake state; cannot move." << std::endl;
-						return;
-					}
+					std::cout << "No Coily component found; cannot move." << std::endl;
+					return;
+				}
 
-					if (!movementComponent->IsOnFirstCubeInRow() && !movementComponent->IsOnLastCubeInRow())
-					{
-						movementComponent->MoveDownLeft();
-					}
-					else
-					{
-						std::cout << "Movement condition not met for MoveDownLeft." << std::endl;
-					}
+				auto movementComponent = coily->GetPyramidMovementComponent();
+				if (!movementComponent)
+				{
+					std::cout << "Coily is not in the Snake state; cannot move." << std::endl;
+					return;
+				}
 
+				if (movementComponent->GetCurrentRow() < movementComponent->GetRows() - 1)
+				{
+					movementComponent->MoveDownLeft();
 				}
 				else
 				{
-					std::cout << "Coily component not found." << std::endl;
+					std::cout << "Movement condition not met for MoveDownLeft." << std::endl;
 				}
-
 			}
-
 		}
 
 
@@ -108,24 +106,27 @@ class MoveUpLeftCommandCoily : public dae::GameObjectCommand
 		{
 			if (GetGameObject() != nullptr)
 			{
-
-				if (auto coily = GetGameObject()->GetComponent<dae::Coily>())
+				auto coily = GetGameObject()->GetComponent<dae::Coily>();
+				if (!coily)
 				{
-					auto movementComponent = coily->GetPyramidMovementComponent();
-					if (!movementComponent)
-					{
-						std::cout << "Coily is not in the Snake state; cannot move." << std::endl;
-						return;
-					}
+					std::cout << "No Coily component found; cannot move." << std::endl;
+					return;
+				}
 
-					if (!movementComponent->IsOnFirstCubeInRow() && !movementComponent->IsOnLastCubeInRow())
-					{
-						movementComponent->MoveUpLeft();
-					}
-					else
-					{
-						std::cout << "Movement condition not met for MoveUpLeft." << std::endl;
-					}
+				auto movementComponent = coily->GetPyramidMovementComponent();
+				if (!movementComponent)
+				{
+					std::cout << "Coily is not in the Snake state; cannot move." << std::endl;
+					return;
+				}
+
+				if (!movementComponent->IsOnFirstCubeInRow())
+				{
+					movementComponent->MoveUpLeft();
+				}
+				else
+				{
+					std::cout << "Movement condition not met for MoveUpLeft." << std::endl;
 				}
 			}
 		}
@@ -147,25 +148,29 @@ class MoveUpRightCommandCoily : public dae::GameObjectCommand
 		{
 			if (GetGameObject() != nullptr)
 			{
-				if (auto coily = GetGameObject()->GetComponent<dae::Coily>())
+				auto coily = GetGameObject()->GetComponent<dae::Coily>();
+				if (!coily)
 				{
-					auto movementComponent = coily->GetPyramidMovementComponent();
-					if (!movementComponent)
-					{
-						std::cout << "Coily is not in the Snake state; cannot move." << std::endl;
-						return;
-					}
-
-					if (!movementComponent->IsOnFirstCubeInRow() && !movementComponent->IsOnLastCubeInRow())
-					{
-						movementComponent->MoveUpRight();
-					}
-					else
-					{
-						std::cout << "Movement condition not met for MoveUpRight." << std::endl;
-					}
-
+					std::cout << "No Coily component found; cannot move." << std::endl;
+					return;
 				}
+
+				auto movementComponent = coily->GetPyramidMovementComponent();
+				if (!movementComponent)
+				{
+					std::cout << "Coily is not in the Snake state; cannot move." << std::endl;
+					return;
+				}
+
+				if (!movementComponent->IsOnLastCubeInRow())
+				{
+					movementComponent->MoveUpRight();
+				}
+				else
+				{
+					std::cout << "Movement condition not met for MoveUpRight." << std::endl;
+				}
+
 			}
 
 		}

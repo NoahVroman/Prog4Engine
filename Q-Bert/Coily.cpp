@@ -42,19 +42,20 @@ dae::Coily::Coily(GameObject* const pParent, std::vector<std::shared_ptr<GameObj
 
 void dae::Coily::Update()
 {
-	if (m_Freeze)
+	if (!m_Freeze)
 	{
-		return;
+		CoilyState::CoilyStateEnum nextState = m_CurrentState->GetNextState(this);
+		if (nextState == m_CurrentState->GetState())
+		{
+			m_CurrentState->Update(this);
+		}
+		else
+		{
+			m_CurrentState = m_pCoilyState[nextState].get();
+		}
+
 	}
-	CoilyState::CoilyStateEnum nextState = m_CurrentState->GetNextState(this);
-	if (nextState == m_CurrentState->GetState())
-	{
-		m_CurrentState->Update(this);
-	}
-	else
-	{
-		m_CurrentState = m_pCoilyState[nextState].get();
-	}
+
 
 
 

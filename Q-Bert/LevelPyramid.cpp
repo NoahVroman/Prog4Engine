@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "LevelCube.h"
 #include "TransfomComponent.h"
-#include "ScoreAndLivesManager.h"
 
 #include <cassert>
 #include <algorithm>
@@ -28,14 +27,13 @@ dae::LevelPyramid::LevelPyramid(GameObject* const pParent, const PyramidSettings
 
 dae::LevelPyramid::~LevelPyramid()
 {
-
+	RemoveAllCubes();
 }
 void dae::LevelPyramid::NotifyObserver(GameObject* const, Event)
 {
 
     bool isComplete = std::all_of(m_pCubes.begin(), m_pCubes.end(), [&](const std::shared_ptr<GameObject>& pCube)
                                   {
-
                                       return pCube->GetComponent<dae::LevelCube>()->IsTurned();
                                   });
 
@@ -93,13 +91,23 @@ int dae::LevelPyramid::GetLastCubeInRow(int row) const
 
 void dae::LevelPyramid::NextRound()
 {
+    m_Settings.ColorIndex = (m_Settings.ColorIndex + 1) % 6;
 
     for (auto& cube : m_pCubes)
     {
-        cube->GetComponent<dae::LevelCube>()->SetTurned(false);
         cube->GetComponent<dae::LevelCube>()->SetColorIndex(m_Settings.ColorIndex);
-        cube->GetComponent<dae::LevelCube>()->ChangeToFirstColor();
+        cube->GetComponent<dae::LevelCube>()->SetTurned(false);
     }
+}
+
+void dae::LevelPyramid::Reset()
+{
+    for (auto& cube : m_pCubes)
+    {
+        cube->GetComponent<dae::LevelCube>()->SetHalfTurned(false);
+        cube->GetComponent<dae::LevelCube>()->SetTurned(false);
+        cube->GetComponent<dae::LevelCube>()->ChangeToFirstColor();
+	}
 }
 
 void dae::LevelPyramid::ContstructPyramid()
@@ -139,14 +147,5 @@ void dae::LevelPyramid::ContstructPyramid()
         }
     }
 
-}
-
-void dae::LevelPyramid::DestroyPyramid()
-{
-	for (auto& cube : m_pCubes)
-	{
-		cube->Destroy();
-	}
-	m_pCubes.clear();
 }
 

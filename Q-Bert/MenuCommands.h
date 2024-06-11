@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "StartScreenSelection.h"
 #include "SceneManager.h"
-#include "RoundManager.h"
 
 class StartScreenMoveDown : public dae::GameObjectCommand
 {
@@ -54,7 +53,7 @@ class StartScreenSelect : public dae::GameObjectCommand
 	
 	public:
 
-		StartScreenSelect(std::shared_ptr<dae::GameObject> pGameObject, std::shared_ptr<dae::RoundManager> roundManager ) : GameObjectCommand(pGameObject), m_RoundManager(roundManager)
+		StartScreenSelect(std::shared_ptr<dae::GameObject> pGameObject) : GameObjectCommand(pGameObject)
 		{
 
 		}
@@ -64,15 +63,54 @@ class StartScreenSelect : public dae::GameObjectCommand
 
 			if (auto startScreen = GetGameObject()->GetComponent<dae::StartScreenSelection>())
 			{
-				startScreen->Confirm(*m_RoundManager);
+				startScreen->Confirm();
 			}
 
-		};
-		private:
-			std::shared_ptr<dae::RoundManager> m_RoundManager;
+	};
 };
 
+class LevelSkip : public dae::GameObjectCommand
+{
+
+	public:
+
+		LevelSkip(std::shared_ptr<dae::GameObject> pGameObject) : GameObjectCommand(pGameObject)
+			, presscount(0)
+
+		{
+
+		}
+
+		void Execute() override
+		{
+			++presscount;
+			if (presscount < 3 )
+			{
+				dae::SceneManager::GetInstance().ChangeScene(dae::SceneManager::GetInstance().GetCurrentSceneIndex() + 3);
+
+			}
 
 
+		};
+private:
+	int presscount;
 
 
+};	
+
+class BackToMenu : public dae::GameObjectCommand
+{
+
+	public:
+
+		BackToMenu(std::shared_ptr<dae::GameObject> pGameObject) : GameObjectCommand(pGameObject)
+		{
+
+		}
+
+		void Execute() override
+		{
+			dae::SceneManager::GetInstance().ChangeScene(0);
+		};
+
+};

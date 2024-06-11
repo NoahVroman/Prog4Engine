@@ -91,14 +91,20 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, float x, float y, fl
 	dst.y = static_cast<int>(y);
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
-	
+
 	SDL_Rect src{};
 	src.x = static_cast<int>(srcX);
 	src.y = static_cast<int>(srcY);
 	src.w = static_cast<int>(srcWidth);
 	src.h = static_cast<int>(srcHeight);
-	
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst);
+
+	// Check if sdlRenderer and sdlTexture are not null before rendering
+	if (sdlRenderer && sdlTexture) {
+		SDL_RenderCopy(sdlRenderer, sdlTexture, &src, &dst);
+	}
+	else {
+		std::cerr << "Error: SDL renderer or texture is null." << std::endl;
+	}
 }
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }

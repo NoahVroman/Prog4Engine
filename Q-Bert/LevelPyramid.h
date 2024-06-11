@@ -40,7 +40,6 @@ namespace dae
 
 		const std::vector<std::shared_ptr<GameObject>>& GetCubes() const { return m_pCubes; }
 
-		void SetSettings(const PyramidSettings& settings) { m_Settings = settings; }
 
 		void Update() override {}
 		void Render() const override {};
@@ -69,14 +68,13 @@ namespace dae
 		int GetLastCubeInRow(int row) const;
 
 		void NextRound();
-		void ContstructPyramid();
-		void DestroyPyramid();
 
-		
+		void Reset();
 
 	private:
 		const int m_AmountOfCubes;
 		
+		void ContstructPyramid();
 
 		PyramidSettings m_Settings;
 		GameObject* m_pParent;

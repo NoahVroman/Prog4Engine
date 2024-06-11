@@ -2,26 +2,26 @@ Round 1
 Level 2
 ColorIdx 3
 SpawnSlickSams 1
-SpawnUggWrongs 1
+SpawnUggWrongs 0
 SlickSamsSpawnInterval 15
-UggWrongSpawnInterval 10
-GameMode 0
+UggWrongSpawnInterval 0
+GameMode 3
 
 Round 2
 Level 2
 ColorIdx 4
 SpawnSlickSams 1
-SpawnUggWrongs 0
+SpawnUggWrongs 1
 SlickSamsSpawnInterval 14
-UggWrongSpawnInterval 0
-GameMode 0
+UggWrongSpawnInterval 10
+GameMode 3
 
 Round 3
 Level 2
 ColorIdx 5
 SpawnSlickSams 1
 SpawnUggWrongs 1
-SlickSamsSpawnInterval 13
-UggWrongSpawnInterval 10
-GameMode 0
+SlickSamsSpawnInterval 12
+UggWrongSpawnInterval 8
+GameMode 3
 

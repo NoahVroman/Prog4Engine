@@ -52,6 +52,8 @@ Disk::Disk(GameObject* const pParent, vector<shared_ptr<GameObject>> qberts, Lev
     m_pTextureComponent = m_pParent->AddComponent<TextureComponent>("Disk.png", m_SpriteInfo);
 
     m_pParent->GetTransform()->SetLocalPosition(m_CurrentPos);
+
+
 }
 
 Disk::~Disk() = default;
@@ -63,6 +65,7 @@ void Disk::Update()
 
     if (m_Activated)
     {
+
         UpdateFlight();
     }
 }
@@ -92,6 +95,8 @@ void Disk::CheckQbertActivation()
             qbert->SetIsOnDisk(true);
             m_Activated = true;
             m_ActivatingQbert = obj;
+
+
             break;
         }
     }

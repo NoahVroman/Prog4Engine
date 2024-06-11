@@ -15,9 +15,6 @@ namespace dae
 
         void Update() override;
 
-        void SetColorIndex(int index) { m_ColorIndex = index; }
-
-
     private:
         void UpdateAnimation();
         void CheckQbertActivation();
@@ -48,6 +45,7 @@ namespace dae
         int m_PreviousRow;
         int m_PreviousIndex;
         const int m_FPSIdle;
+
 
         bool m_IsLeft;
         bool m_Activated;

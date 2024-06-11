@@ -1,6 +1,5 @@
 #include "LevelCube.h"
 
-
 dae::LevelCube::LevelCube(GameObject* pParent, int level, const glm::vec2& size, int colorIndex)
 	: Component(pParent)
 	, m_Level(level)
@@ -18,7 +17,7 @@ glm::vec2 dae::LevelCube::GetCenter() const
 					  GetOwnerObject()->GetTransform()->GetLocalPosition().y - m_Size.y * 0.5f };
 }
 
-bool dae::LevelCube::ChangeColor()
+void dae::LevelCube::ChangeColor()
 {
 	if (!m_Turned)
 	{
@@ -26,9 +25,6 @@ bool dae::LevelCube::ChangeColor()
 		{
 			ChangeToSecondColor();
 			m_Turned = true;
-			return true;
-
-
 		}
 		else if (m_Level == 2)
 		{
@@ -36,8 +32,6 @@ bool dae::LevelCube::ChangeColor()
 			{
 				ChangeToThirdColor();
 				m_Turned = true;
-				return true;
-
 			}
 			else
 			{
@@ -45,26 +39,28 @@ bool dae::LevelCube::ChangeColor()
 				m_HalfTurned = true;
 			}
 		}
-		else if (m_Level == 3 )
+		else if (m_Level == 3)
 		{
-			ChangeToFirstColor();
-			m_HalfTurned = false;
-			m_Turned = false;
-
+			// For level 3, if not turned, change to the second color.
+			ChangeToSecondColor();
+			m_Turned = true; // Mark it as turned.
 		}
 		else
 		{
 			ChangeToSecondColor();
 			m_Turned = true;
-			return true;
-			
-
 		}
-
 	}
-	
-	m_Subject.Notify(Event::CubeChanged,m_pParent);
-	return false;
+	else if (m_Level == 3)
+	{
+		// If turned and level 3, change back to the first color and reset states.
+		ChangeToFirstColor();
+		m_HalfTurned = false;
+		m_Turned = false;
+	}
+
+	// Notify the observers about the cube color change event.
+	m_Subject.Notify(Event::CubeChanged, m_pParent);
 
 }
 
@@ -110,7 +106,6 @@ void dae::LevelCube::RevertColor()
 
 void dae::LevelCube::ChangeToFirstColor()
 {
-
 	GetOwnerObject()->GetComponent<TextureComponent>()->SetSourceInfo(float(m_ColorIndex)* m_Size.x,0,m_Size.x,m_Size.y);
 }
 

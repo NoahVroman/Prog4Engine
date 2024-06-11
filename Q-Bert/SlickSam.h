@@ -11,7 +11,7 @@ namespace dae
 	class SlickSam : public Component
 	{
 		public:
-		SlickSam(GameObject* const pParent, LevelPyramid* pyramid,Qbert* pQbert ,int StartRow, int StartingIndex);
+		SlickSam(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert ,int StartRow, int StartingIndex);
 		~SlickSam() = default;
 
 		SlickSam(const SlickSam& other) = delete;
@@ -32,7 +32,9 @@ namespace dae
 		PyramidMovementComponent* m_pPyramidMovementComponent;
 		TextureComponent* m_pTextureComponent;
 		LevelPyramid* m_pPyramid;
+		std::vector<std::shared_ptr<GameObject>> m_pQberts;
 		Qbert* m_pQbert;
+
 
 		glm::vec2 m_CurrentPos;
 

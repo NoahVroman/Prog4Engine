@@ -13,9 +13,8 @@
 #include "InputManager.h"
 #include "CoilyCommands.h"
 #include "QbertCommands.h"
-#include "ScoreAndLivesManager.h"
-
-dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert, std::shared_ptr<RoundManager> roundmanager)
+#include "MenuCommands.h"
+dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid, std::vector<std::shared_ptr<GameObject>> pQbert)
     : Component(pParent)
     , m_Pyramid{ pyramid }
     , m_pQbert{ pQbert }
@@ -38,7 +37,6 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
     , m_CoilySpawnMaxTime{ 5.f }
     ,m_CoilySpawnTimer{0}
     ,m_pCoily{nullptr}
-    ,m_pRoundManager{roundmanager}
 
 
 {
@@ -51,7 +49,8 @@ dae::LevelManager::LevelManager(GameObject* const pParent, LevelPyramid* pyramid
 
     }
 
-    ServiceLocator::GetSoundSystem().AddSound("../Data/Sounds/QBertJump.wav");
+
+
 
 
 }
@@ -75,19 +74,48 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
 {
     switch (currentEvent) {
     case Event::CubeChanged:
+        // Handle CubeChanged event if necessary
         break;
     case Event::PyramidCompleted:
+    
         m_RoundWon = true;
+
+        for (auto& slickSam : m_SlickSams)
+        {
+            auto slickSamComponent = slickSam->GetComponent<SlickSam>();
+            if (slickSamComponent) {
+                slickSamComponent->SetFreeze(true);
+            }
+        }
+
+        for (auto& uggWrongWay : m_UggWrongWays)
+        {
+            auto uggWrongWayComponent = uggWrongWay->GetComponent<UggWrongWay>();
+            if (uggWrongWayComponent) {
+                uggWrongWayComponent->SetFreeze(true);
+            }
+        }
+
+        if (m_pCoily) {
+            auto coilyComponent = m_pCoily->GetComponent<Coily>();
+            if (coilyComponent) {
+                coilyComponent->SetFreeze(true);
+            }
+        }
+
+    
         break;
     case Event::RoundWon:
         HandleRoundWon();
         break;
     case Event::QbertDied:
+
+		m_Lives--;
+
         if (auto qbertComponent = obj->GetComponent<Qbert>()) {
             qbertComponent->SetDeath(true);
         }
-        else 
-        {
+        else {
             for (auto& qbert : m_pQbert) {
                 if (auto qbertComp = qbert->GetComponent<Qbert>()) {
                     qbertComp->SetDeath(true);
@@ -95,7 +123,10 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
             }
         }
 
-        for (auto& slicksams : m_SlickSams) {
+            ServiceLocator::GetSoundSystem().Play(6, 10);
+        // Clear enemies upon Qbert's death
+        for (auto& slicksams : m_SlickSams) 
+        {
             slicksams->Destroy();
         }
         m_SlickSams.clear();
@@ -115,25 +146,34 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
         break;
 
     case Event::UggWrongWayDied:
+
+        obj->Destroy();
+		break;
     case Event::CoilyDied:
+
+        obj->Destroy();
+
+		break;
     case Event::SlickSamDied:
+    {
+        unsigned int slickslamdied{ UINT32_MAX };
+        if (slickslamdied == UINT32_MAX) {
+            slickslamdied = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/SlickSamCaught.wav");
+        }
+        ServiceLocator::GetSoundSystem().Play(slickslamdied, 10);
         obj->Destroy();
         break;
 
-    case Event::QbertJumped: 
-        {
-           unsigned int JumpSoundIndex{};
-           if (JumpSoundIndex == UINT32_MAX) 
-           {
-               JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
-           }
-           ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
-           break;
+    }
+
+    case Event::QbertJumped: {
+        unsigned int JumpSoundIndex{};
+        if (JumpSoundIndex == UINT32_MAX) {
+            JumpSoundIndex = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/QBertJump.wav");
         }
-    case Event::CubeTurned:
-          ScoreAndLivesManager::GetInstance().AddScore(25);
+        ServiceLocator::GetSoundSystem().Play(JumpSoundIndex, 10);
         break;
-    
+    }
 
     default:
         break;
@@ -143,6 +183,16 @@ void dae::LevelManager::NotifyObserver(GameObject* const obj, Event currentEvent
 void dae::LevelManager::Update()
 {
     float deltaTime = GameTime::GetInstance().GetDeltaTime();
+
+    if (m_Lives <= 0)
+    {
+		
+        m_Lives = m_MaxLives;
+        ResetLevel();
+
+        SceneManager::GetInstance().ChangeScene(1);
+
+	}
 
 
 
@@ -155,10 +205,24 @@ void dae::LevelManager::Update()
         InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_A, InputType::DownThisFrame, MoveUpLeftCommand(m_pQbert[0]));
         InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_W, InputType::DownThisFrame, MoveUpRightCommand(m_pQbert[0]));
 
+        dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_RIGHT, InputType::DownThisFrame, MoveUpRightCommand(m_pQbert[0]));
+        dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_LEFT, InputType::DownThisFrame, MoveUpLeftCommand(m_pQbert[0]));
+        dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_DOWN, InputType::DownThisFrame, MoveDownLeftCommand(m_pQbert[0]));
+        dae::InputManager::GetInstance().BindGamePadAction(0, XINPUT_GAMEPAD_DPAD_UP, InputType::DownThisFrame, MoveUpRightCommand(m_pQbert[0]));
+
+
+        dae::InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_F1, InputType::DownThisFrame, LevelSkip(nullptr));
+
+
         InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_RIGHT, InputType::DownThisFrame, MoveDownRightCommandCoily(m_pCoilyshared));
         InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_DOWN, InputType::DownThisFrame, MoveDownLeftCommandCoily(m_pCoilyshared));
         InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_LEFT, InputType::DownThisFrame, MoveUpLeftCommandCoily(m_pCoilyshared));
         InputManager::GetInstance().BindKeyboardAction(SDL_SCANCODE_UP, InputType::DownThisFrame, MoveUpRightCommandCoily(m_pCoilyshared));
+
+        dae::InputManager::GetInstance().BindGamePadAction(1, XINPUT_GAMEPAD_DPAD_RIGHT, InputType::DownThisFrame, MoveDownRightCommandCoily(m_pCoilyshared));
+        dae::InputManager::GetInstance().BindGamePadAction(1, XINPUT_GAMEPAD_DPAD_LEFT, InputType::DownThisFrame, MoveUpLeftCommandCoily(m_pCoilyshared));
+        dae::InputManager::GetInstance().BindGamePadAction(1, XINPUT_GAMEPAD_DPAD_DOWN, InputType::DownThisFrame, MoveDownLeftCommandCoily(m_pCoilyshared));
+        dae::InputManager::GetInstance().BindGamePadAction(1, XINPUT_GAMEPAD_DPAD_UP, InputType::DownThisFrame, MoveUpRightCommandCoily(m_pCoilyshared));
 
 
     }
@@ -177,16 +241,23 @@ void dae::LevelManager::Update()
 
     //SPAWNING DISKS ON A RANDOM ROW BUT NOT ON THE LAST ROW
 
-    if (m_RoundWon)
+    bool soundPlayed = false;
+    if (m_RoundWon && !soundPlayed)
     {
+        if (RoundWonSound == UINT32_MAX)
+        {
+            RoundWonSound = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/RoundComplete.wav");
+            ServiceLocator::GetSoundSystem().Play(1, 100);
+
+        }
+
+        soundPlayed = true; 
         for (auto& qbert : m_pQbert)
         {
             qbert->GetComponent<Qbert>()->SetFrozen(true);
-
         }
         UpdateFlashingAnimation(deltaTime);
     }
-
     if (m_SpawnSlickSams)
     {
         m_SlickSamSpawnTimer += deltaTime;
@@ -216,9 +287,17 @@ void dae::LevelManager::HandleRoundWon()
     m_FlashingTimer = 0;
     m_CurrentColor = 1;
     ResetLevel();
+    if (m_CurrentLevel == 3 && m_CurrentRound == 3)
+    {
+        SceneManager::GetInstance().ChangeScene(2);
+    }
+    else
+    {
 
+        SceneManager::GetInstance().ChangeScene(SceneManager::GetInstance().GetCurrentSceneIndex() + 1);
 
-    m_pRoundManager->SwitchToNextRound();
+    }
+
 
 }
 
@@ -231,8 +310,11 @@ void dae::LevelManager::UpdateFlashingAnimation(float deltaTime)
 
     if (m_AnimationTimer < m_MaxAnimationTime)
     {
+        
+
         if (m_FlashingTimer >= m_MaxFlashingTime)
         {
+            
             for (auto& cube : m_Pyramid->GetCubes())
             {
                 if (m_CurrentColor == 1)
@@ -254,27 +336,52 @@ void dae::LevelManager::UpdateFlashingAnimation(float deltaTime)
 
 void dae::LevelManager::ResetLevel()
 {
-   
+    // Reset the pyramid to its initial state
+    m_Pyramid->Reset();
 
+    // Destroy and clear all Ugg and WrongWay instances
     for (auto& uggWrongWay : m_UggWrongWays)
     {
         uggWrongWay->Destroy();
     }
     m_UggWrongWays.clear();
 
+    // Destroy and clear all Slick and Sam instances
     for (auto& slickSam : m_SlickSams)
     {
         slickSam->Destroy();
     }
     m_SlickSams.clear();
 
-    for (auto& qberts : m_pQbert)
+    // Destroy Coily if it exists
+    if (m_pCoily)
     {
-
-        qberts->GetComponent<Qbert>()->SetFrozen(false);
-        qberts->GetComponent<Qbert>()->Reset();
-
+        m_pCoily->Destroy();
+        m_pCoily = nullptr;
+        m_pCoilyshared = nullptr; // Clear the shared pointer as well
     }
+
+    // Reset all Qbert instances to their initial state
+    for (auto& qbert : m_pQbert)
+    {
+        if (auto qbertComponent = qbert->GetComponent<Qbert>())
+        {
+            qbertComponent->SetFrozen(false);
+            qbertComponent->Reset();
+        }
+    }
+
+    // Reset timers and flags
+    m_SlickSamSpawnTimer = 0;
+    m_UggWrongWaySpawnTimer = 0;
+    m_CoilySpawnTimer = 0;
+    m_SpawnCoily = false;
+    m_RoundWon = false;
+    m_AnimationTimer = 0;
+    m_FlashingTimer = 0;
+    m_CurrentColor = 1;
+
+
 
 
 
@@ -285,7 +392,7 @@ void dae::LevelManager::SpawnSlickSam()
 
 
     auto slickSam = std::make_shared<GameObject>();
-    slickSam->AddComponent<SlickSam>(m_Pyramid, m_pQbert[0]->GetComponent<Qbert>(), 1, 1);
+    slickSam->AddComponent<SlickSam>(m_Pyramid, m_pQbert, 1, 1);
     dae::SceneManager::GetInstance().GetCurrentScene()->Add(slickSam);
     slickSam->GetComponent<SlickSam>()->GetSubject().AddObserver(this);
     m_SlickSams.push_back(slickSam.get());
@@ -293,8 +400,11 @@ void dae::LevelManager::SpawnSlickSam()
 
 void dae::LevelManager::SpawnUggWrongWay()
 {
+
+    bool spawnLeft = rand() % 2 == 0;
+
     auto uggWrongWay = std::make_shared<GameObject>();
-    uggWrongWay->AddComponent<UggWrongWay>(m_pQbert, m_Pyramid ,6, true);
+    uggWrongWay->AddComponent<UggWrongWay>(m_pQbert, m_Pyramid ,6, spawnLeft);
     dae::SceneManager::GetInstance().GetCurrentScene()->Add(uggWrongWay);
     uggWrongWay->GetComponent<UggWrongWay>()->GetSubject().AddObserver(this);
     m_UggWrongWays.push_back(uggWrongWay.get());
@@ -323,4 +433,5 @@ void dae::LevelManager::SpawnCoily()
     }
 
 }
+
 

@@ -17,10 +17,6 @@ namespace dae
 		LivesChanged,
 		QbertJumped,
 		JumpedOnDisk,
-		Qbert2Died,
-		ScoreGainedP1,
-		ScoreGainedP2,
-		CubeTurned
 	
 	};
 

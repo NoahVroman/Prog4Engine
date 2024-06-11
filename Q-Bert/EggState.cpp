@@ -4,6 +4,7 @@
 #include "TextComponent.h"
 #include "GameTime.h"
 #include <iostream>
+#include "ServiceLocator.h"
 
 dae::EggState::EggState(GameObject* const pParent)
     : CoilyState(CoilyState::CoilyStateEnum::Egg,pParent)
@@ -14,6 +15,13 @@ dae::EggState::EggState(GameObject* const pParent)
 {
    
     srand(static_cast<unsigned int>(time(nullptr)));
+
+    if (jumpSoundId == UINT32_MAX)
+    {
+        jumpSoundId = ServiceLocator::GetSoundSystem().GetSoundIndex("../Data/Sounds/CoilyEggJump.wav");
+
+    }
+
     
 }
 
@@ -78,6 +86,9 @@ void dae::EggState::Update(Coily*coily)
 
         if (m_JumpTimer >= m_JumpInterval)
         {
+
+            ServiceLocator::GetSoundSystem().Play(jumpSoundId, 100);
+
 
             int random = rand() % 2;
             if (random == 0)

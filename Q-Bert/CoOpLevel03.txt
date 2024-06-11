@@ -5,7 +5,7 @@ SpawnSlickSams 1
 SpawnUggWrongs 1
 SlickSamsSpawnInterval 15
 UggWrongSpawnInterval 10
-GameMode 0
+GameMode 1
 
 Round 2
 Level 3
@@ -14,7 +14,7 @@ SpawnSlickSams 1
 SpawnUggWrongs 1
 SlickSamsSpawnInterval 12
 UggWrongSpawnInterval 10
-GameMode 0
+GameMode 1
 
 Round 3
 Level 3
@@ -23,5 +23,5 @@ SpawnSlickSams 1
 SpawnUggWrongs 1
 SlickSamsSpawnInterval 10
 UggWrongSpawnInterval 9
-GameMode 0
+GameMode 1
 

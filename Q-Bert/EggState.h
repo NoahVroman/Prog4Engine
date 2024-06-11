@@ -23,6 +23,8 @@ namespace dae
 			float m_JumpTimer;
 			float m_StateChangeDelay;
 			float m_StateTimer;
+
+			unsigned int jumpSoundId{UINT32_MAX};
 		
 	};
 

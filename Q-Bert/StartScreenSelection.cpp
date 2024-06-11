@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "TransfomComponent.h"
 #include "SceneManager.h"
-#include "RoundManager.h"
+#include "ServiceLocator.h"
 
 namespace dae
 {
@@ -12,13 +12,26 @@ namespace dae
 		, m_ButtonDistance(buttonDistance)
 		, m_SelectedIndex(0)
 		, m_SelectArrow(selectionArrow)
+		, m_SelectionSoundId(UINT32_MAX)
 	{
+
+
+
 	}
 
 	void StartScreenSelection::MoveUp()
 	{
 		if (m_SelectedIndex > 0)
 		{
+			
+
+			if (SceneManager::GetInstance().GetCurrentSceneIndex() == 0)
+			{
+				ServiceLocator::GetSoundSystem().Play(8, 100);
+
+			}
+
+
 			--m_SelectedIndex;
 			m_SelectArrow->GetTransform()->SetLocalPosition(glm::vec2{ m_SelectArrow->GetTransform()->GetLocalPosition().x ,m_SelectArrow->GetTransform()->GetLocalPosition().y - m_ButtonDistance });
 		
@@ -29,46 +42,38 @@ namespace dae
 	{
 		if (m_SelectedIndex < 2)
 		{
+		
+			if (SceneManager::GetInstance().GetCurrentSceneIndex() == 0)
+			{
+				ServiceLocator::GetSoundSystem().Play(8, 100);
+
+			}
+
+
 			++m_SelectedIndex;
 			m_SelectArrow->GetTransform()->SetLocalPosition(glm::vec2{ m_SelectArrow->GetTransform()->GetLocalPosition().x ,m_SelectArrow->GetTransform()->GetLocalPosition().y + m_ButtonDistance });
 		}
 		
 	}
 
-	void StartScreenSelection::Confirm(RoundManager& roundmanager)
+	void StartScreenSelection::Confirm()
 	{
 		auto& scene = SceneManager::GetInstance();
 		switch (m_SelectedIndex)
 		{
 			case 0:
-				scene.ChangeScene(1);
-				roundmanager.LoadLevel();
-
+				scene.ChangeScene(3);
+		
 			break;
 			case 1:
-				 // Scene for coop
-				scene.ChangeScene(3);
-
-				roundmanager.ClearRounds();
-				roundmanager.SetCurrentRound(0);
-				roundmanager.LoadRoundData("Level01CoOp.txt", "CoOpLevel1");
-				roundmanager.LoadLevel();
-
+				scene.ChangeScene(12);
 			break;
 			case 2:
 
-				 // Scene for versus
-				scene.ChangeScene(3);
-
-				roundmanager.ClearRounds();
-				roundmanager.SetCurrentRound(0);
-				roundmanager.LoadRoundData("Level01Versuz.txt", "VersuzLevel1");
-				roundmanager.LoadLevel();
-				
+				scene.ChangeScene(21);
 			break;
 					
 		}
-
 	}
 
 }

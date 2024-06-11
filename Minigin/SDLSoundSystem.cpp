@@ -179,27 +179,8 @@ private:
 				case SoundEvent::Type::Play:
 				{
 					Sound& sound{ m_LoadedSounds[soundEvent.soundIdx] };
-					if (Mix_Playing(sound.channel))
-					{
-						break;
-					}
-
-					if (sound.channel > m_MaxChannels)
-					{
-						const int channel{ Mix_PlayChannel(-1, sound.soundData, 0) };
-						if (channel != -1)
-						{
-							sound.channel = channel;
-						}
-						else
-						{
-							break;
-						}
-					}
-					else
-					{
-						Mix_PlayChannel(sound.channel, sound.soundData, 0);
-					}
+				
+					Mix_PlayChannel(-1, sound.soundData, 0);
 				}
 				break;
 				case SoundEvent::Type::Pause:

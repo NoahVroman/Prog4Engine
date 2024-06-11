@@ -1,7 +1,6 @@
 #include "Qbert.h"
 #include <iostream>
 #include "GameTime.h"
-#include "ScoreAndLivesManager.h"
 
 
 dae::Qbert::Qbert(GameObject* pParent, LevelPyramid* pyramid, int startingIndex, int StartingRow, bool isPlayer2)
@@ -94,11 +93,7 @@ void dae::Qbert::Update()
 
             if (m_JumpedOff == false)
             {
-                if (m_pPyramid->GetCubes()[m_CurrentCubeIndex]->GetComponent<dae::LevelCube>()->ChangeColor())
-                {
-                    m_Subject.Notify(Event::CubeTurned, Parent);
-                }
-
+                m_pPyramid->GetCubes()[m_CurrentCubeIndex]->GetComponent<dae::LevelCube>()->ChangeColor();
             }
             else if (!m_isOnDisk)
             {
@@ -112,6 +107,7 @@ void dae::Qbert::Update()
 void dae::Qbert::MoveUpRight()
 {
    
+
     if (!m_Frozen && !m_IsDead)
     {
 
